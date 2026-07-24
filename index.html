@@ -89,8 +89,17 @@
     font-family:'Inter', sans-serif;
     background:var(--bg);
     color:var(--text);
-    transition:background .3s ease, color .3s ease;
+    transition:background .6s cubic-bezier(.22,1,.36,1), color .6s cubic-bezier(.22,1,.36,1);
     overflow-x:hidden;
+    position:relative;
+  }
+  body.menu-open{overflow:hidden;}
+  body.theme-switching .fx-grid,
+  body.theme-switching .fx-particles{opacity:.55;}
+  body.konami-mode .hero-glow{animation:heroPulse 2.2s ease-in-out infinite;}
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
   }
   .font-heading{font-family:'Inter', sans-serif;}
   .font-num{font-family:'JetBrains Mono', monospace;}
@@ -103,7 +112,9 @@
     background:var(--bg-elevated);
     border:1px solid var(--border);
     border-radius:var(--radius);
-    transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease, filter .25s ease;
+    transform-style:preserve-3d;
+    will-change:transform;
   }
   .glass-card:hover{
     transform:translateY(-4px);
@@ -123,23 +134,61 @@
     width:var(--sidebar-w);
     background:var(--bg-elevated);
     border-right:1px solid var(--border);
-    transition:transform .35s cubic-bezier(.4,0,.2,1), background .3s ease, border-color .3s ease;
+    transition:transform .45s cubic-bezier(.22,1,.36,1), opacity .3s ease, background .3s ease, border-color .3s ease;
+    z-index:110;
+  }
+  .mobile-close-btn{
+    margin-left:auto;
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:var(--bg-elevated-2);
+    color:var(--text);
+    display:flex;
+    align-items:center;
+    justify-content:center;
   }
   .nav-link{color:var(--text-dim);transition:background .2s ease, color .2s ease;}
   .nav-link:hover{background:var(--bg-elevated-2);color:var(--text);}
   .nav-link.active{background:rgba(37,99,235,0.14);color:var(--accent);}
 
   .overlay{
-    background:rgba(0,0,0,0.55);
+    background:rgba(4,8,18,0.72);
+    backdrop-filter:blur(8px);
     opacity:0;
     pointer-events:none;
-    transition:opacity .3s ease;
+    transition:opacity .35s ease;
   }
   .overlay.open{opacity:1;pointer-events:auto;}
 
   @media (max-width: 1023px){
-    .sidebar{position:fixed;top:0;left:0;bottom:0;transform:translateX(-100%);z-index:100;}
-    .sidebar.open{transform:translateX(0);box-shadow:var(--shadow);}
+    .sidebar{
+      position:fixed;
+      inset:0;
+      width:100vw;
+      border-right:none;
+      border-top:1px solid var(--border);
+      transform:translateY(3%) scale(.98);
+      opacity:0;
+      pointer-events:none;
+      background:color-mix(in srgb, var(--bg-elevated) 86%, transparent);
+      backdrop-filter:blur(14px);
+    }
+    .sidebar.open{
+      transform:translateY(0) scale(1);
+      opacity:1;
+      pointer-events:auto;
+      box-shadow:var(--shadow);
+    }
+    .sidebar .nav-link{
+      font-size:1.05rem;
+      padding-top:.95rem;
+      padding-bottom:.95rem;
+    }
+  }
+  @media (min-width: 1024px){
+    .mobile-close-btn{display:none;}
   }
 
   .status-sent{color:var(--green);font-weight:600;}
@@ -161,6 +210,24 @@
   .btn-primary:hover{background:var(--accent-2);}
   .btn-outline{border:1px solid var(--border);color:var(--text);}
   .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+  .ripple{position:relative;overflow:hidden;isolation:isolate;}
+  .ripple::after{
+    content:'';
+    position:absolute;
+    width:12px;
+    height:12px;
+    border-radius:9999px;
+    transform:translate(-50%,-50%) scale(0);
+    left:var(--ripple-x,50%);
+    top:var(--ripple-y,50%);
+    background:radial-gradient(circle, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 75%);
+    opacity:0;
+    pointer-events:none;
+  }
+  .ripple.rippling::after{animation:ripple .72s ease-out;}
+  .interactive{transition:transform .25s ease, filter .25s ease;}
+  .interactive:hover{filter:brightness(1.04);}
+  .tilt-card{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--lift,0px));}
 
   .form-input{
     background:var(--bg-elevated-2);
@@ -185,34 +252,110 @@
     z-index:0;
   }
   .hero-content{position:relative;z-index:1;}
+  #heroDynamicText::after{
+    content:'';
+    margin-left:2px;
+    border-right:2px solid var(--accent);
+    animation:caret 1s steps(1) infinite;
+  }
+  .fx-grid{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:-2;
+    opacity:.42;
+    background:
+      radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(37,99,235,.18), transparent 38%),
+      linear-gradient(to right, color-mix(in srgb, var(--border) 82%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--border) 82%, transparent) 1px, transparent 1px);
+    background-size:auto, 34px 34px, 34px 34px;
+    transition:opacity .3s ease;
+  }
+  .fx-particles{
+    position:fixed;
+    inset:-20%;
+    pointer-events:none;
+    z-index:-1;
+    background:
+      radial-gradient(circle at calc(var(--mx,50%) + 10%) calc(var(--my,50%) - 6%), rgba(59,130,246,.22) 0 0.4%, transparent 1.2%),
+      radial-gradient(circle at calc(var(--mx,50%) - 22%) calc(var(--my,50%) + 18%), rgba(147,197,253,.14) 0 0.45%, transparent 1.4%);
+    filter:blur(1px);
+    animation:drift 16s linear infinite;
+  }
+  .konami-toast{
+    position:fixed;
+    left:50%;
+    bottom:1.5rem;
+    transform:translateX(-50%) translateY(10px);
+    background:var(--bg-elevated);
+    color:var(--text);
+    border:1px solid var(--border);
+    border-radius:999px;
+    padding:.55rem .95rem;
+    font-size:.85rem;
+    opacity:0;
+    pointer-events:none;
+    z-index:220;
+    transition:opacity .25s ease, transform .25s ease;
+  }
+  .konami-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  @keyframes ripple{
+    0%{transform:translate(-50%,-50%) scale(0);opacity:.72;}
+    100%{transform:translate(-50%,-50%) scale(15);opacity:0;}
+  }
+  @keyframes caret{50%{border-color:transparent;}}
+  @keyframes drift{
+    0%{transform:translate3d(0,0,0);}
+    50%{transform:translate3d(10px,-8px,0);}
+    100%{transform:translate3d(0,0,0);}
+  }
+  @keyframes heroPulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.08);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}
+    html{scroll-behavior:auto;}
+    .fade-in{opacity:1;transform:none;}
+    .tilt-card{transform:none!important;}
+  }
 </style>
 </head>
 
 <body data-theme="dark" class="min-h-screen">
+<a href="#home" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[300] focus:px-3 focus:py-2 focus:rounded-lg focus:bg-accent focus:text-white">Skip to content</a>
+<div id="fxGrid" class="fx-grid" aria-hidden="true"></div>
+<div id="fxParticles" class="fx-particles" aria-hidden="true"></div>
 
-<button id="hamburger" class="lg:hidden fixed top-4 right-4 z-[200] w-11 h-11 rounded-xl flex items-center justify-center glass-flat shadow-md">
+<button id="hamburger" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false" class="lg:hidden fixed top-4 right-4 z-[200] w-11 h-11 rounded-xl flex items-center justify-center glass-flat shadow-md interactive ripple">
   <i class="fa-solid fa-bars" id="hamburgerIcon"></i>
 </button>
-<div id="overlay" class="overlay fixed inset-0 z-[90] lg:hidden"></div>
+<div id="overlay" class="overlay fixed inset-0 z-[90] lg:hidden" aria-hidden="true"></div>
 
 <div class="flex min-h-screen">
 
   <!-- SIDEBAR -->
-  <aside id="sidebar" class="sidebar flex flex-col p-6 gap-6">
+  <aside id="sidebar" class="sidebar flex flex-col p-6 gap-6" aria-label="Primary">
+    <button id="closeSidebarBtn" aria-label="Close menu" class="mobile-close-btn lg:hidden interactive ripple">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
     <div>
       <div class="font-heading text-xl font-extrabold" style="color:var(--accent)">Hasan Adam</div>
       <div class="text-xs mt-1" style="color:var(--text-faint)">Industrial Engineer</div>
     </div>
 
-    <ul class="flex flex-col gap-1 flex-1">
-      <li><a href="#home" class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium" data-section="home"><i class="fa-solid fa-house w-5 text-center"></i> Home</a></li>
-      <li><a href="#about" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium" data-section="about"><i class="fa-solid fa-user w-5 text-center"></i> About</a></li>
-      <li><a href="#projects" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium" data-section="projects"><i class="fa-solid fa-diagram-project w-5 text-center"></i> Projects</a></li>
-      <li><a href="#dashboard" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium" data-section="dashboard"><i class="fa-solid fa-chart-line w-5 text-center"></i> Job Dashboard</a></li>
-      <li><a href="#contact" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium" data-section="contact"><i class="fa-solid fa-envelope w-5 text-center"></i> Contact</a></li>
-    </ul>
+    <nav aria-label="Site sections" class="flex-1">
+      <ul class="flex flex-col gap-1">
+        <li><a href="#home" class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium" data-section="home"><i class="fa-solid fa-house w-5 text-center" aria-hidden="true"></i> Home</a></li>
+        <li><a href="#about" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium" data-section="about"><i class="fa-solid fa-user w-5 text-center" aria-hidden="true"></i> About</a></li>
+        <li><a href="#projects" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium" data-section="projects"><i class="fa-solid fa-diagram-project w-5 text-center" aria-hidden="true"></i> Projects</a></li>
+        <li><a href="#dashboard" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium" data-section="dashboard"><i class="fa-solid fa-chart-line w-5 text-center" aria-hidden="true"></i> Job Dashboard</a></li>
+        <li><a href="#contact" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium" data-section="contact"><i class="fa-solid fa-envelope w-5 text-center" aria-hidden="true"></i> Contact</a></li>
+      </ul>
+    </nav>
 
-    <button id="themeToggle" class="glass-flat flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium">
+    <button id="themeToggle" aria-label="Toggle dark and light mode" class="glass-flat flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium interactive ripple">
       <i class="fa-solid fa-moon" id="themeIcon"></i>
       <span id="themeLabel">Dark Mode</span>
     </button>
@@ -229,12 +372,15 @@
         <h1 class="font-heading text-4xl sm:text-5xl font-extrabold leading-tight mb-4">
           Hi, I'm <span style="color:var(--accent)">Hasan Adam</span>.<br>Industrial Engineer & Automation Builder
         </h1>
+        <p class="mb-3 text-sm sm:text-base min-h-[1.75rem]" style="color:var(--accent-2)">
+          <span id="heroDynamicText" aria-live="polite"></span>
+        </p>
         <p class="max-w-xl text-base sm:text-lg mb-8 leading-relaxed" style="color:var(--text-dim)">
           Industrial Engineer with a BSc from UBT, now interning at Sela Co. in Governance. I build AI‑powered tools that make job hunting smarter — and track every result live.
         </p>
         <div class="flex flex-wrap gap-4">
-          <a href="#projects" class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm"><i class="fa-solid fa-diagram-project"></i> View Projects</a>
-          <a href="#dashboard" class="btn-outline inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm"><i class="fa-solid fa-chart-line"></i> Live Job Stats</a>
+          <a href="#projects" class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm interactive ripple"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> View Projects</a>
+          <a href="#dashboard" class="btn-outline inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm interactive ripple"><i class="fa-solid fa-chart-line" aria-hidden="true"></i> Live Job Stats</a>
         </div>
       </div>
     </section>
@@ -248,7 +394,7 @@
       <p class="fade-in mb-10 text-sm sm:text-base" style="color:var(--text-dim)">A quick introduction — how I blend industrial engineering with automation.</p>
 
       <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_1.6fr] gap-8">
-        <div class="fade-in glass-card p-6 text-center">
+        <div class="fade-in glass-card tilt-card p-6 text-center">
           <div class="w-28 h-28 rounded-full mx-auto mb-4 flex items-center justify-center font-heading text-3xl font-extrabold text-white" style="background:linear-gradient(135deg, var(--accent), var(--accent-2));">HA</div>
           <h3 class="font-heading text-lg font-semibold">Hasan Adam</h3>
           <div class="text-sm mb-4" style="color:var(--text-dim)">Industrial Engineer</div>
@@ -265,14 +411,14 @@
 
           <h3 class="font-heading text-base font-semibold mb-3">Skills &amp; Tools</h3>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium"><i class="fa-solid fa-gears block text-xl mb-2"></i>Lean Manufacturing</div>
-            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium"><i class="fa-solid fa-diagram-project block text-xl mb-2"></i>Process Optimization</div>
-            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium"><i class="fa-solid fa-truck-fast block text-xl mb-2"></i>Supply Chain</div>
-            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium"><i class="fa-solid fa-chart-simple block text-xl mb-2"></i>Data Analysis</div>
-            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium"><i class="fa-solid fa-file-excel block text-xl mb-2"></i>Excel</div>
-            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium"><i class="fa-brands fa-python block text-xl mb-2"></i>Python</div>
-            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium"><i class="fa-solid fa-people-group block text-xl mb-2"></i>Leadership</div>
-            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium"><i class="fa-solid fa-magnifying-glass-chart block text-xl mb-2"></i>Risk Management</div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium interactive"><i class="fa-solid fa-gears block text-xl mb-2"></i>Lean Manufacturing</div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium interactive"><i class="fa-solid fa-diagram-project block text-xl mb-2"></i>Process Optimization</div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium interactive"><i class="fa-solid fa-truck-fast block text-xl mb-2"></i>Supply Chain</div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium interactive"><i class="fa-solid fa-chart-simple block text-xl mb-2"></i>Data Analysis</div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium interactive"><i class="fa-solid fa-file-excel block text-xl mb-2"></i>Excel</div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium interactive"><i class="fa-brands fa-python block text-xl mb-2"></i>Python</div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium interactive"><i class="fa-solid fa-people-group block text-xl mb-2"></i>Leadership</div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium interactive"><i class="fa-solid fa-magnifying-glass-chart block text-xl mb-2"></i>Risk Management</div>
           </div>
         </div>
       </div>
@@ -287,7 +433,7 @@
       <p class="fade-in mb-10 text-sm sm:text-base" style="color:var(--text-dim)">A few things I've built and worked on.</p>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div class="fade-in glass-card p-6 flex flex-col">
+        <div class="fade-in glass-card tilt-card p-6 flex flex-col">
           <div class="project-icon w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-robot"></i></div>
           <h3 class="font-heading font-semibold mb-2">AI Job Engine</h3>
           <p class="text-sm mb-4 flex-1 leading-relaxed" style="color:var(--text-dim)">Built a multi‑agent automation pipeline using n8n, Groq, and OpenAI. It scrapes job postings, scores fit, tailors CVs, and sends applications — all while self‑healing when APIs fail. In controlled tests, it increased interview invitations by over 10%.</p>
@@ -300,7 +446,7 @@
           <a href="https://github.com/hsndm566" target="_blank" rel="noopener" class="text-sm font-semibold inline-flex items-center gap-2" style="color:var(--accent)">View on GitHub <i class="fa-solid fa-arrow-right"></i></a>
         </div>
 
-        <div class="fade-in glass-card p-6 flex flex-col">
+        <div class="fade-in glass-card tilt-card p-6 flex flex-col">
           <div class="project-icon w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-plane-departure"></i></div>
           <h3 class="font-heading font-semibold mb-2">KAIA Airport Project</h3>
           <p class="text-sm mb-4 flex-1 leading-relaxed" style="color:var(--text-dim)">Senior capstone project. Applied DMAIC and Value Stream Mapping to optimize check‑in workflows at King Abdulaziz International Airport. Reduced average processing time from 15.5 to 9.2 minutes (40% acceleration) and cut passenger wait times by 50%.</p>
@@ -312,7 +458,7 @@
           <a href="#" class="text-sm font-semibold inline-flex items-center gap-2" style="color:var(--accent)">Case study soon <i class="fa-solid fa-arrow-right"></i></a>
         </div>
 
-        <div class="fade-in glass-card p-6 flex flex-col">
+        <div class="fade-in glass-card tilt-card p-6 flex flex-col">
           <div class="project-icon w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-chart-line"></i></div>
           <h3 class="font-heading font-semibold mb-2">This Dashboard</h3>
           <p class="text-sm mb-4 flex-1 leading-relaxed" style="color:var(--text-dim)">A live personal site that pulls data directly from my Google Sheet to track every job application, reply, and interview in real time. Built with a single HTML file, Tailwind CSS, and Chart.js.</p>
@@ -324,7 +470,7 @@
           <a href="https://github.com/hsndm566/hsndm.tech" target="_blank" rel="noopener" class="text-sm font-semibold inline-flex items-center gap-2" style="color:var(--accent)">View Repo <i class="fa-solid fa-arrow-right"></i></a>
         </div>
 
-        <div class="fade-in glass-card p-6 flex flex-col">
+        <div class="fade-in glass-card tilt-card p-6 flex flex-col">
           <div class="project-icon w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-building-columns"></i></div>
           <h3 class="font-heading font-semibold mb-2">Sela Governance Internship</h3>
           <p class="text-sm mb-4 flex-1 leading-relaxed" style="color:var(--text-dim)">At Sela Co., I work in the Governance department reviewing and enhancing internal policies for government compliance. I've inserted myself strategically into multiple governance areas, helping shape how the company operates going forward.</p>
@@ -350,28 +496,28 @@
         <div class="glass-flat flex items-center gap-2 px-4 py-2 rounded-full text-sm" style="color:var(--text-dim)">
           <i class="fa-solid fa-clock"></i> Last updated: <strong id="lastUpdate" class="font-num" style="color:var(--text)">loading...</strong>
         </div>
-        <button id="refreshBtn" class="glass-flat flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold" style="color:var(--accent)">
+        <button id="refreshBtn" class="glass-flat flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold interactive ripple" style="color:var(--accent)">
           <i class="fa-solid fa-rotate-right"></i> Refresh now
         </button>
       </div>
 
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div class="fade-in glass-card p-5 text-center">
+        <div class="fade-in glass-card tilt-card p-5 text-center stat-card">
           <i class="fa-solid fa-paper-plane text-lg mb-2" style="color:var(--accent)"></i>
           <div class="font-num text-3xl font-extrabold" style="color:var(--accent)" id="sent">0</div>
           <div class="text-xs mt-1" style="color:var(--text-dim)">Sent Today</div>
         </div>
-        <div class="fade-in glass-card p-5 text-center">
+        <div class="fade-in glass-card tilt-card p-5 text-center stat-card">
           <i class="fa-solid fa-reply text-lg mb-2" style="color:var(--accent)"></i>
           <div class="font-num text-3xl font-extrabold" style="color:var(--accent)" id="replies">0</div>
           <div class="text-xs mt-1" style="color:var(--text-dim)">Replies</div>
         </div>
-        <div class="fade-in glass-card p-5 text-center">
+        <div class="fade-in glass-card tilt-card p-5 text-center stat-card">
           <i class="fa-solid fa-briefcase text-lg mb-2" style="color:var(--accent)"></i>
           <div class="font-num text-3xl font-extrabold" style="color:var(--accent)" id="interviews">0</div>
           <div class="text-xs mt-1" style="color:var(--text-dim)">Interviews</div>
         </div>
-        <div class="fade-in glass-card p-5 text-center">
+        <div class="fade-in glass-card tilt-card p-5 text-center stat-card">
           <i class="fa-solid fa-circle-check text-lg mb-2" style="color:var(--accent)"></i>
           <div class="font-num text-3xl font-extrabold" style="color:var(--accent)" id="total">0</div>
           <div class="text-xs mt-1" style="color:var(--text-dim)">Total Sent</div>
@@ -388,13 +534,14 @@
           <h3 class="font-heading font-semibold mb-4">Recent Activity</h3>
           <div class="overflow-x-auto">
             <table class="w-full text-sm">
+              <caption class="sr-only">Recent job application activity from Google Sheets</caption>
               <thead>
                 <tr style="border-bottom:1px solid var(--border)">
-                  <th class="text-left py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)">Company</th>
-                  <th class="text-left py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)">Job Title</th>
-                  <th class="text-left py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)">Fit Score</th>
-                  <th class="text-left py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)">Status</th>
-                  <th class="text-left py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)">Date</th>
+                  <th scope="col" class="text-left py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)">Company</th>
+                  <th scope="col" class="text-left py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)">Job Title</th>
+                  <th scope="col" class="text-left py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)">Fit Score</th>
+                  <th scope="col" class="text-left py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)">Status</th>
+                  <th scope="col" class="text-left py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)">Date</th>
                 </tr>
               </thead>
               <tbody id="recentBody">
@@ -416,25 +563,25 @@
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Contact links -->
-        <div class="fade-in glass-card p-6">
+        <div class="fade-in glass-card tilt-card p-6">
           <h3 class="font-heading font-semibold mb-4">Reach me directly</h3>
           <div class="flex flex-col gap-3">
-            <a href="https://github.com/hsndm566" target="_blank" rel="noopener" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition">
+            <a href="https://github.com/hsndm566" target="_blank" rel="noopener" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition interactive">
               <i class="fa-brands fa-github" style="color:var(--accent)"></i> GitHub — github.com/hsndm566
             </a>
-            <a href="https://linkedin.com/in/hsndm" target="_blank" rel="noopener" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition">
+            <a href="https://linkedin.com/in/hsndm" target="_blank" rel="noopener" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition interactive">
               <i class="fa-brands fa-linkedin" style="color:var(--accent)"></i> LinkedIn — linkedin.com/in/hsndm
             </a>
-            <a href="mailto:hasanadam506@gmail.com" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition">
+            <a href="mailto:hasanadam506@gmail.com" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition interactive">
               <i class="fa-solid fa-envelope" style="color:var(--accent)"></i> hasanadam506@gmail.com
             </a>
-            <a href="https://t.me/hsndmp" target="_blank" rel="noopener" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition">
+            <a href="https://t.me/hsndmp" target="_blank" rel="noopener" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition interactive">
               <i class="fa-brands fa-telegram" style="color:var(--accent)"></i> Telegram — t.me/hsndmp
             </a>
-            <a href="https://instagram.com/hsndm_" target="_blank" rel="noopener" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition">
+            <a href="https://instagram.com/hsndm_" target="_blank" rel="noopener" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition interactive">
               <i class="fa-brands fa-instagram" style="color:var(--accent)"></i> Instagram — @hsndm_
             </a>
-            <a href="https://facebook.com/hsndm_" target="_blank" rel="noopener" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition">
+            <a href="https://facebook.com/hsndm_" target="_blank" rel="noopener" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition interactive">
               <i class="fa-brands fa-facebook" style="color:var(--accent)"></i> Facebook — @hsndm_
             </a>
             <div class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium" style="color:var(--text-dim)">
@@ -444,29 +591,29 @@
         </div>
 
         <!-- Contact form (Web3Forms) -->
-        <div class="fade-in glass-card p-6">
+        <div class="fade-in glass-card tilt-card p-6">
           <h3 class="font-heading font-semibold mb-4">Send a message</h3>
           <form id="contactForm" class="flex flex-col gap-4">
             <input type="hidden" name="access_key" value="2ec3d648-98ad-440a-bc37-35f716999314">
             <input type="hidden" name="subject" value="New message from Hasan Adam's portfolio">
 
             <div>
-              <label class="text-xs font-medium mb-1 block" style="color:var(--text-dim)">Name</label>
-              <input type="text" name="name" required placeholder="Your name"
+              <label for="contactName" class="text-xs font-medium mb-1 block" style="color:var(--text-dim)">Name</label>
+              <input id="contactName" type="text" name="name" required placeholder="Your name"
                 class="form-input w-full px-3.5 py-2.5 rounded-lg text-sm transition">
             </div>
             <div>
-              <label class="text-xs font-medium mb-1 block" style="color:var(--text-dim)">Email</label>
-              <input type="email" name="email" required placeholder="you@example.com"
+              <label for="contactEmail" class="text-xs font-medium mb-1 block" style="color:var(--text-dim)">Email</label>
+              <input id="contactEmail" type="email" name="email" required placeholder="you@example.com"
                 class="form-input w-full px-3.5 py-2.5 rounded-lg text-sm transition">
             </div>
             <div>
-              <label class="text-xs font-medium mb-1 block" style="color:var(--text-dim)">Message</label>
-              <textarea name="message" required rows="4" placeholder="Say hello..."
+              <label for="contactMessage" class="text-xs font-medium mb-1 block" style="color:var(--text-dim)">Message</label>
+              <textarea id="contactMessage" name="message" required rows="4" placeholder="Say hello..."
                 class="form-input w-full px-3.5 py-2.5 rounded-lg text-sm transition resize-none"></textarea>
             </div>
 
-            <button type="submit" id="contactSubmit" class="btn-primary rounded-lg py-2.5 text-sm font-semibold flex items-center justify-center gap-2">
+            <button type="submit" id="contactSubmit" class="btn-primary rounded-lg py-2.5 text-sm font-semibold flex items-center justify-center gap-2 interactive ripple">
               <i class="fa-solid fa-paper-plane"></i> Send Message
             </button>
             <p class="text-xs text-center" style="color:var(--text-faint)">Powered by Web3Forms</p>
@@ -485,16 +632,24 @@
 </div>
 
 <script>
-  /* ---------------- Shared state (must be declared before applyTheme runs) ---------------- */
   let statusChartInstance = null;
-
-  /* ---------------- Theme toggle ---------------- */
   const body = document.body;
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const heroDynamicText = document.getElementById('heroDynamicText');
+  const dashboardSection = document.getElementById('dashboard');
+  const statsEls = {
+    sent: document.getElementById('sent'),
+    replies: document.getElementById('replies'),
+    interviews: document.getElementById('interviews'),
+    total: document.getElementById('total')
+  };
+
   const themeToggle = document.getElementById('themeToggle');
   const themeIcon = document.getElementById('themeIcon');
   const themeLabel = document.getElementById('themeLabel');
 
   function applyTheme(theme){
+    body.classList.add('theme-switching');
     body.setAttribute('data-theme', theme);
     document.documentElement.classList.toggle('dark', theme === 'dark');
     if(theme === 'light'){
@@ -505,13 +660,14 @@
       themeLabel.textContent = 'Dark Mode';
     }
     updateChartColors();
+    setTimeout(() => body.classList.remove('theme-switching'), 420);
   }
 
   let currentTheme = 'dark';
   try {
     const saved = window.localStorage ? localStorage.getItem('site-theme') : null;
     if(saved) currentTheme = saved;
-  } catch(e){ /* localStorage unavailable, default to dark */ }
+  } catch(e){}
   applyTheme(currentTheme);
 
   themeToggle.addEventListener('click', () => {
@@ -520,30 +676,37 @@
     try { if(window.localStorage) localStorage.setItem('site-theme', currentTheme); } catch(e){}
   });
 
-  /* ---------------- Mobile nav ---------------- */
   const sidebar = document.getElementById('sidebar');
   const hamburger = document.getElementById('hamburger');
   const hamburgerIcon = document.getElementById('hamburgerIcon');
   const overlay = document.getElementById('overlay');
+  const closeSidebarBtn = document.getElementById('closeSidebarBtn');
 
   function closeSidebar(){
     sidebar.classList.remove('open');
     overlay.classList.remove('open');
+    body.classList.remove('menu-open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    hamburger.setAttribute('aria-label', 'Open menu');
     hamburgerIcon.className = 'fa-solid fa-bars';
   }
   function toggleSidebar(){
     const isOpen = sidebar.classList.toggle('open');
     overlay.classList.toggle('open', isOpen);
+    body.classList.toggle('menu-open', isOpen);
+    hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    hamburger.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
     hamburgerIcon.className = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+    if(isOpen) closeSidebarBtn.focus();
   }
   hamburger.addEventListener('click', toggleSidebar);
+  closeSidebarBtn.addEventListener('click', closeSidebar);
   overlay.addEventListener('click', closeSidebar);
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeSidebar(); });
   document.querySelectorAll('.nav-link').forEach(link => link.addEventListener('click', closeSidebar));
 
-  /* ---------------- Active nav link on scroll ---------------- */
   const navLinks = document.querySelectorAll('.nav-link');
   const sections = document.querySelectorAll('main section');
-
   const navObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if(entry.isIntersecting){
@@ -554,33 +717,32 @@
   }, { rootMargin: '-45% 0px -45% 0px' });
   sections.forEach(sec => navObserver.observe(sec));
 
-  /* ---------------- Fade-in on scroll ---------------- */
-  const fadeObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if(entry.isIntersecting){
-        entry.target.classList.add('visible');
-        fadeObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+  if(!prefersReducedMotion){
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          fadeObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+  } else {
+    document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'));
+  }
 
-  /* ---------------- Footer year ---------------- */
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  /* ---------------- Count-up helper (dependency-free, vanilla JS) ---------------- */
   function animateCount(el, value){
     const target = Number(value) || 0;
     const startVal = Number(el.dataset.rawValue || 0);
-    const duration = 1000;
+    const duration = 1100;
     const startTime = performance.now();
-
     if(el._countRaf) cancelAnimationFrame(el._countRaf);
-
     function tick(now){
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
+      const eased = 1 - Math.pow(2, -10 * progress);
       const current = Math.round(startVal + (target - startVal) * eased);
       el.textContent = current;
       if(progress < 1){
@@ -593,17 +755,21 @@
     el._countRaf = requestAnimationFrame(tick);
   }
 
-  /* ---------------- Contact form (Web3Forms) ---------------- */
+  function escapeHtml(value){
+    return String(value || '').replace(/[&<>"']/g, (ch) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[ch]));
+  }
+  function toStatusClass(value){
+    return String(value || 'unknown').toLowerCase().replace(/[^a-z0-9_-]/g, '-');
+  }
+
   const contactForm = document.getElementById('contactForm');
   const contactSubmit = document.getElementById('contactSubmit');
   const formStatus = document.getElementById('formStatus');
-
   contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     contactSubmit.disabled = true;
     contactSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
     formStatus.classList.remove('hidden','msg-success','msg-error');
-
     try {
       const formData = new FormData(contactForm);
       const res = await fetch('https://api.web3forms.com/submit', {
@@ -612,7 +778,6 @@
         body: formData
       });
       const result = await res.json();
-
       if(result.success){
         formStatus.textContent = "Message sent! I'll get back to you soon.";
         formStatus.classList.add('msg-success');
@@ -630,18 +795,14 @@
     }
   });
 
-  /* ---------------- Google Sheets live data (logic unchanged) ---------------- */
   const SHEET_ID = '1rivD5luGlZqq6MCEUVvlT263OfUKXrzH6cr9cf0nG3A';
   const SHEET_NAME = 'Job Applications Log';
   const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
 
   function getChartColors(){
     const theme = body.getAttribute('data-theme');
-    return theme === 'light'
-      ? { text: '#57647a', grid: '#dfe6f0' }
-      : { text: '#8b95a8', grid: '#262f42' };
+    return theme === 'light' ? { text: '#57647a', grid: '#dfe6f0' } : { text: '#8b95a8', grid: '#262f42' };
   }
-
   function updateChartColors(){
     if(!statusChartInstance) return;
     const colors = getChartColors();
@@ -667,23 +828,23 @@
       const totalSent = data.filter(r => r.status === 'sent').length;
       const interviews = data.filter(r => r.decision === 'interview_invite' || r.status === 'interview_invite').length;
       const replies = data.filter(r => (r.decision && r.decision.includes('reply')) || (r.status && r.status.includes('replied'))).length;
-
-      animateCount(document.getElementById('sent'), sentToday);
-      animateCount(document.getElementById('replies'), replies);
-      animateCount(document.getElementById('interviews'), interviews);
-      animateCount(document.getElementById('total'), totalSent);
+      animateCount(statsEls.sent, sentToday);
+      animateCount(statsEls.replies, replies);
+      animateCount(statsEls.interviews, interviews);
+      animateCount(statsEls.total, totalSent);
 
       const recent = data.filter(r => r.timestamp).sort((a,b) => (b.timestamp || '').localeCompare(a.timestamp || '')).slice(0,10);
       const tbody = document.getElementById('recentBody');
-      tbody.innerHTML = recent.map(r => `
-        <tr style="border-bottom:1px solid var(--border)">
-          <td class="py-2 px-2">${r.company || '—'}</td>
-          <td class="py-2 px-2">${r.job_title || '—'}</td>
-          <td class="py-2 px-2 font-num">${r.fit_score || '—'}</td>
-          <td class="py-2 px-2 font-num status-${r.status || 'unknown'}">${r.status || '—'}</td>
-          <td class="py-2 px-2 font-num">${r.timestamp ? r.timestamp.split('T')[0] : '—'}</td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = recent.map(r => {
+        const safeStatus = escapeHtml(r.status || '—');
+        return `<tr style="border-bottom:1px solid var(--border)">
+          <td class="py-2 px-2">${escapeHtml(r.company || '—')}</td>
+          <td class="py-2 px-2">${escapeHtml(r.job_title || '—')}</td>
+          <td class="py-2 px-2 font-num">${escapeHtml(r.fit_score || '—')}</td>
+          <td class="py-2 px-2 font-num status-${toStatusClass(r.status)}">${safeStatus}</td>
+          <td class="py-2 px-2 font-num">${escapeHtml(r.timestamp ? r.timestamp.split('T')[0] : '—')}</td>
+        </tr>`;
+      }).join('');
 
       const statusCounts = {};
       data.forEach(r => {
@@ -693,7 +854,6 @@
       const labels = Object.keys(statusCounts);
       const values = Object.values(statusCounts);
       const palette = ['#2563eb','#22c55e','#ef4444','#eab308','#a855f7','#3b82f6','#ec4899'];
-
       const ctx = document.getElementById('statusChart').getContext('2d');
       const colors = getChartColors();
 
@@ -705,12 +865,8 @@
         statusChartInstance = new Chart(ctx, {
           type: 'doughnut',
           data: {
-            labels: labels,
-            datasets: [{
-              data: values,
-              backgroundColor: labels.map((_, i) => palette[i % palette.length]),
-              borderWidth: 0
-            }]
+            labels,
+            datasets: [{ data: values, backgroundColor: labels.map((_, i) => palette[i % palette.length]), borderWidth: 0 }]
           },
           options: {
             responsive: true,
@@ -731,8 +887,126 @@
     }
   }
 
-  document.getElementById('refreshBtn').addEventListener('click', loadData);
+  function initRipple(){
+    document.querySelectorAll('.ripple').forEach(el => {
+      el.addEventListener('pointerdown', (e) => {
+        const rect = el.getBoundingClientRect();
+        el.style.setProperty('--ripple-x', `${e.clientX - rect.left}px`);
+        el.style.setProperty('--ripple-y', `${e.clientY - rect.top}px`);
+        el.classList.remove('rippling');
+        void el.offsetWidth;
+        el.classList.add('rippling');
+      });
+    });
+  }
 
+  function initTiltCards(){
+    if(prefersReducedMotion || !window.matchMedia('(hover: hover)').matches) return;
+    document.querySelectorAll('.tilt-card').forEach(card => {
+      card.addEventListener('pointermove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
+        const rx = ((0.5 - y) * 7).toFixed(2);
+        const ry = ((x - 0.5) * 7).toFixed(2);
+        card.style.setProperty('--rx', `${rx}deg`);
+        card.style.setProperty('--ry', `${ry}deg`);
+        card.style.setProperty('--lift', '-4px');
+      });
+      card.addEventListener('pointerleave', () => {
+        card.style.setProperty('--rx', '0deg');
+        card.style.setProperty('--ry', '0deg');
+        card.style.setProperty('--lift', '0px');
+      });
+    });
+  }
+
+  function initHeroTyping(){
+    const lines = [
+      'Building automation that scales decisions.',
+      'Turning job applications into live analytics.',
+      'Engineering smoother operations with AI.'
+    ];
+    let lineIndex = 0;
+    let charIndex = 0;
+    let deleting = false;
+    function step(){
+      const current = lines[lineIndex];
+      if(!deleting){
+        charIndex++;
+        heroDynamicText.textContent = current.slice(0, charIndex);
+        if(charIndex === current.length) deleting = true;
+      } else {
+        charIndex--;
+        heroDynamicText.textContent = current.slice(0, Math.max(charIndex, 0));
+        if(charIndex <= 0){
+          deleting = false;
+          lineIndex = (lineIndex + 1) % lines.length;
+        }
+      }
+      const timeout = deleting ? 45 : 70;
+      const pause = (!deleting && charIndex === current.length) ? 1250 : (deleting && charIndex === 0 ? 360 : timeout);
+      setTimeout(step, prefersReducedMotion ? 1800 : pause);
+    }
+    step();
+  }
+
+  function initReactiveBackdrop(){
+    const root = document.documentElement;
+    let rafId = null;
+    const update = (x, y) => {
+      root.style.setProperty('--mx', `${x}%`);
+      root.style.setProperty('--my', `${y}%`);
+    };
+    update(50, 50);
+    if(prefersReducedMotion) return;
+    window.addEventListener('pointermove', (e) => {
+      if(rafId) return;
+      rafId = requestAnimationFrame(() => {
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+        update(x, y);
+        rafId = null;
+      });
+    }, { passive: true });
+  }
+
+  function showKonamiToast(message){
+    const toast = document.createElement('div');
+    toast.className = 'konami-toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('show'));
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 320);
+    }, 1800);
+  }
+
+  function initKonami(){
+    const code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    let idx = 0;
+    document.addEventListener('keydown', (e) => {
+      const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      if(key === code[idx]){
+        idx++;
+        if(idx === code.length){
+          idx = 0;
+          body.classList.toggle('konami-mode');
+          showKonamiToast(body.classList.contains('konami-mode') ? '🎉 Konami mode unlocked!' : 'Konami mode disabled');
+        }
+      } else {
+        idx = key === code[0] ? 1 : 0;
+      }
+    });
+  }
+
+  document.getElementById('refreshBtn').addEventListener('click', loadData);
+  initRipple();
+  initTiltCards();
+  initHeroTyping();
+  initReactiveBackdrop();
+  initKonami();
   loadData();
   setInterval(loadData, 300000);
 </script>
