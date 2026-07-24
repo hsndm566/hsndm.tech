@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Application Dashboard – hsndm</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Calibri', sans-serif; background: #0b0f15; color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+    .container { max-width: 700px; width: 100%; }
+    h1 { font-size: 2.5rem; margin-bottom: 0.2rem; color: #58a6ff; }
+    .subtitle { font-size: 1rem; color: #8b949e; margin-bottom: 2rem; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .stat-card { background: #161b22; border-radius: 12px; padding: 1.2rem; text-align: center; border: 1px solid #30363d; }
+    .stat-card .number { font-size: 2.2rem; font-weight: 700; color: #58a6ff; }
+    .stat-card .label { font-size: 0.9rem; color: #8b949e; margin-top: 0.3rem; }
+    .recent { background: #161b22; border-radius: 12px; padding: 1.5rem; border: 1px solid #30363d; margin-bottom: 2rem; }
+    .recent h2 { font-size: 1.3rem; margin-bottom: 1rem; color: #c9d1d9; }
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; padding: 0.6rem 0.4rem; color: #8b949e; font-weight: 600; font-size: 0.85rem; border-bottom: 1px solid #30363d; }
+    td { padding: 0.5rem 0.4rem; font-size: 0.9rem; border-bottom: 1px solid #21262d; }
+    .status-sent { color: #3fb950; }
+    .status-failed { color: #f85149; }
+    .footer { text-align: center; color: #484f58; font-size: 0.8rem; margin-top: 2rem; }
+    .refresh { color: #58a6ff; cursor: pointer; }
+    button { background: #238636; border: none; color: white; padding: 0.6rem 1.4rem; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 1rem; }
+    button:hover { background: #2ea043; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>hsndm</h1>
+    <div class="subtitle">Job Application Dashboard · <span id="lastUpdate">loading...</span> · <span class="refresh" onclick="loadData()">↻ refresh</span></div>
+
+    <div class="stats">
+      <div class="stat-card"><div class="number" id="sent">—</div><div class="label">Sent Today</div></div>
+      <div class="stat-card"><div class="number" id="replies">—</div><div class="label">Replies</div></div>
+      <div class="stat-card"><div class="number" id="interviews">—</div><div class="label">Interviews</div></div>
+      <div class="stat-card"><div class="number" id="total">—</div><div class="label">Total Sent</div></div>
+    </div>
+
+    <div class="recent">
+      <h2>Recent Activity</h2>
+      <table>
+        <thead><tr><th>Company</th><th>Job Title</th><th>Fit Score</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody id="recentBody"><tr><td colspan="5" style="text-align:center;color:#8b949e;">Loading...</td></tr></tbody>
+      </table>
+    </div>
+
+    <div class="footer">
+      Data refreshes every 5 minutes · Powered by n8n & Google Sheets
+    </div>
+  </div>
+
+  <script>
+    const SHEET_ID = '1rivD5luGlZqq6MCEUVvlT263OfUKXrzH6cr9cf0nG3A';
+    const SHEET_NAME = 'Job Applications Log';
+    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+
+    async function loadData() {
+      try {
+        const res = await fetch(SHEET_URL);
+        const text = await res.text();
+        const json = JSON.parse(text.substring(47, text.length - 2));
+        const rows = json.table.rows;
+        const headers = json.table.cols.map(c => c.label.toLowerCase());
+        const data = rows.map(r => {
+          const obj = {};
+          r.c.forEach((c, i) => obj[headers[i]] = c ? c.v : '');
+          return obj;
+        });
+
+        // Calculate stats
+        const today = new Date().toISOString().split('T')[0];
+        const sentToday = data.filter(r => r.status === 'sent' && r.timestamp && r.timestamp.startsWith(today)).length;
+        const totalSent = data.filter(r => r.status === 'sent').length;
+        const interviews = data.filter(r => r.decision === 'interview_invite' || r.status === 'interview_invite').length;
+        // Replies: we don't have explicit reply column, so we infer from decision/status containing 'reply' or 'replied'
+        const replies = data.filter(r => (r.decision && r.decision.includes('reply')) || (r.status && r.status.includes('replied'))).length;
+
+        document.getElementById('sent').textContent = sentToday;
+        document.getElementById('replies').textContent = replies;
+        document.getElementById('interviews').textContent = interviews;
+        document.getElementById('total').textContent = totalSent;
+
+        // Recent activity (last 10)
+        const recent = data.filter(r => r.timestamp).sort((a,b) => b.timestamp.localeCompare(a.timestamp)).slice(0,10);
+        const tbody = document.getElementById('recentBody');
+        tbody.innerHTML = recent.map(r => `
+          <tr>
+            <td>${r.company || '—'}</td>
+            <td>${r.job_title || '—'}</td>
+            <td>${r.fit_score || '—'}</td>
+            <td class="status-${r.status || 'unknown'}">${r.status || '—'}</td>
+            <td>${r.timestamp ? r.timestamp.split('T')[0] : '—'}</td>
+          </tr>
+        `).join('');
+
+        document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+      } catch(e) {
+        document.getElementById('recentBody').innerHTML = '<tr><td colspan="5" style="text-align:center;color:#f85149;">Error loading data. Ensure sheet is shared publicly.</td></tr>';
+      }
+    }
+
+    loadData();
+    setInterval(loadData, 300000); // refresh every 5 minutes
+  </script>
+</body>
+</html>
