@@ -485,6 +485,9 @@
 </div>
 
 <script>
+  /* ---------------- Shared state (must be declared before applyTheme runs) ---------------- */
+  let statusChartInstance = null;
+
   /* ---------------- Theme toggle ---------------- */
   const body = document.body;
   const themeToggle = document.getElementById('themeToggle');
@@ -631,8 +634,6 @@
   const SHEET_ID = '1rivD5luGlZqq6MCEUVvlT263OfUKXrzH6cr9cf0nG3A';
   const SHEET_NAME = 'Job Applications Log';
   const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
-
-  let statusChartInstance = null;
 
   function getChartColors(){
     const theme = body.getAttribute('data-theme');
