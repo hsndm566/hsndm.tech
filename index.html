@@ -1,109 +1,739 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Job Application Dashboard – hsndm</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', 'Calibri', sans-serif; background: #0b0f15; color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-    .container { max-width: 700px; width: 100%; }
-    h1 { font-size: 2.5rem; margin-bottom: 0.2rem; color: #58a6ff; }
-    .subtitle { font-size: 1rem; color: #8b949e; margin-bottom: 2rem; }
-    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-    .stat-card { background: #161b22; border-radius: 12px; padding: 1.2rem; text-align: center; border: 1px solid #30363d; }
-    .stat-card .number { font-size: 2.2rem; font-weight: 700; color: #58a6ff; }
-    .stat-card .label { font-size: 0.9rem; color: #8b949e; margin-top: 0.3rem; }
-    .recent { background: #161b22; border-radius: 12px; padding: 1.5rem; border: 1px solid #30363d; margin-bottom: 2rem; }
-    .recent h2 { font-size: 1.3rem; margin-bottom: 1rem; color: #c9d1d9; }
-    table { width: 100%; border-collapse: collapse; }
-    th { text-align: left; padding: 0.6rem 0.4rem; color: #8b949e; font-weight: 600; font-size: 0.85rem; border-bottom: 1px solid #30363d; }
-    td { padding: 0.5rem 0.4rem; font-size: 0.9rem; border-bottom: 1px solid #21262d; }
-    .status-sent { color: #3fb950; }
-    .status-failed { color: #f85149; }
-    .footer { text-align: center; color: #484f58; font-size: 0.8rem; margin-top: 2rem; }
-    .refresh { color: #58a6ff; cursor: pointer; }
-    button { background: #238636; border: none; color: white; padding: 0.6rem 1.4rem; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 1rem; }
-    button:hover { background: #2ea043; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>hsndm</h1>
-    <div class="subtitle">Job Application Dashboard · <span id="lastUpdate">loading...</span> · <span class="refresh" onclick="loadData()">↻ refresh</span></div>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hasan Adam – Industrial Engineer &amp; Job Application Dashboard</title>
+<meta name="description" content="Hasan Adam – Industrial Engineer, automation builder, and live job-application tracker.">
 
-    <div class="stats">
-      <div class="stat-card"><div class="number" id="sent">—</div><div class="label">Sent Today</div></div>
-      <div class="stat-card"><div class="number" id="replies">—</div><div class="label">Replies</div></div>
-      <div class="stat-card"><div class="number" id="interviews">—</div><div class="label">Interviews</div></div>
-      <div class="stat-card"><div class="number" id="total">—</div><div class="label">Total Sent</div></div>
-    </div>
+<!-- Google Analytics (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA_MEASUREMENT_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'YOUR_GA_MEASUREMENT_ID');
+</script>
 
-    <div class="recent">
-      <h2>Recent Activity</h2>
-      <table>
-        <thead><tr><th>Company</th><th>Job Title</th><th>Fit Score</th><th>Status</th><th>Date</th></tr></thead>
-        <tbody id="recentBody"><tr><td colspan="5" style="text-align:center;color:#8b949e;">Loading...</td></tr></tbody>
-      </table>
-    </div>
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <div class="footer">
-      Data refreshes every 5 minutes · Powered by n8n & Google Sheets
-    </div>
-  </div>
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <script>
-    const SHEET_ID = '1rivD5luGlZqq6MCEUVvlT263OfUKXrzH6cr9cf0nG3A';
-    const SHEET_NAME = 'Job Applications Log';
-    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
-
-    async function loadData() {
-      try {
-        const res = await fetch(SHEET_URL);
-        const text = await res.text();
-        const json = JSON.parse(text.substring(47, text.length - 2));
-        const rows = json.table.rows;
-        const headers = json.table.cols.map(c => c.label.toLowerCase());
-        const data = rows.map(r => {
-          const obj = {};
-          r.c.forEach((c, i) => obj[headers[i]] = c ? c.v : '');
-          return obj;
-        });
-
-        // Calculate stats
-        const today = new Date().toISOString().split('T')[0];
-        const sentToday = data.filter(r => r.status === 'sent' && r.timestamp && r.timestamp.startsWith(today)).length;
-        const totalSent = data.filter(r => r.status === 'sent').length;
-        const interviews = data.filter(r => r.decision === 'interview_invite' || r.status === 'interview_invite').length;
-        // Replies: we don't have explicit reply column, so we infer from decision/status containing 'reply' or 'replied'
-        const replies = data.filter(r => (r.decision && r.decision.includes('reply')) || (r.status && r.status.includes('replied'))).length;
-
-        document.getElementById('sent').textContent = sentToday;
-        document.getElementById('replies').textContent = replies;
-        document.getElementById('interviews').textContent = interviews;
-        document.getElementById('total').textContent = totalSent;
-
-        // Recent activity (last 10)
-        const recent = data.filter(r => r.timestamp).sort((a,b) => b.timestamp.localeCompare(a.timestamp)).slice(0,10);
-        const tbody = document.getElementById('recentBody');
-        tbody.innerHTML = recent.map(r => `
-          <tr>
-            <td>${r.company || '—'}</td>
-            <td>${r.job_title || '—'}</td>
-            <td>${r.fit_score || '—'}</td>
-            <td class="status-${r.status || 'unknown'}">${r.status || '—'}</td>
-            <td>${r.timestamp ? r.timestamp.split('T')[0] : '—'}</td>
-          </tr>
-        `).join('');
-
-        document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
-      } catch(e) {
-        document.getElementById('recentBody').innerHTML = '<tr><td colspan="5" style="text-align:center;color:#f85149;">Error loading data. Ensure sheet is shared publicly.</td></tr>';
+<!-- Tailwind CSS (CDN) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          accent: '#2563eb',
+          accent2: '#3b82f6',
+        },
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'monospace'],
+        },
+        boxShadow: {
+          glow: '0 0 0 1px rgba(37,99,235,0.4), 0 8px 30px rgba(37,99,235,0.25)',
+        }
       }
     }
+  }
+</script>
 
-    loadData();
-    setInterval(loadData, 300000); // refresh every 5 minutes
-  </script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<style>
+  :root{
+    --bg:#0a0e17;
+    --bg-elevated:#121826;
+    --bg-elevated-2:#1a2233;
+    --border:#262f42;
+    --text:#e8ecf3;
+    --text-dim:#8b95a8;
+    --text-faint:#565f70;
+    --accent:#2563eb;
+    --accent-2:#3b82f6;
+    --green:#22c55e;
+    --red:#ef4444;
+    --yellow:#eab308;
+    --shadow: 0 8px 28px rgba(0,0,0,0.45);
+    --radius: 16px;
+    --sidebar-w: 260px;
+  }
+
+  [data-theme="light"]{
+    --bg:#ffffff;
+    --bg-elevated:#f8fafc;
+    --bg-elevated-2:#eef2f8;
+    --border:#dfe6f0;
+    --text:#0f172a;
+    --text-dim:#57647a;
+    --text-faint:#94a3b8;
+    --accent:#2563eb;
+    --accent-2:#1d4ed8;
+    --green:#16a34a;
+    --red:#dc2626;
+    --yellow:#ca8a04;
+    --shadow: 0 8px 28px rgba(100,116,139,0.18);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter', sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    transition:background .3s ease, color .3s ease;
+    overflow-x:hidden;
+  }
+  .font-heading{font-family:'Inter', sans-serif;}
+  .font-num{font-family:'JetBrains Mono', monospace;}
+
+  ::-webkit-scrollbar{width:8px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px;}
+
+  .glass-card{
+    background:var(--bg-elevated);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .glass-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 0 0 1px rgba(37,99,235,0.35), 0 14px 34px rgba(37,99,235,0.18);
+    border-color:rgba(37,99,235,0.5);
+  }
+  .glass-flat{
+    background:var(--bg-elevated);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+  }
+
+  .fade-in{opacity:0;transform:translateY(26px);transition:opacity .7s ease, transform .7s ease;}
+  .fade-in.visible{opacity:1;transform:translateY(0);}
+
+  .sidebar{
+    width:var(--sidebar-w);
+    background:var(--bg-elevated);
+    border-right:1px solid var(--border);
+    transition:transform .35s cubic-bezier(.4,0,.2,1), background .3s ease, border-color .3s ease;
+  }
+  .nav-link{color:var(--text-dim);transition:background .2s ease, color .2s ease;}
+  .nav-link:hover{background:var(--bg-elevated-2);color:var(--text);}
+  .nav-link.active{background:rgba(37,99,235,0.14);color:var(--accent);}
+
+  .overlay{
+    background:rgba(0,0,0,0.55);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .3s ease;
+  }
+  .overlay.open{opacity:1;pointer-events:auto;}
+
+  @media (max-width: 1023px){
+    .sidebar{position:fixed;top:0;left:0;bottom:0;transform:translateX(-100%);z-index:100;}
+    .sidebar.open{transform:translateX(0);box-shadow:var(--shadow);}
+  }
+
+  .status-sent{color:var(--green);font-weight:600;}
+  .status-failed{color:var(--red);font-weight:600;}
+  .status-interview_invite{color:var(--yellow);font-weight:600;}
+
+  .skill-chip{
+    background:var(--bg-elevated);
+    border:1px solid var(--border);
+    transition:transform .2s ease, border-color .2s ease;
+  }
+  .skill-chip:hover{transform:translateY(-3px);border-color:var(--accent);}
+  .skill-chip i{color:var(--accent);}
+
+  .project-icon{background:rgba(37,99,235,0.14);color:var(--accent);}
+  .project-tags span{background:var(--bg-elevated-2);border:1px solid var(--border);color:var(--text-dim);}
+
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{background:var(--accent-2);}
+  .btn-outline{border:1px solid var(--border);color:var(--text);}
+  .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+
+  .form-input{
+    background:var(--bg-elevated-2);
+    border:1px solid var(--border);
+    color:var(--text);
+  }
+  .form-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,0.2);}
+
+  .msg-success{color:var(--green);}
+  .msg-error{color:var(--red);}
+
+  .hero-glow-wrap{position:relative;}
+  .hero-glow{
+    position:absolute;
+    top:-120px;
+    left:-80px;
+    width:420px;
+    height:420px;
+    background:radial-gradient(circle, rgba(37,99,235,0.35) 0%, rgba(37,99,235,0.12) 45%, rgba(37,99,235,0) 70%);
+    filter:blur(40px);
+    pointer-events:none;
+    z-index:0;
+  }
+  .hero-content{position:relative;z-index:1;}
+</style>
+</head>
+
+<body data-theme="dark" class="min-h-screen">
+
+<button id="hamburger" class="lg:hidden fixed top-4 right-4 z-[200] w-11 h-11 rounded-xl flex items-center justify-center glass-flat shadow-md">
+  <i class="fa-solid fa-bars" id="hamburgerIcon"></i>
+</button>
+<div id="overlay" class="overlay fixed inset-0 z-[90] lg:hidden"></div>
+
+<div class="flex min-h-screen">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar" class="sidebar flex flex-col p-6 gap-6">
+    <div>
+      <div class="font-heading text-xl font-extrabold" style="color:var(--accent)">Hasan Adam</div>
+      <div class="text-xs mt-1" style="color:var(--text-faint)">Industrial Engineer</div>
+    </div>
+
+    <ul class="flex flex-col gap-1 flex-1">
+      <li><a href="#home" class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium" data-section="home"><i class="fa-solid fa-house w-5 text-center"></i> Home</a></li>
+      <li><a href="#about" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium" data-section="about"><i class="fa-solid fa-user w-5 text-center"></i> About</a></li>
+      <li><a href="#projects" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium" data-section="projects"><i class="fa-solid fa-diagram-project w-5 text-center"></i> Projects</a></li>
+      <li><a href="#dashboard" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium" data-section="dashboard"><i class="fa-solid fa-chart-line w-5 text-center"></i> Job Dashboard</a></li>
+      <li><a href="#contact" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium" data-section="contact"><i class="fa-solid fa-envelope w-5 text-center"></i> Contact</a></li>
+    </ul>
+
+    <button id="themeToggle" class="glass-flat flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium">
+      <i class="fa-solid fa-moon" id="themeIcon"></i>
+      <span id="themeLabel">Dark Mode</span>
+    </button>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="flex-1 px-5 sm:px-8 lg:px-14 py-10 lg:py-14 max-w-6xl">
+
+    <!-- HOME -->
+    <section id="home" class="min-h-[75vh] flex flex-col justify-center pb-10 hero-glow-wrap">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="fade-in hero-content">
+        <div class="text-sm font-semibold uppercase tracking-wider mb-3" style="color:var(--accent)">Welcome to my portfolio</div>
+        <h1 class="font-heading text-4xl sm:text-5xl font-extrabold leading-tight mb-4">
+          Hi, I'm <span style="color:var(--accent)">Hasan Adam</span>.<br>Industrial Engineer & Automation Builder
+        </h1>
+        <p class="max-w-xl text-base sm:text-lg mb-8 leading-relaxed" style="color:var(--text-dim)">
+          Industrial Engineer with a BSc from UBT, now interning at Sela Co. in Governance. I build AI‑powered tools that make job hunting smarter — and track every result live.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a href="#projects" class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm"><i class="fa-solid fa-diagram-project"></i> View Projects</a>
+          <a href="#dashboard" class="btn-outline inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm"><i class="fa-solid fa-chart-line"></i> Live Job Stats</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="py-16 border-t" style="border-color:var(--border)">
+      <div class="fade-in flex items-baseline gap-3 mb-1">
+        <span class="font-num font-bold" style="color:var(--accent)">01</span>
+        <h2 class="font-heading text-2xl sm:text-3xl font-bold">About Me</h2>
+      </div>
+      <p class="fade-in mb-10 text-sm sm:text-base" style="color:var(--text-dim)">A quick introduction — how I blend industrial engineering with automation.</p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_1.6fr] gap-8">
+        <div class="fade-in glass-card p-6 text-center">
+          <div class="w-28 h-28 rounded-full mx-auto mb-4 flex items-center justify-center font-heading text-3xl font-extrabold text-white" style="background:linear-gradient(135deg, var(--accent), var(--accent-2));">HA</div>
+          <h3 class="font-heading text-lg font-semibold">Hasan Adam</h3>
+          <div class="text-sm mb-4" style="color:var(--text-dim)">Industrial Engineer</div>
+          <div class="flex flex-col gap-2.5 text-sm text-left pt-4 border-t" style="border-color:var(--border); color:var(--text-dim)">
+            <div class="flex items-center gap-2.5"><i class="fa-solid fa-location-dot w-4" style="color:var(--accent)"></i> Jeddah, Saudi Arabia</div>
+            <div class="flex items-center gap-2.5"><i class="fa-solid fa-graduation-cap w-4" style="color:var(--accent)"></i> University of Business & Technology (UBT)</div>
+            <div class="flex items-center gap-2.5"><i class="fa-solid fa-envelope w-4" style="color:var(--accent)"></i> hasanadam506@gmail.com</div>
+          </div>
+        </div>
+
+        <div class="fade-in">
+          <p class="mb-4 leading-relaxed text-sm sm:text-base" style="color:var(--text-dim)">I'm an Industrial Engineer with a BSc from UBT, currently interning at Sela Co. in the Governance department. There, I review and enhance internal policies for government compliance, strategically contributing to multiple governance areas to shape how the company operates.</p>
+          <p class="mb-8 leading-relaxed text-sm sm:text-base" style="color:var(--text-dim)">Outside of work, I built a multi‑agent job application engine — an n8n automation that scrapes, scores, tailors, and sends applications. In controlled tests, it boosted interview invitations by over 10%. I'm actively seeking Co‑op opportunities where I can apply Lean, automation, and policy skills to real‑world operations.</p>
+
+          <h3 class="font-heading text-base font-semibold mb-3">Skills &amp; Tools</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium"><i class="fa-solid fa-gears block text-xl mb-2"></i>Lean Manufacturing</div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium"><i class="fa-solid fa-diagram-project block text-xl mb-2"></i>Process Optimization</div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium"><i class="fa-solid fa-truck-fast block text-xl mb-2"></i>Supply Chain</div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium"><i class="fa-solid fa-chart-simple block text-xl mb-2"></i>Data Analysis</div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium"><i class="fa-solid fa-file-excel block text-xl mb-2"></i>Excel</div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium"><i class="fa-brands fa-python block text-xl mb-2"></i>Python</div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium"><i class="fa-solid fa-people-group block text-xl mb-2"></i>Leadership</div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium"><i class="fa-solid fa-magnifying-glass-chart block text-xl mb-2"></i>Risk Management</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="py-16 border-t" style="border-color:var(--border)">
+      <div class="fade-in flex items-baseline gap-3 mb-1">
+        <span class="font-num font-bold" style="color:var(--accent)">02</span>
+        <h2 class="font-heading text-2xl sm:text-3xl font-bold">Projects</h2>
+      </div>
+      <p class="fade-in mb-10 text-sm sm:text-base" style="color:var(--text-dim)">A few things I've built and worked on.</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div class="fade-in glass-card p-6 flex flex-col">
+          <div class="project-icon w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-robot"></i></div>
+          <h3 class="font-heading font-semibold mb-2">AI Job Engine</h3>
+          <p class="text-sm mb-4 flex-1 leading-relaxed" style="color:var(--text-dim)">Built a multi‑agent automation pipeline using n8n, Groq, and OpenAI. It scrapes job postings, scores fit, tailors CVs, and sends applications — all while self‑healing when APIs fail. In controlled tests, it increased interview invitations by over 10%.</p>
+          <div class="project-tags flex flex-wrap gap-2 mb-4">
+            <span class="px-2.5 py-1 rounded-full text-xs">n8n</span>
+            <span class="px-2.5 py-1 rounded-full text-xs">Groq</span>
+            <span class="px-2.5 py-1 rounded-full text-xs">OpenAI</span>
+            <span class="px-2.5 py-1 rounded-full text-xs">Automation</span>
+          </div>
+          <a href="https://github.com/hsndm566" target="_blank" rel="noopener" class="text-sm font-semibold inline-flex items-center gap-2" style="color:var(--accent)">View on GitHub <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+
+        <div class="fade-in glass-card p-6 flex flex-col">
+          <div class="project-icon w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-plane-departure"></i></div>
+          <h3 class="font-heading font-semibold mb-2">KAIA Airport Project</h3>
+          <p class="text-sm mb-4 flex-1 leading-relaxed" style="color:var(--text-dim)">Senior capstone project. Applied DMAIC and Value Stream Mapping to optimize check‑in workflows at King Abdulaziz International Airport. Reduced average processing time from 15.5 to 9.2 minutes (40% acceleration) and cut passenger wait times by 50%.</p>
+          <div class="project-tags flex flex-wrap gap-2 mb-4">
+            <span class="px-2.5 py-1 rounded-full text-xs">DMAIC</span>
+            <span class="px-2.5 py-1 rounded-full text-xs">VSM</span>
+            <span class="px-2.5 py-1 rounded-full text-xs">Lean</span>
+          </div>
+          <a href="#" class="text-sm font-semibold inline-flex items-center gap-2" style="color:var(--accent)">Case study soon <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+
+        <div class="fade-in glass-card p-6 flex flex-col">
+          <div class="project-icon w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-chart-line"></i></div>
+          <h3 class="font-heading font-semibold mb-2">This Dashboard</h3>
+          <p class="text-sm mb-4 flex-1 leading-relaxed" style="color:var(--text-dim)">A live personal site that pulls data directly from my Google Sheet to track every job application, reply, and interview in real time. Built with a single HTML file, Tailwind CSS, and Chart.js.</p>
+          <div class="project-tags flex flex-wrap gap-2 mb-4">
+            <span class="px-2.5 py-1 rounded-full text-xs">JavaScript</span>
+            <span class="px-2.5 py-1 rounded-full text-xs">Chart.js</span>
+            <span class="px-2.5 py-1 rounded-full text-xs">Google Sheets API</span>
+          </div>
+          <a href="https://github.com/hsndm566/hsndm.tech" target="_blank" rel="noopener" class="text-sm font-semibold inline-flex items-center gap-2" style="color:var(--accent)">View Repo <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+
+        <div class="fade-in glass-card p-6 flex flex-col">
+          <div class="project-icon w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-building-columns"></i></div>
+          <h3 class="font-heading font-semibold mb-2">Sela Governance Internship</h3>
+          <p class="text-sm mb-4 flex-1 leading-relaxed" style="color:var(--text-dim)">At Sela Co., I work in the Governance department reviewing and enhancing internal policies for government compliance. I've inserted myself strategically into multiple governance areas, helping shape how the company operates going forward.</p>
+          <div class="project-tags flex flex-wrap gap-2 mb-4">
+            <span class="px-2.5 py-1 rounded-full text-xs">Governance</span>
+            <span class="px-2.5 py-1 rounded-full text-xs">Policy</span>
+            <span class="px-2.5 py-1 rounded-full text-xs">Compliance</span>
+          </div>
+          <a href="https://www.linkedin.com/in/hsndm" target="_blank" rel="noopener" class="text-sm font-semibold inline-flex items-center gap-2" style="color:var(--accent)">Learn more on LinkedIn <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="py-16 border-t" style="border-color:var(--border)">
+      <div class="fade-in flex items-baseline gap-3 mb-1">
+        <span class="font-num font-bold" style="color:var(--accent)">03</span>
+        <h2 class="font-heading text-2xl sm:text-3xl font-bold">Job Application Dashboard</h2>
+      </div>
+      <p class="fade-in mb-8 text-sm sm:text-base" style="color:var(--text-dim)">Live data pulled directly from my Google Sheet job tracker.</p>
+
+      <div class="fade-in flex flex-wrap gap-3 mb-6">
+        <div class="glass-flat flex items-center gap-2 px-4 py-2 rounded-full text-sm" style="color:var(--text-dim)">
+          <i class="fa-solid fa-clock"></i> Last updated: <strong id="lastUpdate" class="font-num" style="color:var(--text)">loading...</strong>
+        </div>
+        <button id="refreshBtn" class="glass-flat flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold" style="color:var(--accent)">
+          <i class="fa-solid fa-rotate-right"></i> Refresh now
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="fade-in glass-card p-5 text-center">
+          <i class="fa-solid fa-paper-plane text-lg mb-2" style="color:var(--accent)"></i>
+          <div class="font-num text-3xl font-extrabold" style="color:var(--accent)" id="sent">0</div>
+          <div class="text-xs mt-1" style="color:var(--text-dim)">Sent Today</div>
+        </div>
+        <div class="fade-in glass-card p-5 text-center">
+          <i class="fa-solid fa-reply text-lg mb-2" style="color:var(--accent)"></i>
+          <div class="font-num text-3xl font-extrabold" style="color:var(--accent)" id="replies">0</div>
+          <div class="text-xs mt-1" style="color:var(--text-dim)">Replies</div>
+        </div>
+        <div class="fade-in glass-card p-5 text-center">
+          <i class="fa-solid fa-briefcase text-lg mb-2" style="color:var(--accent)"></i>
+          <div class="font-num text-3xl font-extrabold" style="color:var(--accent)" id="interviews">0</div>
+          <div class="text-xs mt-1" style="color:var(--text-dim)">Interviews</div>
+        </div>
+        <div class="fade-in glass-card p-5 text-center">
+          <i class="fa-solid fa-circle-check text-lg mb-2" style="color:var(--accent)"></i>
+          <div class="font-num text-3xl font-extrabold" style="color:var(--accent)" id="total">0</div>
+          <div class="text-xs mt-1" style="color:var(--text-dim)">Total Sent</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-5">
+        <div class="fade-in glass-flat p-6">
+          <h3 class="font-heading font-semibold mb-4">Status Breakdown</h3>
+          <div class="relative h-60"><canvas id="statusChart"></canvas></div>
+        </div>
+
+        <div class="fade-in glass-flat p-6">
+          <h3 class="font-heading font-semibold mb-4">Recent Activity</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr style="border-bottom:1px solid var(--border)">
+                  <th class="text-left py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)">Company</th>
+                  <th class="text-left py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)">Job Title</th>
+                  <th class="text-left py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)">Fit Score</th>
+                  <th class="text-left py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)">Status</th>
+                  <th class="text-left py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)">Date</th>
+                </tr>
+              </thead>
+              <tbody id="recentBody">
+                <tr><td colspan="5" class="text-center py-4" style="color:var(--text-dim)">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="py-16 border-t" style="border-color:var(--border)">
+      <div class="fade-in flex items-baseline gap-3 mb-1">
+        <span class="font-num font-bold" style="color:var(--accent)">04</span>
+        <h2 class="font-heading text-2xl sm:text-3xl font-bold">Get In Touch</h2>
+      </div>
+      <p class="fade-in mb-8 text-sm sm:text-base" style="color:var(--text-dim)">Open to Co‑op opportunities, collaborations, or a quick chat — reach me through any of the channels below.</p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Contact links -->
+        <div class="fade-in glass-card p-6">
+          <h3 class="font-heading font-semibold mb-4">Reach me directly</h3>
+          <div class="flex flex-col gap-3">
+            <a href="https://github.com/hsndm566" target="_blank" rel="noopener" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition">
+              <i class="fa-brands fa-github" style="color:var(--accent)"></i> GitHub — github.com/hsndm566
+            </a>
+            <a href="https://linkedin.com/in/hsndm" target="_blank" rel="noopener" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition">
+              <i class="fa-brands fa-linkedin" style="color:var(--accent)"></i> LinkedIn — linkedin.com/in/hsndm
+            </a>
+            <a href="mailto:hasanadam506@gmail.com" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition">
+              <i class="fa-solid fa-envelope" style="color:var(--accent)"></i> hasanadam506@gmail.com
+            </a>
+            <a href="https://t.me/hsndmp" target="_blank" rel="noopener" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition">
+              <i class="fa-brands fa-telegram" style="color:var(--accent)"></i> Telegram — t.me/hsndmp
+            </a>
+            <a href="https://instagram.com/hsndm_" target="_blank" rel="noopener" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition">
+              <i class="fa-brands fa-instagram" style="color:var(--accent)"></i> Instagram — @hsndm_
+            </a>
+            <a href="https://facebook.com/hsndm_" target="_blank" rel="noopener" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition">
+              <i class="fa-brands fa-facebook" style="color:var(--accent)"></i> Facebook — @hsndm_
+            </a>
+            <div class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium" style="color:var(--text-dim)">
+              <i class="fa-brands fa-whatsapp" style="color:var(--accent)"></i> WhatsApp: @hsndm_
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact form (Web3Forms) -->
+        <div class="fade-in glass-card p-6">
+          <h3 class="font-heading font-semibold mb-4">Send a message</h3>
+          <form id="contactForm" class="flex flex-col gap-4">
+            <input type="hidden" name="access_key" value="2ec3d648-98ad-440a-bc37-35f716999314">
+            <input type="hidden" name="subject" value="New message from Hasan Adam's portfolio">
+
+            <div>
+              <label class="text-xs font-medium mb-1 block" style="color:var(--text-dim)">Name</label>
+              <input type="text" name="name" required placeholder="Your name"
+                class="form-input w-full px-3.5 py-2.5 rounded-lg text-sm transition">
+            </div>
+            <div>
+              <label class="text-xs font-medium mb-1 block" style="color:var(--text-dim)">Email</label>
+              <input type="email" name="email" required placeholder="you@example.com"
+                class="form-input w-full px-3.5 py-2.5 rounded-lg text-sm transition">
+            </div>
+            <div>
+              <label class="text-xs font-medium mb-1 block" style="color:var(--text-dim)">Message</label>
+              <textarea name="message" required rows="4" placeholder="Say hello..."
+                class="form-input w-full px-3.5 py-2.5 rounded-lg text-sm transition resize-none"></textarea>
+            </div>
+
+            <button type="submit" id="contactSubmit" class="btn-primary rounded-lg py-2.5 text-sm font-semibold flex items-center justify-center gap-2">
+              <i class="fa-solid fa-paper-plane"></i> Send Message
+            </button>
+            <p class="text-xs text-center" style="color:var(--text-faint)">Powered by Web3Forms</p>
+
+            <div id="formStatus" class="text-sm hidden"></div>
+          </form>
+        </div>
+      </div>
+
+      <div class="text-center text-xs mt-14" style="color:var(--text-faint)">
+        &copy; <span id="year"></span> Hasan Adam. Built with a single HTML file, Tailwind, Chart.js &amp; Google Sheets. Data refreshes every 5 minutes.
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  /* ---------------- Theme toggle ---------------- */
+  const body = document.body;
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+  const themeLabel = document.getElementById('themeLabel');
+
+  function applyTheme(theme){
+    body.setAttribute('data-theme', theme);
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    if(theme === 'light'){
+      themeIcon.className = 'fa-solid fa-sun';
+      themeLabel.textContent = 'Light Mode';
+    } else {
+      themeIcon.className = 'fa-solid fa-moon';
+      themeLabel.textContent = 'Dark Mode';
+    }
+    updateChartColors();
+  }
+
+  let currentTheme = 'dark';
+  try {
+    const saved = window.localStorage ? localStorage.getItem('site-theme') : null;
+    if(saved) currentTheme = saved;
+  } catch(e){ /* localStorage unavailable, default to dark */ }
+  applyTheme(currentTheme);
+
+  themeToggle.addEventListener('click', () => {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    applyTheme(currentTheme);
+    try { if(window.localStorage) localStorage.setItem('site-theme', currentTheme); } catch(e){}
+  });
+
+  /* ---------------- Mobile nav ---------------- */
+  const sidebar = document.getElementById('sidebar');
+  const hamburger = document.getElementById('hamburger');
+  const hamburgerIcon = document.getElementById('hamburgerIcon');
+  const overlay = document.getElementById('overlay');
+
+  function closeSidebar(){
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+    hamburgerIcon.className = 'fa-solid fa-bars';
+  }
+  function toggleSidebar(){
+    const isOpen = sidebar.classList.toggle('open');
+    overlay.classList.toggle('open', isOpen);
+    hamburgerIcon.className = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+  }
+  hamburger.addEventListener('click', toggleSidebar);
+  overlay.addEventListener('click', closeSidebar);
+  document.querySelectorAll('.nav-link').forEach(link => link.addEventListener('click', closeSidebar));
+
+  /* ---------------- Active nav link on scroll ---------------- */
+  const navLinks = document.querySelectorAll('.nav-link');
+  const sections = document.querySelectorAll('main section');
+
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        const id = entry.target.getAttribute('id');
+        navLinks.forEach(l => l.classList.toggle('active', l.dataset.section === id));
+      }
+    });
+  }, { rootMargin: '-45% 0px -45% 0px' });
+  sections.forEach(sec => navObserver.observe(sec));
+
+  /* ---------------- Fade-in on scroll ---------------- */
+  const fadeObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        fadeObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+
+  /* ---------------- Footer year ---------------- */
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ---------------- Count-up helper (dependency-free, vanilla JS) ---------------- */
+  function animateCount(el, value){
+    const target = Number(value) || 0;
+    const startVal = Number(el.dataset.rawValue || 0);
+    const duration = 1000;
+    const startTime = performance.now();
+
+    if(el._countRaf) cancelAnimationFrame(el._countRaf);
+
+    function tick(now){
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(startVal + (target - startVal) * eased);
+      el.textContent = current;
+      if(progress < 1){
+        el._countRaf = requestAnimationFrame(tick);
+      } else {
+        el.textContent = target;
+        el.dataset.rawValue = target;
+      }
+    }
+    el._countRaf = requestAnimationFrame(tick);
+  }
+
+  /* ---------------- Contact form (Web3Forms) ---------------- */
+  const contactForm = document.getElementById('contactForm');
+  const contactSubmit = document.getElementById('contactSubmit');
+  const formStatus = document.getElementById('formStatus');
+
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    contactSubmit.disabled = true;
+    contactSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+    formStatus.classList.remove('hidden','msg-success','msg-error');
+
+    try {
+      const formData = new FormData(contactForm);
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      });
+      const result = await res.json();
+
+      if(result.success){
+        formStatus.textContent = "Message sent! I'll get back to you soon.";
+        formStatus.classList.add('msg-success');
+        contactForm.reset();
+      } else {
+        formStatus.textContent = result.message || 'Something went wrong. Please try again.';
+        formStatus.classList.add('msg-error');
+      }
+    } catch(err){
+      formStatus.textContent = 'Network error — please try again later.';
+      formStatus.classList.add('msg-error');
+    } finally {
+      contactSubmit.disabled = false;
+      contactSubmit.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Message';
+    }
+  });
+
+  /* ---------------- Google Sheets live data (logic unchanged) ---------------- */
+  const SHEET_ID = '1rivD5luGlZqq6MCEUVvlT263OfUKXrzH6cr9cf0nG3A';
+  const SHEET_NAME = 'Job Applications Log';
+  const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+
+  let statusChartInstance = null;
+
+  function getChartColors(){
+    const theme = body.getAttribute('data-theme');
+    return theme === 'light'
+      ? { text: '#57647a', grid: '#dfe6f0' }
+      : { text: '#8b95a8', grid: '#262f42' };
+  }
+
+  function updateChartColors(){
+    if(!statusChartInstance) return;
+    const colors = getChartColors();
+    statusChartInstance.options.plugins.legend.labels.color = colors.text;
+    statusChartInstance.update();
+  }
+
+  async function loadData(){
+    try {
+      const res = await fetch(SHEET_URL);
+      const text = await res.text();
+      const json = JSON.parse(text.substring(47, text.length - 2));
+      const rows = json.table.rows;
+      const headers = json.table.cols.map(c => (c.label || '').toLowerCase());
+      const data = rows.map(r => {
+        const obj = {};
+        r.c.forEach((c, i) => obj[headers[i]] = c ? c.v : '');
+        return obj;
+      });
+
+      const today = new Date().toISOString().split('T')[0];
+      const sentToday = data.filter(r => r.status === 'sent' && r.timestamp && r.timestamp.startsWith(today)).length;
+      const totalSent = data.filter(r => r.status === 'sent').length;
+      const interviews = data.filter(r => r.decision === 'interview_invite' || r.status === 'interview_invite').length;
+      const replies = data.filter(r => (r.decision && r.decision.includes('reply')) || (r.status && r.status.includes('replied'))).length;
+
+      animateCount(document.getElementById('sent'), sentToday);
+      animateCount(document.getElementById('replies'), replies);
+      animateCount(document.getElementById('interviews'), interviews);
+      animateCount(document.getElementById('total'), totalSent);
+
+      const recent = data.filter(r => r.timestamp).sort((a,b) => (b.timestamp || '').localeCompare(a.timestamp || '')).slice(0,10);
+      const tbody = document.getElementById('recentBody');
+      tbody.innerHTML = recent.map(r => `
+        <tr style="border-bottom:1px solid var(--border)">
+          <td class="py-2 px-2">${r.company || '—'}</td>
+          <td class="py-2 px-2">${r.job_title || '—'}</td>
+          <td class="py-2 px-2 font-num">${r.fit_score || '—'}</td>
+          <td class="py-2 px-2 font-num status-${r.status || 'unknown'}">${r.status || '—'}</td>
+          <td class="py-2 px-2 font-num">${r.timestamp ? r.timestamp.split('T')[0] : '—'}</td>
+        </tr>
+      `).join('');
+
+      const statusCounts = {};
+      data.forEach(r => {
+        const s = r.status || 'unknown';
+        statusCounts[s] = (statusCounts[s] || 0) + 1;
+      });
+      const labels = Object.keys(statusCounts);
+      const values = Object.values(statusCounts);
+      const palette = ['#2563eb','#22c55e','#ef4444','#eab308','#a855f7','#3b82f6','#ec4899'];
+
+      const ctx = document.getElementById('statusChart').getContext('2d');
+      const colors = getChartColors();
+
+      if(statusChartInstance){
+        statusChartInstance.data.labels = labels;
+        statusChartInstance.data.datasets[0].data = values;
+        statusChartInstance.update();
+      } else {
+        statusChartInstance = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: values,
+              backgroundColor: labels.map((_, i) => palette[i % palette.length]),
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: { color: colors.text, boxWidth: 12, padding: 14, font: { size: 11, family: 'JetBrains Mono' } }
+              }
+            }
+          }
+        });
+      }
+
+      document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+    } catch(e){
+      document.getElementById('recentBody').innerHTML = '<tr><td colspan="5" class="text-center py-4" style="color:var(--red);">Error loading data. Ensure the sheet is shared publicly ("Anyone with the link can view").</td></tr>';
+    }
+  }
+
+  document.getElementById('refreshBtn').addEventListener('click', loadData);
+
+  loadData();
+  setInterval(loadData, 300000);
+</script>
 </body>
 </html>
