@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Submit your CV for a target role and get it into the pipeline." />
+  <title>Submit Your CV</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .fade-in { animation: fade .4s ease both } @keyframes fade { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: none } }
+    .checkmark { stroke-dasharray: 48; stroke-dashoffset: 48; animation: draw .6s ease .1s forwards }
+    @keyframes draw { to { stroke-dashoffset: 0 } }
+    .pop { animation: pop .4s cubic-bezier(.2,.8,.2,1) both } @keyframes pop { from { transform: scale(.7); opacity: 0 } to { transform: scale(1); opacity: 1 } }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+  <nav class="bg-white border-b sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <span class="font-bold text-lg">📄 Submit CV</span>
+      <div class="flex gap-2 text-sm">
+        <a href="index.html" class="px-3 py-1.5 rounded hover:bg-slate-100">Home</a>
+        <a href="dashboard.html" class="px-3 py-1.5 rounded hover:bg-slate-100">Dashboard</a>
+        <a href="cv.html" class="px-3 py-1.5 rounded bg-slate-900 text-white">Submit CV</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-2xl mx-auto px-4 py-10">
+    <h1 class="text-2xl font-bold mb-2">Submit your CV</h1>
+    <p class="text-slate-500 mb-8">Paste your CV, tell us the role you're targeting, and we'll take it from there.</p>
+
+    <form id="cvForm" class="bg-white rounded-xl shadow-sm p-6 space-y-5">
+      <div>
+        <label class="block text-sm font-medium mb-1" for="target_role">Target role</label>
+        <input id="target_role" name="target_role" required class="w-full border rounded-lg px-3 py-2" placeholder="e.g. Senior Frontend Engineer" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1" for="email">Email</label>
+        <input id="email" name="email" type="email" required class="w-full border rounded-lg px-3 py-2" placeholder="you@example.com" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1" for="cv_text">CV text</label>
+        <textarea id="cv_text" name="cv_text" required rows="10" class="w-full border rounded-lg px-3 py-2" placeholder="Paste your CV here…"></textarea>
+      </div>
+      <button id="submitBtn" type="submit" class="w-full bg-blue-600 text-white font-medium py-2.5 rounded-lg hover:bg-blue-700 disabled:opacity-60">Submit CV</button>
+      <p id="formError" class="hidden text-sm text-red-600"></p>
+    </form>
+
+    <!-- Success animation -->
+    <div id="successCard" class="hidden bg-white rounded-xl shadow-sm p-10 text-center pop">
+      <svg class="mx-auto mb-4" width="72" height="72" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="25" fill="none" stroke="#22c55e" stroke-width="2" />
+        <path class="checkmark" fill="none" stroke="#22c55e" stroke-width="4" stroke-linecap="round" d="M14 27 l8 8 l16 -16" />
+      </svg>
+      <h2 class="text-xl font-semibold mb-1">CV submitted!</h2>
+      <p class="text-slate-500 mb-6">Thanks — we've received your CV and will be in touch.</p>
+      <div class="flex gap-3 justify-center">
+        <a href="dashboard.html" class="px-4 py-2 rounded-lg bg-slate-900 text-white">View Dashboard</a>
+        <button id="againBtn" class="px-4 py-2 rounded-lg border">Submit another</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Julie chatbot -->
+  <div id="julie" class="fixed bottom-5 right-5 z-40">
+    <button id="julieToggle" class="bg-indigo-600 text-white rounded-full w-14 h-14 shadow-lg text-2xl hover:bg-indigo-700">💬</button>
+    <div id="juliePanel" class="hidden w-80 bg-white rounded-xl shadow-2xl border mt-2 flex flex-col" style="height:420px">
+      <div class="bg-indigo-600 text-white px-4 py-3 rounded-t-xl font-semibold">Julie · Job Assistant</div>
+      <div id="julieLog" class="flex-1 overflow-y-auto p-3 space-y-2 text-sm"></div>
+      <form id="julieForm" class="p-3 border-t flex gap-2">
+        <input id="julieInput" class="flex-1 border rounded px-3 py-2 text-sm" placeholder="Ask Julie…" autocomplete="off" />
+        <button class="bg-indigo-600 text-white px-3 rounded text-sm">Send</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    var SUBMIT_ENDPOINT = "https://hsndm566.app.n8n.cloud/webhook/submit-cv";
+    var JULIE_ENDPOINT = "https://hsndm566.app.n8n.cloud/webhook/julie-chat";
+
+    document.getElementById("cvForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      var err = document.getElementById("formError"); err.classList.add("hidden");
+      var btn = document.getElementById("submitBtn"); btn.disabled = true; btn.textContent = "Submitting…";
+      var payload = {
+        cv_text: document.getElementById("cv_text").value,
+        target_role: document.getElementById("target_role").value,
+        email: document.getElementById("email").value
+      };
+      try {
+        var res = await fetch(SUBMIT_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+        if (!res.ok) throw new Error("Server responded " + res.status);
+        document.getElementById("cvForm").classList.add("hidden");
+        document.getElementById("successCard").classList.remove("hidden");
+      } catch (e2) {
+        err.textContent = "Submission failed: " + e2.message + ". Please try again.";
+        err.classList.remove("hidden");
+      } finally { btn.disabled = false; btn.textContent = "Submit CV"; }
+    });
+    document.getElementById("againBtn").addEventListener("click", function () {
+      document.getElementById("successCard").classList.add("hidden");
+      document.getElementById("cvForm").reset();
+      document.getElementById("cvForm").classList.remove("hidden");
+    });
+
+    // ---- Julie chatbot ----
+    var panel = document.getElementById("juliePanel");
+    document.getElementById("julieToggle").addEventListener("click", function () { panel.classList.toggle("hidden"); });
+    function julieMsg(text, who) {
+      var log = document.getElementById("julieLog");
+      var d = document.createElement("div");
+      d.className = who === "user" ? "text-right" : "text-left";
+      d.innerHTML = "<span class='inline-block px-3 py-2 rounded-lg " + (who === "user" ? "bg-indigo-600 text-white" : "bg-slate-100") + "'>" + text + "</span>";
+      log.appendChild(d); log.scrollTop = log.scrollHeight;
+    }
+    document.getElementById("julieForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      var input = document.getElementById("julieInput");
+      var q = input.value.trim(); if (!q) return;
+      julieMsg(q, "user"); input.value = "";
+      try {
+        var res = await fetch(JULIE_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: q }) });
+        var data = await res.json().catch(function () { return {}; });
+        julieMsg(data.reply || data.output || "Sorry, I couldn't reach the assistant right now.", "bot");
+      } catch (err) { julieMsg("Network error contacting Julie.", "bot"); }
+    });
+  </script>
+</body>
+</html>
