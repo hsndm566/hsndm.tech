@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Al-Huda Bakery - Fresh from the oven, providing high-quality bread, pastries, and cakes">
+    <meta name="keywords" content="bakery, bread, pastries, cakes, fresh, oven">
+    <title>Al-Huda Bakery - Fresh from the oven</title>
+    <link rel="icon" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/svgs/brands/favicon.svg" sizes="16x16">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #FFC107;
+            --secondary-color: #8BC34A;
+            --background-color: #F5F5F5;
+            --text-color: #333;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            overflow-x: hidden;
+        }
+        header {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 1em;
+            text-align: center;
+        }
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-gap: 1em;
+            padding: 2em;
+            background-image: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+            color: #fff;
+        }
+        .hero h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 0.5em;
+        }
+        .hero p {
+            font-size: 1.2em;
+            font-weight: 400;
+        }
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-gap: 1em;
+            padding: 2em;
+        }
+        .service {
+            background-color: #fff;
+            padding: 1em;
+            border: 1px solid #ddd;
+            border-radius: 0.5em;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .service h2 {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-bottom: 0.5em;
+        }
+        .about {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-gap: 1em;
+            padding: 2em;
+        }
+        .about p {
+            font-size: 1em;
+            font-weight: 400;
+        }
+        .contact {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-gap: 1em;
+            padding: 2em;
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        .contact h2 {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-bottom: 0.5em;
+        }
+        .contact p {
+            font-size: 1em;
+            font-weight: 400;
+        }
+        @media (max-width: 768px) {
+            .services {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero {
+                padding: 1em;
+            }
+            .hero h1 {
+                font-size: 2em;
+            }
+            .hero p {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="hero" class="hero">
+            <h1>Al-Huda Bakery</h1>
+            <p>Fresh from the oven</p>
+        </section>
+        <section id="services" class="services">
+            <div class="service">
+                <h2>Bread</h2>
+                <p>Our bread is freshly baked every day, using only the finest ingredients and traditional baking methods.</p>
+            </div>
+            <div class="service">
+                <h2>Pastries</h2>
+                <p>From classic croissants to decadent danishes, our pastries are the perfect treat to start your day.</p>
+            </div>
+            <div class="service">
+                <h2>Cakes</h2>
+                <p>Whether you're celebrating a birthday or just need a sweet treat, our cakes are made with love and care to ensure they're always delicious.</p>
+            </div>
+        </section>
+        <section id="about" class="about">
+            <p>Welcome to Al-Huda Bakery, where we're passionate about providing high-quality baked goods to our community. Our team of skilled bakers use only the finest ingredients and traditional baking methods to create a wide range of delicious treats.</p>
+            <p>We're committed to providing excellent customer service and ensuring that every visit to our bakery is a positive one. Whether you're looking for a quick snack or a special occasion cake, we're here to help.</p>
+        </section>
+        <section id="contact" class="contact">
+            <h2>Get in Touch</h2>
+            <p>If you have any questions or would like to place an order, please don't hesitate to contact us. You can reach us by phone at 555-555-5555 or by email at <a href="mailto:info@alhudabakery.com">info@alhudabakery.com</a>.</p>
+            <p>We're located at 123 Main St, Anytown, USA and are open Monday - Saturday from 8am - 6pm and Sunday from 9am - 5pm.</p>
+        </section>
+    </main>
+    <script>
+        // Add event listener to nav links to smooth scroll to section
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', event => {
+                event.preventDefault();
+                const sectionId = link.getAttribute('href');
+                const section = document.querySelector(sectionId);
+                section.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        // Add animation to hero section on load
+        window.addEventListener('load', () => {
+            const hero = document.querySelector('.hero');
+            hero.classList.add('animate');
+        });
+    </script>
+</body>
+</html>
