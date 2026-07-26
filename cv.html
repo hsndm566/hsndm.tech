@@ -1,18 +1,11 @@
-# Enhanced Personal Portfolio Site
-
-I'll continue enhancing the portfolio with a premium, cohesive design system. Here are the complete improved files:
-
-## 1. `cv.html` - CV Submission Page
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Submit your CV for a target role and get it into the pipeline." />
+  <meta name="description" content="Personal portfolio — projects, dashboard, and CV submission." />
   <meta name="theme-color" content="#0b1220" />
-  <title>Submit Your CV — Portfolio</title>
+  <title>Portfolio — Home</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -35,22 +28,20 @@ I'll continue enhancing the portfolio with a premium, cohesive design system. He
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --bg:#0b1220; --bg-2:#0a0f1c;
-      --card:rgba(17,25,40,.6);
-      --border:rgba(255,255,255,.08);
-      --border-strong:rgba(255,255,255,.14);
-      --text:#e5e7eb; --muted:#94a3b8; --accent:#2563eb;
+    :root{
+      --bg:#0b1220;--card:rgba(17,25,40,.6);
+      --border:rgba(255,255,255,.08);--border-strong:rgba(255,255,255,.14);
+      --text:#e5e7eb;--muted:#94a3b8;--accent:#2563eb;
     }
     *{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+    html{scroll-behavior:smooth;}
     html,body{background:var(--bg);}
     body{
       font-family:'Inter',ui-sans-serif,system-ui,sans-serif;color:var(--text);
       background:
-        radial-gradient(1000px 600px at 85% -10%, rgba(37,99,235,.25), transparent 60%),
+        radial-gradient(1000px 600px at 85% -10%, rgba(37,99,235,.28), transparent 60%),
         radial-gradient(800px 500px at 0% 20%, rgba(99,102,241,.18), transparent 60%),
         radial-gradient(700px 500px at 50% 110%, rgba(37,99,235,.15), transparent 60%),
         linear-gradient(180deg,#0b1220 0%,#070b16 100%);
@@ -77,57 +68,55 @@ I'll continue enhancing the portfolio with a premium, cohesive design system. He
     .nav-link:hover{color:#fff;background:rgba(255,255,255,.05);}
     .nav-link.active{color:#fff;background:linear-gradient(135deg,#2563eb,#1d4ed8);box-shadow:0 6px 20px -6px rgba(37,99,235,.6);}
 
+    .btn-primary{position:relative;background:linear-gradient(135deg,#2563eb 0%,#1d4ed8 100%);color:#fff;font-weight:600;padding:.85rem 1.5rem;border-radius:.8rem;overflow:hidden;transition:transform .2s ease,box-shadow .3s ease;box-shadow:0 10px 30px -10px rgba(37,99,235,.6);display:inline-flex;align-items:center;gap:.5rem;}
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 16px 40px -12px rgba(37,99,235,.8);}
+    .btn-primary::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(255,255,255,.25),transparent);transform:translateX(-100%);transition:transform .8s ease;}
+    .btn-primary:hover::before{transform:translateX(100%);}
+    .btn-ghost{padding:.85rem 1.5rem;border-radius:.8rem;border:1px solid var(--border-strong);background:rgba(255,255,255,.03);color:#e2e8f0;transition:all .25s ease;font-weight:500;display:inline-flex;align-items:center;gap:.5rem;}
+    .btn-ghost:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25);transform:translateY(-1px);}
+
+    .fade-in{animation:fade .7s cubic-bezier(.2,.8,.2,1) both;}
+    @keyframes fade{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+    .stagger>*{animation:fade .7s cubic-bezier(.2,.8,.2,1) both;}
+    .stagger>*:nth-child(1){animation-delay:.05s;}
+    .stagger>*:nth-child(2){animation-delay:.15s;}
+    .stagger>*:nth-child(3){animation-delay:.25s;}
+    .stagger>*:nth-child(4){animation-delay:.35s;}
+    .stagger>*:nth-child(5){animation-delay:.45s;}
+    .stagger>*:nth-child(6){animation-delay:.55s;}
+
+    .card{position:relative;padding:1.75rem;border-radius:1.25rem;transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .3s ease,box-shadow .3s ease;overflow:hidden;}
+    .card:hover{transform:translateY(-4px);border-color:rgba(37,99,235,.35);box-shadow:0 24px 60px -20px rgba(37,99,235,.4);}
+    .card::after{content:"";position:absolute;inset:0;background:radial-gradient(400px circle at var(--mx,50%) var(--my,0%), rgba(37,99,235,.12), transparent 40%);opacity:0;transition:opacity .3s ease;pointer-events:none;}
+    .card:hover::after{opacity:1;}
+    .card-icon{width:44px;height:44px;border-radius:.75rem;background:linear-gradient(135deg,rgba(37,99,235,.2),rgba(37,99,235,.05));border:1px solid rgba(37,99,235,.3);display:flex;align-items:center;justify-content:center;color:#60a5fa;margin-bottom:1rem;transition:transform .3s ease;}
+    .card:hover .card-icon{transform:scale(1.08) rotate(-4deg);}
+
+    .chip{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .75rem;border-radius:9999px;background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.25);color:#93c5fd;font-size:.75rem;font-weight:500;}
+
+    .stat-num{font-variant-numeric:tabular-nums;font-weight:800;background:linear-gradient(135deg,#fff,#93c5fd);-webkit-background-clip:text;background-clip:text;color:transparent;}
+
     .field{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:.75rem;padding:.75rem 1rem;color:var(--text);transition:all .25s ease;font-size:.95rem;}
     .field::placeholder{color:#64748b;}
     .field:hover{border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.05);}
     .field:focus{outline:none;border-color:var(--accent);background:rgba(37,99,235,.06);box-shadow:0 0 0 4px rgba(37,99,235,.15);}
-    textarea.field{resize:vertical;min-height:180px;line-height:1.6;}
-
+    textarea.field{resize:vertical;min-height:120px;line-height:1.6;}
     .label{display:flex;align-items:center;gap:.4rem;font-size:.8rem;font-weight:600;letter-spacing:.02em;color:#cbd5e1;margin-bottom:.5rem;text-transform:uppercase;}
-    .label .req{color:#f87171;}
+    .req{color:#f87171;}
 
-    .btn-primary{position:relative;width:100%;background:linear-gradient(135deg,#2563eb 0%,#1d4ed8 100%);color:#fff;font-weight:600;padding:.85rem 1rem;border-radius:.8rem;overflow:hidden;transition:transform .2s ease,box-shadow .3s ease;box-shadow:0 10px 30px -10px rgba(37,99,235,.6);}
-    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 16px 40px -12px rgba(37,99,235,.8);}
-    .btn-primary:active{transform:translateY(0);}
-    .btn-primary:disabled{opacity:.65;cursor:not-allowed;transform:none;}
-    .btn-primary::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(255,255,255,.25),transparent);transform:translateX(-100%);transition:transform .8s ease;}
-    .btn-primary:hover::before{transform:translateX(100%);}
-
-    .btn-ghost{padding:.65rem 1.1rem;border-radius:.7rem;border:1px solid var(--border-strong);background:rgba(255,255,255,.03);color:#e2e8f0;transition:all .25s ease;font-weight:500;}
-    .btn-ghost:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25);}
-    .btn-dark{padding:.65rem 1.1rem;border-radius:.7rem;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;font-weight:600;box-shadow:0 8px 24px -8px rgba(37,99,235,.6);transition:transform .2s ease,box-shadow .3s ease;}
-    .btn-dark:hover{transform:translateY(-1px);box-shadow:0 12px 30px -8px rgba(37,99,235,.8);}
-
-    .fade-in{animation:fade .6s cubic-bezier(.2,.8,.2,1) both;}
-    @keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
-    .stagger>*{animation:fade .6s cubic-bezier(.2,.8,.2,1) both;}
-    .stagger>*:nth-child(1){animation-delay:.05s;}
-    .stagger>*:nth-child(2){animation-delay:.12s;}
-    .stagger>*:nth-child(3){animation-delay:.19s;}
-    .stagger>*:nth-child(4){animation-delay:.26s;}
-    .stagger>*:nth-child(5){animation-delay:.33s;}
-
-    .checkmark{stroke-dasharray:48;stroke-dashoffset:48;animation:draw .7s ease .3s forwards;}
-    @keyframes draw{to{stroke-dashoffset:0;}}
-    .pop{animation:pop .5s cubic-bezier(.2,.8,.2,1) both;}
-    @keyframes pop{from{transform:scale(.85);opacity:0;}to{transform:scale(1);opacity:1;}}
-    .success-ring{animation:ring 2s ease-in-out infinite;}
-    @keyframes ring{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4);}50%{box-shadow:0 0 0 18px rgba(34,197,94,0);}}
-
-    .counter{font-variant-numeric:tabular-nums;}
-    .progress-track{height:4px;background:rgba(255,255,255,.06);border-radius:9999px;overflow:hidden;}
-    .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#2563eb,#60a5fa);transition:width .4s ease;}
-
-    #julieToggle{background:linear-gradient(135deg,#2563eb 0%,#1d4ed8 100%);box-shadow:0 12px 30px -8px rgba(37,99,235,.7),0 0 0 4px rgba(37,99,235,.15);transition:transform .25s ease;}
+    #julieToggle{background:linear-gradient(135deg,#2563eb,#1d4ed8);box-shadow:0 12px 30px -8px rgba(37,99,235,.7),0 0 0 4px rgba(37,99,235,.15);transition:transform .25s ease;}
     #julieToggle:hover{transform:translateY(-2px) scale(1.05);}
     #julieToggle::after{content:"";position:absolute;inset:-6px;border-radius:9999px;background:linear-gradient(135deg,#2563eb,#6366f1);opacity:.35;z-index:-1;animation:pulse 2.2s ease-in-out infinite;}
     @keyframes pulse{0%,100%{transform:scale(1);opacity:.35;}50%{transform:scale(1.15);opacity:.1;}}
 
     .julie-msg-user{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border-radius:14px 14px 4px 14px;}
     .julie-msg-bot{background:rgba(255,255,255,.06);color:#e2e8f0;border:1px solid var(--border);border-radius:14px 14px 14px 4px;}
+    .typing span{display:inline-block;width:6px;height:6px;margin:0 2px;background:#94a3b8;border-radius:50%;animation:typing 1.2s infinite ease-in-out;}
+    .typing span:nth-child(2){animation-delay:.15s;}
+    .typing span:nth-child(3){animation-delay:.3s;}
+    @keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.4;}30%{transform:translateY(-5px);opacity:1;}}
 
     #julieLog::-webkit-scrollbar,textarea.field::-webkit-scrollbar{width:8px;}
-    #julieLog::-webkit-scrollbar-track,textarea.field::-webkit-scrollbar-track{background:transparent;}
     #julieLog::-webkit-scrollbar-thumb,textarea.field::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:8px;}
     #julieLog::-webkit-scrollbar-thumb:hover,textarea.field::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.2);}
 
@@ -138,10 +127,8 @@ I'll continue enhancing the portfolio with a premium, cohesive design system. He
     body{top:0 !important;}
     .skiptranslate{display:none !important;}
 
-    .typing span{display:inline-block;width:6px;height:6px;margin:0 2px;background:#94a3b8;border-radius:50%;animation:typing 1.2s infinite ease-in-out;}
-    .typing span:nth-child(2){animation-delay:.15s;}
-    .typing span:nth-child(3){animation-delay:.3s;}
-    @keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.4;}30%{transform:translateY(-5px);opacity:1;}}
+    .avatar-ring{background:conic-gradient(from 0deg,#2563eb,#6366f1,#8b5cf6,#2563eb);padding:3px;border-radius:9999px;animation:spin 8s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
 
     button:focus-visible,a:focus-visible,.field:focus-visible{outline:2px solid #60a5fa;outline-offset:2px;}
 
@@ -155,6 +142,7 @@ I'll continue enhancing the portfolio with a premium, cohesive design system. He
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
 
+  <!-- Nav -->
   <nav class="glass sticky top-0 z-30 border-b border-white/5">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
       <a href="index.html" class="flex items-center gap-2 group">
@@ -167,103 +155,100 @@ I'll continue enhancing the portfolio with a premium, cohesive design system. He
         <span class="font-bold text-white tracking-tight hidden sm:inline">Portfolio</span>
       </a>
       <div class="flex items-center gap-1">
-        <a href="index.html" class="nav-link">Home</a>
+        <a href="index.html" class="nav-link active">Home</a>
         <a href="dashboard.html" class="nav-link">Dashboard</a>
-        <a href="cv.html" class="nav-link active">Submit CV</a>
+        <a href="cv.html" class="nav-link">Submit CV</a>
       </div>
       <div id="google_translate_element" class="hidden sm:block"></div>
     </div>
   </nav>
 
-  <main class="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
-    <div class="text-center mb-10 fade-in">
-      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-600/10 border border-accent-600/30 text-accent-400 text-xs font-medium mb-4">
-        <span class="w-1.5 h-1.5 rounded-full bg-accent-400 animate-pulse"></span>
-        Accepting applications
-      </div>
-      <h1 class="text-3xl sm:text-4xl font-bold text-white mb-3 tracking-tight">
-        Submit your <span class="bg-gradient-to-r from-accent-400 to-accent-600 bg-clip-text text-transparent">CV</span>
-      </h1>
-      <p class="text-slate-400 max-w-md mx-auto leading-relaxed">
-        Paste your CV, tell us the role you're targeting, and we'll take it from there.
-      </p>
-    </div>
-
-    <div class="mb-6 fade-in" style="animation-delay:.15s">
-      <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
-        <span>Form completion</span>
-        <span id="progressLabel" class="counter font-medium">0%</span>
-      </div>
-      <div class="progress-track">
-        <div id="progressFill" class="progress-fill"></div>
-      </div>
-    </div>
-
-    <form id="cvForm" class="glass-strong rounded-2xl shadow-soft p-6 sm:p-8 space-y-6 stagger">
-      <div>
-        <label class="label" for="target_role">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-4V3H8v4H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/></svg>
-          Target role <span class="req">*</span>
-        </label>
-        <input id="target_role" name="target_role" required class="field" placeholder="e.g. Senior Frontend Engineer" />
-      </div>
-
-      <div>
-        <label class="label" for="email">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          Email <span class="req">*</span>
-        </label>
-        <input id="email" name="email" type="email" required class="field" placeholder="you@example.com" />
-      </div>
-
-      <div>
-        <div class="flex items-end justify-between">
-          <label class="label" for="cv_text">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            CV text <span class="req">*</span>
-          </label>
-          <span id="cvCount" class="text-xs text-slate-500 counter mb-2">0 characters</span>
+  <!-- Hero -->
+  <header class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-12 sm:pb-20">
+    <div class="grid md:grid-cols-[auto_1fr] gap-8 md:gap-12 items-center fade-in">
+      <div class="mx-auto md:mx-0">
+        <div class="avatar-ring">
+          <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center text-5xl font-bold text-white">
+            JD
+          </div>
         </div>
-        <textarea id="cv_text" name="cv_text" required rows="10" class="field" placeholder="Paste your CV here…"></textarea>
-        <p class="text-xs text-slate-500 mt-2 flex items-center gap-1.5">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-          Include experience, skills, and education for best results.
+      </div>
+      <div class="text-center md:text-left">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-600/10 border border-accent-600/30 text-accent-400 text-xs font-medium mb-5">
+          <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+          Available for new projects
+        </div>
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight mb-4 leading-[1.05]">
+          Hi, I'm <span class="bg-gradient-to-r from-accent-400 via-accent-500 to-accent-600 bg-clip-text text-transparent">Jane Doe</span>
+        </h1>
+        <p class="text-lg sm:text-xl text-slate-300 mb-3 font-medium">Product Engineer &amp; Full-Stack Developer</p>
+        <p class="text-slate-400 max-w-xl mb-8 leading-relaxed">
+          I design and build fast, beautiful web experiences — from data dashboards to conversational interfaces.
         </p>
-      </div>
-
-      <button id="submitBtn" type="submit" class="btn-primary flex items-center justify-center gap-2">
-        <span id="btnText">Submit CV</span>
-        <svg id="btnIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </button>
-
-      <div id="formError" class="hidden text-sm text-red-400 flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <span id="formErrorText"></span>
-      </div>
-    </form>
-
-    <div id="successCard" class="hidden glass-strong rounded-2xl shadow-soft p-10 sm:p-12 text-center pop">
-      <div class="mx-auto mb-6 w-20 h-20 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center success-ring">
-        <svg width="48" height="48" viewBox="0 0 52 52">
-          <circle cx="26" cy="26" r="24" fill="none" stroke="#22c55e" stroke-width="2.5" opacity=".6"/>
-          <path class="checkmark" fill="none" stroke="#22c55e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M14 27 l8 8 l16 -16"/>
-        </svg>
-      </div>
-      <h2 class="text-2xl font-bold text-white mb-2">Application received</h2>
-      <p class="text-slate-400 mb-6 max-w-sm mx-auto">Thanks — your CV is in the pipeline. We'll be in touch shortly.</p>
-      <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <a href="dashboard.html" class="btn-dark">View dashboard</a>
-        <button onclick="resetForm()" class="btn-ghost">Submit another</button>
+        <div class="flex flex-wrap gap-3 justify-center md:justify-start">
+          <a href="#projects" class="btn-primary">
+            View projects
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+          <a href="cv.html" class="btn-ghost">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Submit your CV
+          </a>
+        </div>
       </div>
     </div>
-  </main>
 
-  <!-- Julie chatbot -->
-  <button id="julieToggle" aria-label="Open Julie chatbot" class="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full flex items-center justify-center text-white">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-  </button>
+    <!-- Stats -->
+    <div class="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 stagger">
+      <div class="glass rounded-2xl p-5 text-center">
+        <div class="stat-num text-3xl sm:text-4xl">6+</div>
+        <div class="text-xs sm:text-sm text-slate-400 mt-1">Years experience</div>
+      </div>
+      <div class="glass rounded-2xl p-5 text-center">
+        <div class="stat-num text-3xl sm:text-4xl">40+</div>
+        <div class="text-xs sm:text-sm text-slate-400 mt-1">Projects shipped</div>
+      </div>
+      <div class="glass rounded-2xl p-5 text-center">
+        <div class="stat-num text-3xl sm:text-4xl">15</div>
+        <div class="text-xs sm:text-sm text-slate-400 mt-1">Happy clients</div>
+      </div>
+      <div class="glass rounded-2xl p-5 text-center">
+        <div class="stat-num text-3xl sm:text-4xl">98%</div>
+        <div class="text-xs sm:text-sm text-slate-400 mt-1">Satisfaction</div>
+      </div>
+    </div>
+  </header>
 
-  <div id="juliePanel" class="hidden fixed bottom-24 right-6 z-40 w-96 max-w-full glass-strong rounded-2xl shadow-soft overflow-hidden flex flex-col" style="height:520px">
-    <div class="flex items-center justify-between p-4 border-b border-white/10">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9
+  <!-- Projects -->
+  <section id="projects" class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-16">
+    <div class="text-center mb-12 fade-in">
+      <div class="chip mb-4">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.8 5.8 21 7 14 2 9.3 9 8.5 12 2"/></svg>
+        Featured work
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight mb-3">Selected projects</h2>
+      <p class="text-slate-400 max-w-xl mx-auto">A few things I've built recently.</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 stagger">
+      <article class="glass card">
+        <div class="card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <h3 class="text-lg font-semibold text-white mb-2">Analytics Dashboard</h3>
+        <p class="text-sm text-slate-400 mb-4 leading-relaxed">Real-time KPI dashboard powered by Google Sheets and Chart.js.</p>
+        <a href="dashboard.html" class="text-accent-400 text-sm font-medium hover:text-accent-300 inline-flex items-center gap-1 group">
+          Open dashboard
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-0.5 transition-transform"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </article>
+
+      <article class="glass card">
+        <div class="card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3 class="text-lg font-semibold text-white mb-2">Julie — AI assistant</h3>
+        <p class="text-sm text-slate-400 mb-4 leading-relaxed">A friendly chatbot embedded across the site to guide visitors.</p>
+        <button onclick="openJulie()" class="text-accent-400 text-sm font-medium hover:text-accent-300 inline-flex items-center gap-1 group">
+          Try Julie
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="group-
