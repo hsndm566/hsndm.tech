@@ -1,86 +1,54 @@
-I'll enhance this portfolio site with premium dark glassmorphism, better hierarchy, smooth micro-interactions, and improved mobile responsiveness while preserving all functionality.
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Live job application dashboard — stats, trends and recent activity." />
+  <meta name="description" content="Personal portfolio — full-stack developer with a live job search dashboard." />
   <meta name="theme-color" content="#0b1120" />
-  <title>Job Search Dashboard</title>
+  <title>Portfolio · Home</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --accent: #2563eb;
       --accent-glow: rgba(37, 99, 235, 0.4);
       --bg-0: #0b1120;
-      --bg-1: #0f172a;
-      --bg-2: #1e293b;
       --border: rgba(148, 163, 184, 0.12);
       --border-hover: rgba(148, 163, 184, 0.25);
     }
-
     * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-
     html { scroll-behavior: smooth; }
-
     body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-family: 'Inter', system-ui, sans-serif;
       background: var(--bg-0);
       color: #e2e8f0;
       min-height: 100vh;
       position: relative;
       overflow-x: hidden;
     }
-
-    /* Animated background gradient orbs */
-    body::before,
-    body::after {
-      content: '';
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(120px);
-      opacity: 0.15;
-      pointer-events: none;
-      z-index: 0;
+    body::before, body::after {
+      content: ''; position: fixed; border-radius: 50%;
+      filter: blur(120px); opacity: 0.18; pointer-events: none; z-index: 0;
       animation: float 20s ease-in-out infinite;
     }
-    body::before {
-      width: 500px; height: 500px;
-      background: #2563eb;
-      top: -100px; left: -100px;
-    }
-    body::after {
-      width: 400px; height: 400px;
-      background: #7c3aed;
-      bottom: -100px; right: -100px;
-      animation-delay: -10s;
-    }
+    body::before { width: 550px; height: 550px; background: #2563eb; top: -120px; left: -120px; }
+    body::after { width: 450px; height: 450px; background: #7c3aed; bottom: -100px; right: -100px; animation-delay: -10s; }
     @keyframes float {
       0%, 100% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(50px, -30px) scale(1.1); }
+      50% { transform: translate(60px, -40px) scale(1.1); }
     }
-
-    /* Grid background pattern */
     .grid-bg {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background-image:
         linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
         linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
       background-size: 60px 60px;
       mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
       -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
-      pointer-events: none;
-      z-index: 0;
+      pointer-events: none; z-index: 0;
     }
-
-    /* Glass card */
     .glass {
       background: rgba(15, 23, 42, 0.6);
       backdrop-filter: blur(20px) saturate(180%);
@@ -89,78 +57,25 @@ I'll enhance this portfolio site with premium dark glassmorphism, better hierarc
       border-radius: 16px;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .glass:hover {
-      border-color: var(--border-hover);
-    }
-
+    .glass:hover { border-color: var(--border-hover); }
     .glass-strong {
       background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(24px) saturate(180%);
       -webkit-backdrop-filter: blur(24px) saturate(180%);
       border: 1px solid var(--border);
     }
-
-    /* Stat card with hover shine */
-    .stat-card {
-      position: relative;
-      overflow: hidden;
+    .text-gradient {
+      background: linear-gradient(135deg, #f1f5f9 0%, #94a3b8 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(600px circle at var(--mx, 50%) var(--my, 50%), rgba(37, 99, 235, 0.08), transparent 40%);
-      opacity: 0;
-      transition: opacity 0.4s;
-      pointer-events: none;
+    .text-gradient-accent {
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #f472b6 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .stat-card:hover::before { opacity: 1; }
-    .stat-card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(37, 99, 235, 0.3);
-      box-shadow: 0 20px 40px -20px rgba(37, 99, 235, 0.2);
-    }
-
-    /* Skeleton with dark theme */
-    .skeleton {
-      background: linear-gradient(90deg, rgba(148,163,184,0.08) 25%, rgba(148,163,184,0.15) 37%, rgba(148,163,184,0.08) 63%);
-      background-size: 400% 100%;
-      animation: shimmer 1.6s ease infinite;
-      border-radius: 8px;
-    }
-    @keyframes shimmer {
-      0% { background-position: 100% 0 }
-      100% { background-position: -100% 0 }
-    }
-
-    .fade-in { animation: fade 0.5s cubic-bezier(0.4, 0, 0.2, 1) both }
-    @keyframes fade {
-      from { opacity: 0; transform: translateY(8px) }
-      to { opacity: 1; transform: none }
-    }
-
-    .slide-up { animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both }
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px) }
-      to { opacity: 1; transform: none }
-    }
-
-    /* Nav */
-    .nav-link {
-      position: relative;
-      transition: all 0.2s ease;
-    }
+    .nav-link { position: relative; transition: all 0.2s ease; }
     .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 2px;
-      background: var(--accent);
-      border-radius: 2px;
-      transition: width 0.3s ease;
+      content: ''; position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%);
+      width: 0; height: 2px; background: var(--accent); border-radius: 2px; transition: width 0.3s ease;
     }
     .nav-link:hover::after { width: 60%; }
     .nav-link.active {
@@ -169,70 +84,92 @@ I'll enhance this portfolio site with premium dark glassmorphism, better hierarc
       box-shadow: 0 4px 20px -4px var(--accent-glow);
     }
     .nav-link.active::after { display: none; }
-
-    /* Buttons */
     .btn-primary {
       background: linear-gradient(135deg, #2563eb, #3b82f6);
-      color: white;
-      transition: all 0.2s ease;
+      color: white; transition: all 0.2s ease;
       box-shadow: 0 4px 14px -2px var(--accent-glow);
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
     }
     .btn-primary::before {
-      content: '';
-      position: absolute;
-      inset: 0;
+      content: ''; position: absolute; inset: 0;
       background: linear-gradient(135deg, transparent, rgba(255,255,255,0.2), transparent);
-      transform: translateX(-100%);
-      transition: transform 0.6s;
+      transform: translateX(-100%); transition: transform 0.6s;
     }
     .btn-primary:hover::before { transform: translateX(100%); }
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px -2px var(--accent-glow);
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px -2px var(--accent-glow); }
+    .btn-secondary {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid var(--border);
+      color: #e2e8f0; transition: all 0.2s ease;
     }
-    .btn-primary:active { transform: translateY(0); }
-
-    /* Refresh spin */
-    .spinning { animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* Pulse dot */
+    .btn-secondary:hover {
+      background: rgba(30, 41, 59, 0.9);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .slide-up { animation: slideUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) both; }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: none; }
+    }
+    .fade-in { animation: fade 0.6s cubic-bezier(0.4, 0, 0.2, 1) both; }
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: none; }
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 999px;
+      background: rgba(37, 99, 235, 0.1);
+      border: 1px solid rgba(37, 99, 235, 0.25);
+      color: #93c5fd; font-size: 12px; font-weight: 600;
+      letter-spacing: 0.03em; text-transform: uppercase;
+    }
     .pulse-dot {
-      width: 8px; height: 8px;
-      background: #22c55e;
-      border-radius: 50%;
-      position: relative;
+      width: 8px; height: 8px; background: #22c55e; border-radius: 50%; position: relative;
     }
     .pulse-dot::before {
-      content: '';
-      position: absolute;
-      inset: -4px;
-      background: #22c55e;
-      border-radius: 50%;
-      opacity: 0.4;
-      animation: pulse 2s ease-in-out infinite;
+      content: ''; position: absolute; inset: -4px; background: #22c55e;
+      border-radius: 50%; opacity: 0.4; animation: pulse 2s ease-in-out infinite;
     }
     @keyframes pulse {
       0%, 100% { transform: scale(1); opacity: 0.4; }
       50% { transform: scale(1.5); opacity: 0; }
     }
-
-    /* Table row hover */
-    .activity-row {
-      transition: all 0.2s ease;
-      border-bottom: 1px solid rgba(148, 163, 184, 0.06);
+    .project-card {
+      position: relative; overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .activity-row:hover {
-      background: rgba(37, 99, 235, 0.05);
+    .project-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(600px circle at var(--mx, 50%) var(--my, 50%), rgba(37, 99, 235, 0.1), transparent 40%);
+      opacity: 0; transition: opacity 0.4s; pointer-events: none;
     }
-    .activity-row:last-child { border-bottom: none; }
-
+    .project-card:hover::before { opacity: 1; }
+    .project-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(37, 99, 235, 0.3);
+      box-shadow: 0 24px 48px -20px rgba(37, 99, 235, 0.25);
+    }
+    .skill-tag {
+      display: inline-flex; align-items: center;
+      padding: 6px 12px; border-radius: 8px;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--border);
+      font-size: 13px; font-weight: 500;
+      color: #cbd5e1; transition: all 0.2s ease;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .skill-tag:hover {
+      background: rgba(37, 99, 235, 0.15);
+      border-color: rgba(37, 99, 235, 0.4);
+      color: #93c5fd;
+      transform: translateY(-2px);
+    }
     /* Julie chatbot */
     #julieToggle {
       background: linear-gradient(135deg, #2563eb, #7c3aed);
-      box-shadow: 0 8px 30px -4px rgba(37, 99, 235, 0.5), 0 0 0 0 rgba(37, 99, 235, 0.4);
+      box-shadow: 0 8px 30px -4px rgba(37, 99, 235, 0.5);
       transition: all 0.3s ease;
       animation: pulseGlow 3s ease-in-out infinite;
     }
@@ -240,11 +177,8 @@ I'll enhance this portfolio site with premium dark glassmorphism, better hierarc
       0%, 100% { box-shadow: 0 8px 30px -4px rgba(37, 99, 235, 0.5), 0 0 0 0 rgba(37, 99, 235, 0.4); }
       50% { box-shadow: 0 8px 30px -4px rgba(37, 99, 235, 0.7), 0 0 0 12px rgba(37, 99, 235, 0); }
     }
-    #julieToggle:hover {
-      transform: scale(1.08) rotate(-5deg);
-    }
+    #julieToggle:hover { transform: scale(1.08) rotate(-5deg); }
     #julieToggle:active { transform: scale(0.95); }
-
     #juliePanel {
       background: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(24px) saturate(180%);
@@ -257,24 +191,15 @@ I'll enhance this portfolio site with premium dark glassmorphism, better hierarc
       from { opacity: 0; transform: scale(0.9) translateY(10px); }
       to { opacity: 1; transform: scale(1) translateY(0); }
     }
-
-    .julie-header {
-      background: linear-gradient(135deg, #2563eb, #7c3aed);
-    }
-
-    .julie-msg {
-      animation: msgIn 0.3s ease-out;
-      max-width: 85%;
-    }
+    .julie-header { background: linear-gradient(135deg, #2563eb, #7c3aed); }
+    .julie-msg { animation: msgIn 0.3s ease-out; max-width: 85%; }
     @keyframes msgIn {
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: none; }
     }
-
     .julie-bubble-user {
       background: linear-gradient(135deg, #2563eb, #3b82f6);
-      color: white;
-      border-radius: 16px 16px 4px 16px;
+      color: white; border-radius: 16px 16px 4px 16px;
     }
     .julie-bubble-bot {
       background: rgba(51, 65, 85, 0.6);
@@ -282,14 +207,9 @@ I'll enhance this portfolio site with premium dark glassmorphism, better hierarc
       border-radius: 16px 16px 16px 4px;
       border: 1px solid var(--border);
     }
-
-    /* Typing indicator */
     .typing-dots span {
-      display: inline-block;
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: #94a3b8;
-      margin: 0 1px;
+      display: inline-block; width: 6px; height: 6px;
+      border-radius: 50%; background: #94a3b8; margin: 0 1px;
       animation: typingBounce 1.4s ease-in-out infinite;
     }
     .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
@@ -298,13 +218,45 @@ I'll enhance this portfolio site with premium dark glassmorphism, better hierarc
       0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
       30% { transform: translateY(-6px); opacity: 1; }
     }
-
-    /* Form inputs */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.2); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.35); }
+    #google_translate_element {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 6px 10px; font-size: 12px;
+    }
+    .goog-te-gadget { color: #94a3b8 !important; font-family: 'Inter', sans-serif !important; font-size: 12px !important; }
+    .goog-te-gadget select {
+      background: rgba(30, 41, 59, 0.8) !important; color: #e2e8f0 !important;
+      border: 1px solid var(--border) !important; border-radius: 6px !important;
+      padding: 3px 6px !important; font-size: 12px !important;
+    }
+    body { top: 0 !important; }
+    .skiptranslate { display: none !important; }
+    button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--accent); outline-offset: 2px;
+    }
+    .avatar-ring {
+      background: linear-gradient(135deg, #2563eb, #7c3aed, #ec4899);
+      padding: 3px; border-radius: 50%;
+      animation: rotate 8s linear infinite;
+    }
+    @keyframes rotate {
+      to { transform: rotate(360deg); }
+    }
+    .avatar-inner {
+      background: #0b1120; border-radius: 50%;
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
+    }
     .input-field {
       background: rgba(15, 23, 42, 0.5);
       border: 1px solid var(--border);
-      color: #e2e8f0;
-      transition: all 0.2s ease;
+      color: #e2e8f0; transition: all 0.2s ease;
     }
     .input-field:focus {
       outline: none;
@@ -313,187 +265,143 @@ I'll enhance this portfolio site with premium dark glassmorphism, better hierarc
       background: rgba(15, 23, 42, 0.8);
     }
     .input-field::placeholder { color: #64748b; }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(148, 163, 184, 0.2);
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.35); }
-
-    /* Google translate widget */
-    #google_translate_element {
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 6px 10px;
-      font-size: 12px;
-    }
-    .goog-te-gadget { color: #94a3b8 !important; font-family: 'Inter', sans-serif !important; font-size: 12px !important; }
-    .goog-te-gadget select {
-      background: rgba(30, 41, 59, 0.8) !important;
-      color: #e2e8f0 !important;
-      border: 1px solid var(--border) !important;
-      border-radius: 6px !important;
-      padding: 3px 6px !important;
-      font-size: 12px !important;
-    }
-    body { top: 0 !important; }
-    .skiptranslate { display: none !important; }
-
-    /* Heading gradient */
-    .text-gradient {
-      background: linear-gradient(135deg, #f1f5f9 0%, #94a3b8 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    /* Chart container */
-    .chart-wrap {
-      position: relative;
-      height: 280px;
-    }
-
-    /* Badges */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      backdrop-filter: blur(8px);
-      border: 1px solid transparent;
-    }
-    .badge::before {
-      content: '';
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: currentColor;
-    }
-    .badge-applied { background: rgba(59,130,246,0.15); color: #60a5fa; border-color: rgba(59,130,246,0.3); }
-    .badge-interview { background: rgba(245,158,11,0.15); color: #fbbf24; border-color: rgba(245,158,11,0.3); }
-    .badge-offer { background: rgba(34,197,94,0.15); color: #4ade80; border-color: rgba(34,197,94,0.3); }
-    .badge-rejected { background: rgba(239,68,68,0.15); color: #f87171; border-color: rgba(239,68,68,0.3); }
-
-    /* Mobile menu adjustments */
     @media (max-width: 640px) {
       .nav-link { padding: 6px 10px; font-size: 13px; }
-      #google_translate_element {
-        top: auto !important;
-        bottom: 5px !important;
-        left: 5px !important;
-        right: auto !important;
-      }
+      #google_translate_element { top: auto !important; bottom: 5px !important; left: 5px !important; right: auto !important; }
       #julieToggle { width: 56px; height: 56px; }
-      #juliePanel {
-        width: calc(100vw - 24px) !important;
-        right: -8px;
-      }
+      #juliePanel { width: calc(100vw - 24px) !important; right: -8px; }
     }
-
-    /* Focus visible for accessibility */
-    button:focus-visible, a:focus-visible, input:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
-    }
-
-    /* Stat number */
-    .stat-value {
-      font-family: 'Inter', sans-serif;
-      font-variant-numeric: tabular-nums;
-      letter-spacing: -0.02em;
-    }
-
-    .stat-icon {
-      width: 40px; height: 40px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
+    .section-label {
+      display: inline-block; font-size: 12px; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: #60a5fa; margin-bottom: 12px;
     }
   </style>
 </head>
 <body>
   <div class="grid-bg"></div>
 
+  <!-- Language switcher placeholder -->
+  <div id="google_translate_element" style="position: fixed; top: 12px; right: 12px; z-index: 40;"></div>
+
   <!-- Navigation -->
   <nav class="glass-strong sticky top-0 z-30 border-x-0 border-t-0 rounded-none">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
       <a href="index.html" class="flex items-center gap-2 group">
         <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold shadow-lg shadow-blue-600/30 group-hover:scale-110 transition-transform">
-          📊
+          ✦
         </div>
-        <span class="font-bold text-base sm:text-lg text-white hidden sm:block">Job Dashboard</span>
+        <span class="font-bold text-base sm:text-lg text-white hidden sm:block">Portfolio</span>
       </a>
       <div class="flex gap-1 sm:gap-2 text-sm">
-        <a href="index.html" class="nav-link px-3 sm:px-4 py-2 rounded-lg text-slate-300 hover:text-white font-medium">Home</a>
-        <a href="dashboard.html" class="nav-link active px-3 sm:px-4 py-2 rounded-lg font-medium">Dashboard</a>
+        <a href="index.html" class="nav-link active px-3 sm:px-4 py-2 rounded-lg font-medium">Home</a>
+        <a href="dashboard.html" class="nav-link px-3 sm:px-4 py-2 rounded-lg text-slate-300 hover:text-white font-medium">Dashboard</a>
         <a href="cv.html" class="nav-link px-3 sm:px-4 py-2 rounded-lg text-slate-300 hover:text-white font-medium">Submit CV</a>
       </div>
     </div>
   </nav>
 
-  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10">
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 sm:mb-10 slide-up">
-      <div>
-        <div class="flex items-center gap-2 mb-2">
-          <div class="pulse-dot"></div>
-          <span class="text-xs font-semibold text-emerald-400 uppercase tracking-wider">Live Data</span>
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
+    <!-- Hero -->
+    <section class="pt-16 sm:pt-24 pb-16 sm:pb-24">
+      <div class="grid md:grid-cols-[auto_1fr] gap-8 md:gap-12 items-center slide-up">
+        <div class="avatar-ring w-32 h-32 sm:w-40 sm:h-40 mx-auto md:mx-0">
+          <div class="avatar-inner">👨‍💻</div>
         </div>
-        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gradient tracking-tight">Job Search Analytics</h1>
-        <p class="text-slate-400 mt-2 text-sm sm:text-base">Real-time insights from my application pipeline</p>
-      </div>
-      <div class="flex items-center gap-3 text-sm">
-        <div class="hidden sm:flex items-center gap-2 text-slate-400 px-3 py-2 rounded-lg glass">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <span id="lastUpdated">—</span>
+        <div class="text-center md:text-left">
+          <div class="hero-badge mb-4">
+            <div class="pulse-dot"></div>
+            Available for opportunities
+          </div>
+          <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] mb-4">
+            <span class="text-gradient">Hi, I'm </span>
+            <span class="text-gradient-accent">Alex</span>
+          </h1>
+          <p class="text-lg sm:text-xl text-slate-400 max-w-2xl leading-relaxed mb-8">
+            Full-stack developer building thoughtful web products. Currently exploring the job market — track my progress live.
+          </p>
+          <div class="flex flex-wrap gap-3 justify-center md:justify-start">
+            <a href="dashboard.html" class="btn-primary px-6 py-3 rounded-xl font-semibold inline-flex items-center gap-2">
+              View Live Dashboard
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+            <a href="cv.html" class="btn-secondary px-6 py-3 rounded-xl font-semibold inline-flex items-center gap-2">
+              Submit CV
+            </a>
+            <a href="#contact" class="btn-secondary px-6 py-3 rounded-xl font-semibold inline-flex items-center gap-2">
+              Get in Touch
+            </a>
+          </div>
         </div>
-        <button id="refreshBtn" class="btn-primary px-4 py-2 rounded-lg font-medium flex items-center gap-2">
-          <svg id="refreshIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-          <span class="hidden sm:inline">Refresh</span>
-        </button>
       </div>
-    </div>
+    </section>
 
-    <!-- Stats cards -->
-    <section id="statsCards" class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8">
-      <div class="glass stat-card p-5 slide-up" style="animation-delay: 0.05s">
-        <div class="flex items-start justify-between mb-3">
-          <div class="stat-icon bg-slate-500/10 text-slate-300">📋</div>
-          <span class="text-xs text-slate-500 font-medium">Total</span>
-        </div>
-        <div class="text-slate-400 text-xs uppercase tracking-wider font-semibold">Applications</div>
-        <div class="stat-value text-3xl sm:text-4xl font-bold mt-1 text-white" id="statTotal"><div class="skeleton h-9 w-16"></div></div>
+    <!-- About -->
+    <section class="pb-16 sm:pb-24 slide-up">
+      <div class="section-label">About</div>
+      <h2 class="text-3xl sm:text-4xl font-bold text-gradient mb-6">A quick intro</h2>
+      <div class="glass p-6 sm:p-8">
+        <p class="text-slate-300 leading-relaxed text-base sm:text-lg mb-4">
+          I'm a developer who cares about the details — from database schemas to microinteractions. I've spent the last few years building SaaS tools, dashboards, and internal platforms for early-stage teams.
+        </p>
+        <p class="text-slate-400 leading-relaxed">
+          This site is also a real-time window into my job search: every application I submit is tracked in a Google Sheet, and the dashboard here reflects it live. Transparency, meet accountability.
+        </p>
       </div>
-      <div class="glass stat-card p-5 slide-up" style="animation-delay: 0.1s">
-        <div class="flex items-start justify-between mb-3">
-          <div class="stat-icon bg-blue-500/10 text-blue-400">📨</div>
-          <span class="text-xs text-blue-400 font-medium">In Flight</span>
+    </section>
+
+    <!-- Skills -->
+    <section class="pb-16 sm:pb-24 slide-up">
+      <div class="section-label">Toolkit</div>
+      <h2 class="text-3xl sm:text-4xl font-bold text-gradient mb-6">Skills & Stack</h2>
+      <div class="glass p-6 sm:p-8">
+        <div class="grid sm:grid-cols-2 gap-6">
+          <div>
+            <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Frontend</h3>
+            <div class="flex flex-wrap gap-2">
+              <span class="skill-tag">React</span>
+              <span class="skill-tag">TypeScript</span>
+              <span class="skill-tag">Next.js</span>
+              <span class="skill-tag">Tailwind</span>
+              <span class="skill-tag">Vue</span>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Backend</h3>
+            <div class="flex flex-wrap gap-2">
+              <span class="skill-tag">Node.js</span>
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">PostgreSQL</span>
+              <span class="skill-tag">Redis</span>
+              <span class="skill-tag">GraphQL</span>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Cloud & DevOps</h3>
+            <div class="flex flex-wrap gap-2">
+              <span class="skill-tag">AWS</span>
+              <span class="skill-tag">Docker</span>
+              <span class="skill-tag">Terraform</span>
+              <span class="skill-tag">GitHub Actions</span>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Design</h3>
+            <div class="flex flex-wrap gap-2">
+              <span class="skill-tag">Figma</span>
+              <span class="skill-tag">Framer</span>
+              <span class="skill-tag">Design Systems</span>
+            </div>
+          </div>
         </div>
-        <div class="text-slate-400 text-xs uppercase tracking-wider font-semibold">Applied</div>
-        <div class="stat-value text-3xl sm:text-4xl font-bold mt-1 text-white" id="statApplied"><div class="skeleton h-9 w-16"></div></div>
       </div>
-      <div class="glass stat-card p-5 slide-up" style="animation-delay: 0.15s">
-        <div class="flex items-start justify-between mb-3">
-          <div class="stat-icon bg-amber-500/10 text-amber-400">🎯</div>
-          <span class="text-xs text-amber-400 font-medium">Active</span>
-        </div>
-        <div class="text-slate-400 text-xs uppercase tracking-wider font-semibold">Interviews</div>
-        <div class="stat-value text-3xl sm:text-4xl font-bold mt-1 text-white" id="statInterview"><div class="skeleton h-9 w-16"></div></div>
-      </div>
-      <div class="glass stat-card p-5 slide-up" style="animation-delay: 0.2s">
-        <div class="flex items-start justify-between mb-3">
-          <div class="stat-icon bg-emerald-500/10 text-emerald-400">🏆</div>
-          <span class="text-xs text-emerald-400 font-medium">Success</span>
-        </div>
-        <div class="text-slate-400 text-xs uppercase tracking-wider font-semibold">Offers</div>
+    </section>
+
+    <!-- Projects -->
+    <section class="pb-16 sm:pb-24 slide-up">
+      <div class="section-label">Selected Work</div>
+      <h2 class="text-3xl sm:text-4xl font-bold text-gradient mb-6">Projects</h2>
+      <div class="grid md:grid-cols-2 gap-5">
+        <a href="dashboard.html" class="glass project-card p-6 block">
+          <div class="flex items-start justify-between mb-4">
+            <div class="w-12 h-12 rounded-xl bg-
