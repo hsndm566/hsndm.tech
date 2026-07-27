@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="site_title_projects">Projects – Hasan Adam</title>
+<meta name="theme-color" content="#0a0e17" id="theme-color-meta">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { darkMode: 'class', theme: { extend: { colors: { accent: '#2563eb', accent2: '#3b82f6' }, fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] } } } }
+</script>
+<link rel="stylesheet" href="styles.css">
+<script>
+  try {
+    const savedTheme = localStorage.getItem('site-theme') || 'dark';
+    document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    const savedLang = localStorage.getItem('site-lang') || 'en';
+    document.documentElement.lang = savedLang;
+    document.documentElement.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
+  } catch(e){}
+</script>
+</head>
+<body class="min-h-screen">
+
+<div class="ambient-bg" aria-hidden="true">
+  <div class="ambient-blob b1"></div>
+  <div class="ambient-blob b2"></div>
+  <div class="ambient-blob b3"></div>
+</div>
+
+<div id="nav-placeholder"></div>
+<script src="nav.js"></script>
+
+<main class="w-full px-5 sm:px-8 lg:px-14 pt-20 lg:pt-32 pb-14 max-w-5xl mx-auto min-h-[90vh]">
+  <section class="py-4">
+    <div class="fade-in flex items-baseline gap-3 mb-1">
+      <span class="font-num font-bold" style="color:var(--accent)">02</span>
+      <h1 class="font-heading text-3xl sm:text-4xl font-bold" data-i18n="nav_projects">Projects</h1>
+    </div>
+    <p class="fade-in mb-10 text-sm sm:text-base" style="color:var(--text-dim)" data-i18n="projects_sub">Systems, workflows, and automation engineering.</p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <div class="fade-in glass-card tilt-card p-6 flex flex-col">
+        <div class="project-icon w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-robot"></i></div>
+        <h2 class="font-heading font-semibold mb-2" data-i18n="proj_1_title">AI Job Engine</h2>
+        <p class="text-sm mb-4 flex-1 leading-relaxed" style="color:var(--text-dim)" data-i18n="proj_1_desc">Built a multi‑agent automation pipeline using n8n, Groq, and OpenAI. Scrapes jobs, scores fit, tailors CVs, and applies automatically.</p>
+        <div class="project-tags flex flex-wrap gap-2 mb-4">
+          <span class="px-2.5 py-1 rounded-full text-xs">n8n</span>
+          <span class="px-2.5 py-1 rounded-full text-xs">Groq</span>
+          <span class="px-2.5 py-1 rounded-full text-xs">OpenAI</span>
+        </div>
+        <a href="https://github.com/hsndm566" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold inline-flex items-center gap-2" style="color:var(--accent)">
+          <span data-i18n="btn_github">View on GitHub</span> <i class="fa-solid fa-arrow-right rtl-flip"></i>
+        </a>
+      </div>
+
+      <div class="fade-in glass-card tilt-card p-6 flex flex-col">
+        <div class="project-icon w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-plane-departure"></i></div>
+        <h2 class="font-heading font-semibold mb-2" data-i18n="proj_2_title">KAIA Airport Project</h2>
+        <p class="text-sm mb-4 flex-1 leading-relaxed" style="color:var(--text-dim)" data-i18n="proj_2_desc">Applied DMAIC and VSM to optimize check‑in workflows at King Abdulaziz International Airport, cutting passenger wait times in half.</p>
+        <div class="project-tags flex flex-wrap gap-2 mb-4">
+          <span class="px-2.5 py-1 rounded-full text-xs">DMAIC</span>
+          <span class="px-2.5 py-1 rounded-full text-xs">VSM</span>
+          <span class="px-2.5 py-1 rounded-full text-xs">Lean</span>
+        </div>
+        <button type="button" onclick="openModal('kaiaModal')" class="text-sm font-semibold inline-flex items-center gap-2 self-start" style="color:var(--accent)">
+          <span data-i18n="btn_case_study">View Case Study</span> <i class="fa-solid fa-arrow-up-right-from-square rtl-flip"></i>
+        </button>
+      </div>
+
+      <div class="fade-in glass-card tilt-card p-6 flex flex-col">
+        <div class="project-icon w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-code-branch"></i></div>
+        <h2 class="font-heading font-semibold mb-2" data-i18n="proj_3_title">OpenCode Integration</h2>
+        <p class="text-sm mb-4 flex-1 leading-relaxed" style="color:var(--text-dim)" data-i18n="proj_3_desc">Integrated an open-source coding assistant into a personal workflow to speed up development and prototyping tasks.</p>
+        <div class="project-tags flex flex-wrap gap-2 mb-4">
+          <span class="px-2.5 py-1 rounded-full text-xs">OpenCode</span>
+          <span class="px-2.5 py-1 rounded-full text-xs">Dev Tools</span>
+        </div>
+        <a href="#" class="text-sm font-semibold inline-flex items-center gap-2" style="color:var(--accent)">
+          <span data-i18n="btn_soon">Case study soon</span> <i class="fa-solid fa-arrow-right rtl-flip"></i>
+        </a>
+      </div>
+
+      <div class="fade-in glass-card tilt-card p-6 flex flex-col">
+        <div class="project-icon w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-chart-line"></i></div>
+        <h2 class="font-heading font-semibold mb-2" data-i18n="proj_4_title">This Portfolio</h2>
+        <p class="text-sm mb-4 flex-1 leading-relaxed" style="color:var(--text-dim)" data-i18n="proj_4_desc">A multi-page static site pulling data directly from Google Sheets to track job applications live, styled with Tailwind CSS.</p>
+        <div class="project-tags flex flex-wrap gap-2 mb-4">
+          <span class="px-2.5 py-1 rounded-full text-xs">HTML/JS</span>
+          <span class="px-2.5 py-1 rounded-full text-xs">Chart.js</span>
+          <span class="px-2.5 py-1 rounded-full text-xs">Sheets API</span>
+        </div>
+        <a href="https://github.com/hsndm566/hsndm.tech" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold inline-flex items-center gap-2" style="color:var(--accent)">
+          <span data-i18n="btn_repo">View Repo</span> <i class="fa-solid fa-arrow-right rtl-flip"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- KAIA Case Study Modal -->
+<div id="kaiaModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="kaiaModalTitle">
+  <div class="modal-panel">
+    <div class="flex items-start justify-between mb-4 gap-4">
+      <div>
+        <div class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:var(--accent)" data-i18n="kaia_tag">Senior Capstone · Lean Six Sigma</div>
+        <h2 id="kaiaModalTitle" class="font-heading text-xl sm:text-2xl font-bold" data-i18n="kaia_title">Process Optimization at King Abdulaziz International Airport</h2>
+      </div>
+      <button type="button" class="modal-close" onclick="closeModal('kaiaModal')" aria-label="Close case study">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <p class="text-sm leading-relaxed mb-5" style="color:var(--text-dim)" data-i18n="kaia_p1">
+      This capstone project applied Lean Management and the DMAIC framework to the passenger check-in process at KAIA Terminal 1. The goal: cut processing time, reduce queues, and balance workload.
+    </p>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+      <div class="modal-kpi">
+        <div class="font-num text-xl font-extrabold" style="color:var(--accent)">41%</div>
+        <div class="text-xs mt-1" style="color:var(--text-dim)" data-i18n="kaia_stat1">Faster check-in</div>
+      </div>
+      <div class="modal-kpi">
+        <div class="font-num text-xl font-extrabold" style="color:var(--accent)">50%</div>
+        <div class="text-xs mt-1" style="color:var(--text-dim)" data-i18n="kaia_stat2">Shorter queues</div>
+      </div>
+      <div class="modal-kpi">
+        <div class="font-num text-xl font-extrabold" style="color:var(--accent)">57%</div>
+        <div class="text-xs mt-1" style="color:var(--text-dim)" data-i18n="kaia_stat3">Faster verification</div>
+      </div>
+      <div class="modal-kpi">
+        <div class="font-num text-xl font-extrabold" style="color:var(--accent)">120</div>
+        <div class="text-xs mt-1" style="color:var(--text-dim)" data-i18n="kaia_stat4">Passengers surveyed</div>
+      </div>
+    </div>
+
+    <h3 class="font-heading text-sm font-semibold mb-2" data-i18n="kaia_h2">Approach</h3>
+    <p class="text-sm leading-relaxed mb-4" style="color:var(--text-dim)" data-i18n="kaia_p2">
+      Using the DMAIC cycle, I mapped the current-state process with Value Stream Mapping, ran time-and-motion studies, then piloted interventions — self-service kiosks, digital ID verification, and dynamic counter allocation.
+    </p>
+
+    <h3 class="font-heading text-sm font-semibold mb-2" data-i18n="kaia_h3">Key Results</h3>
+    <ul class="text-sm leading-relaxed mb-4 list-disc pl-5 rtl-pr-5" style="color:var(--text-dim)">
+      <li data-i18n="kaia_li1">Average total check-in time dropped from 15.5 to 9.2 minutes.</li>
+      <li data-i18n="kaia_li2">Queue waiting time was roughly halved.</li>
+      <li data-i18n="kaia_li3">Document verification time fell by 57%.</li>
+      <li data-i18n="kaia_li4">Off-peak counter utilization improved to 70%.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="text-center text-xs mt-14 mb-8" style="color:var(--text-faint)">
+  &copy; <span id="year"></span> <span data-i18n="footer_copy">Hasan Adam. Built with HTML, Tailwind, Chart.js & Google Sheets.</span>
+</div>
+<script src="main.js"></script>
+</body>
+</html>

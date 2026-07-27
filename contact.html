@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="site_title_contact">Contact – Hasan Adam</title>
+<meta name="theme-color" content="#0a0e17" id="theme-color-meta">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { darkMode: 'class', theme: { extend: { colors: { accent: '#2563eb', accent2: '#3b82f6' }, fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] } } } }
+</script>
+<link rel="stylesheet" href="styles.css">
+<script>
+  try {
+    const savedTheme = localStorage.getItem('site-theme') || 'dark';
+    document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    const savedLang = localStorage.getItem('site-lang') || 'en';
+    document.documentElement.lang = savedLang;
+    document.documentElement.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
+  } catch(e){}
+</script>
+</head>
+<body class="min-h-screen">
+
+<div class="ambient-bg" aria-hidden="true">
+  <div class="ambient-blob b1"></div>
+  <div class="ambient-blob b2"></div>
+  <div class="ambient-blob b3"></div>
+</div>
+
+<div id="nav-placeholder"></div>
+<script src="nav.js"></script>
+
+<main class="w-full px-5 sm:px-8 lg:px-14 pt-20 lg:pt-32 pb-14 max-w-5xl mx-auto min-h-[90vh]">
+  <section class="py-4">
+    <div class="fade-in flex items-baseline gap-3 mb-1">
+      <span class="font-num font-bold" style="color:var(--accent)">04</span>
+      <h1 class="font-heading text-3xl sm:text-4xl font-bold" data-i18n="nav_contact">Contact</h1>
+    </div>
+    <p class="fade-in mb-8 text-sm sm:text-base" style="color:var(--text-dim)" data-i18n="contact_sub">Open to Co‑op opportunities, collaborations, or a quick chat.</p>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="fade-in glass-card p-6">
+        <h2 class="font-heading text-lg font-semibold mb-4" data-i18n="contact_channels">Channels</h2>
+        <div class="flex flex-col gap-3">
+          <a href="https://github.com/hsndm566" target="_blank" rel="noopener noreferrer" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition">
+            <i class="fa-brands fa-github" style="color:var(--accent)"></i> GitHub
+          </a>
+          <a href="https://linkedin.com/in/hsndm" target="_blank" rel="noopener noreferrer" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition">
+            <i class="fa-brands fa-linkedin" style="color:var(--accent)"></i> LinkedIn
+          </a>
+          <a href="mailto:hasanadam506@gmail.com" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition">
+            <i class="fa-solid fa-envelope" style="color:var(--accent)"></i> hasanadam506@gmail.com
+          </a>
+          <a href="https://t.me/hsndmp" target="_blank" rel="noopener noreferrer" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:opacity-80 transition">
+            <i class="fa-brands fa-telegram" style="color:var(--accent)"></i> Telegram
+          </a>
+          <div class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium" style="color:var(--text-dim)">
+            <i class="fa-brands fa-whatsapp" style="color:var(--accent)"></i> WhatsApp: @hsndm_
+          </div>
+        </div>
+      </div>
+
+      <div class="fade-in glass-card p-6">
+        <h2 class="font-heading text-lg font-semibold mb-4" id="formHeading" data-i18n="contact_form_title">Send a message</h2>
+        <form id="contactForm" class="flex flex-col gap-4" aria-labelledby="formHeading" novalidate>
+          <input type="hidden" name="access_key" value="2ec3d648-98ad-440a-bc37-35f716999314">
+          <input type="hidden" name="subject" value="New message from Hasan Adam's portfolio">
+          <div>
+            <label for="cf-name" class="text-xs font-medium mb-1 block" style="color:var(--text-dim)" data-i18n="label_name">Name</label>
+            <input type="text" id="cf-name" name="name" required placeholder="Your name" data-i18n-placeholder="ph_name" class="form-input w-full px-3.5 py-2.5 rounded-lg text-sm transition" aria-describedby="err-name">
+            <div id="err-name" class="field-error-msg" role="alert"></div>
+          </div>
+          <div>
+            <label for="cf-email" class="text-xs font-medium mb-1 block" style="color:var(--text-dim)" data-i18n="label_email">Email</label>
+            <input type="email" id="cf-email" name="email" required placeholder="you@example.com" data-i18n-placeholder="ph_email" class="form-input w-full px-3.5 py-2.5 rounded-lg text-sm transition" aria-describedby="err-email">
+            <div id="err-email" class="field-error-msg" role="alert"></div>
+          </div>
+          <div>
+            <label for="cf-message" class="text-xs font-medium mb-1 block" style="color:var(--text-dim)" data-i18n="label_message">Message</label>
+            <textarea id="cf-message" name="message" required rows="4" placeholder="Say hello..." data-i18n-placeholder="ph_message" class="form-input w-full px-3.5 py-2.5 rounded-lg text-sm transition resize-none" aria-describedby="err-message"></textarea>
+            <div id="err-message" class="field-error-msg" role="alert"></div>
+          </div>
+          <button type="submit" id="contactSubmit" class="btn-primary rounded-lg py-2.5 text-sm font-semibold flex items-center justify-center gap-2">
+            <i class="fa-solid fa-paper-plane"></i> <span data-i18n="btn_send">Send Message</span>
+          </button>
+          <p class="text-xs text-center" style="color:var(--text-faint)">Powered by Web3Forms</p>
+          <div id="formStatus" class="text-sm hidden" aria-live="polite"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="text-center text-xs mt-14 mb-8" style="color:var(--text-faint)">
+  &copy; <span id="year"></span> <span data-i18n="footer_copy">Hasan Adam. Built with HTML, Tailwind, Chart.js & Google Sheets.</span>
+</div>
+<script src="main.js"></script>
+</body>
+</html>

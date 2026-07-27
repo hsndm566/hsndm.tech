@@ -1,607 +1,120 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hasan Adam — Industrial Engineering &amp; Automation</title>
+<title data-i18n="site_title">Hasan Adam – Industrial Engineer</title>
+<meta name="description" content="Hasan Adam – Industrial Engineer, automation builder, and live job-application tracker.">
+<meta name="theme-color" content="#0a0e17" id="theme-color-meta">
 
-<!--
-  DESIGN TOKENS — Engineering Drawing Sheet
-  Paper:      #FBFCFA  (cool drafting-paper white)
-  Ink/Primary:#123A5E  (blueprint ink)
-  Redline:    #D14A0F  (markup/annotation orange — used sparingly, like a drafter's red pencil)
-  Graphite:   #1B1F23  (body text)
-  Steel:      #64707C  (secondary text, ruled lines)
-  Display:    Space Grotesk
-  Body:       IBM Plex Sans
-  Utility:    IBM Plex Mono  (dimensions, drawing numbers, data)
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hsndm.tech/">
+<meta property="og:title" content="Hasan Adam – Industrial Engineer">
+<meta property="og:description" content="Hasan Adam – Industrial Engineer, automation builder, and live job-application tracker.">
+<meta property="og:image" content="/og-image.png">
 
-  SIGNATURE: every panel is framed as a drawing sheet with a title block
-  (DWG NO / SCALE / REV / DATE) in the corner, and the hero is a literal
-  blueprint schematic of the automation pipeline — not a stock hero image.
--->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hasan Adam – Industrial Engineer">
+<meta name="twitter:description" content="Hasan Adam – Industrial Engineer, automation builder, and live job-application tracker.">
+<meta name="twitter:image" content="/og-image.png">
 
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Person",
+  "name": "Hasan Adam",
+  "jobTitle": "Industrial Engineer",
+  "worksFor": { "@type": "Organization", "name": "Sela Co." },
+  "alumniOf": { "@type": "Organization", "name": "University of Business & Technology (UBT)" },
+  "sameAs": [ "https://github.com/hsndm566", "https://linkedin.com/in/hsndm" ]
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          paper: '#FBFCFA',
-          ink: '#123A5E',
-          inkdeep: '#0C2A45',
-          redline: '#D14A0F',
-          graphite: '#1B1F23',
-          steel: '#64707C',
-          steelfaint: '#D7DCE1'
-        },
-        fontFamily: {
-          display: ['"Space Grotesk"', 'sans-serif'],
-          sans: ['"IBM Plex Sans"', 'sans-serif'],
-          mono: ['"IBM Plex Mono"', 'monospace']
-        }
-      }
-    }
+    darkMode: 'class',
+    theme: { extend: { colors: { accent: '#2563eb', accent2: '#3b82f6' }, fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] } } }
   }
 </script>
-
-<style>
-  body { background-color: #FBFCFA; color: #1B1F23; overflow-x: hidden; }
-
-  /* Faint drafting grid, only visible where used */
-  .grid-field {
-    background-image:
-      linear-gradient(rgba(18,58,94,0.055) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(18,58,94,0.055) 1px, transparent 1px);
-    background-size: 28px 28px;
-  }
-
-  .page-view { display: none; }
-  .page-view.active { display: block; animation: fadeIn .45s ease-out; }
-  @keyframes fadeIn { from { opacity:0; transform: translateY(8px);} to {opacity:1; transform: translateY(0);} }
-
-  /* Drawing-sheet frame: hairline border + corner tick marks */
-  .sheet {
-    position: relative;
-    border: 1px solid #C9D1D8;
-    background: #FFFFFF;
-  }
-  .sheet::before, .sheet::after,
-  .sheet .tick-tl, .sheet .tick-tr, .sheet .tick-bl, .sheet .tick-br { display:none; }
-  .sheet .corner {
-    position: absolute; width: 10px; height: 10px;
-    border-color: #123A5E; opacity: .55;
-  }
-  .sheet .corner.tl { top:-1px; left:-1px; border-top:2px solid; border-left:2px solid; }
-  .sheet .corner.tr { top:-1px; right:-1px; border-top:2px solid; border-right:2px solid; }
-  .sheet .corner.bl { bottom:-1px; left:-1px; border-bottom:2px solid; border-left:2px solid; }
-  .sheet .corner.br { bottom:-1px; right:-1px; border-bottom:2px solid; border-right:2px solid; }
-
-  /* Title block, bottom-right of a sheet */
-  .title-block {
-    border-top: 1px solid #D7DCE1;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: .04em;
-    color: #64707C;
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 14px;
-    background: #FAFBFC;
-  }
-  .title-block span b { color: #123A5E; font-weight: 600; }
-
-  .nav-link { position: relative; }
-  .nav-link.active { color: #123A5E; }
-  .nav-link.active::after {
-    content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: #D14A0F;
-  }
-
-  .dim-line { border-top: 1px dashed #B9C2CA; position: relative; }
-  .dim-line .dim-tick {
-    position: absolute; top: -4px; width: 1px; height: 8px; background: #B9C2CA;
-  }
-
-  .eyebrow {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: #D14A0F;
-  }
-
-  .typing-cursor::after { content: '_'; color: #D14A0F; animation: blink 1s step-end infinite; }
-  @keyframes blink { 50% { opacity: 0; } }
-
-  ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-track { background: #F1F3F4; }
-  ::-webkit-scrollbar-thumb { background: #123A5E; border-radius: 0; }
-
-  @media (prefers-reduced-motion: reduce) {
-    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; }
-  }
-</style>
+<link rel="stylesheet" href="styles.css">
+<script>
+  try {
+    const savedTheme = localStorage.getItem('site-theme') || 'dark';
+    document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    const savedLang = localStorage.getItem('site-lang') || 'en';
+    document.documentElement.lang = savedLang;
+    document.documentElement.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
+  } catch(e){}
+</script>
 </head>
-<body class="font-sans antialiased">
+<body class="min-h-screen">
 
-<!-- Navigation -->
-<nav class="fixed top-0 w-full z-50 bg-paper/90 backdrop-blur border-b border-steelfaint">
-  <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="w-8 h-8 border-2 border-ink flex items-center justify-center text-ink font-display font-bold text-sm">HA</div>
-      <span class="font-display font-semibold tracking-tight text-lg">Hasan Adam</span>
-    </div>
-    <div class="hidden md:flex gap-8 font-mono text-[13px] tracking-wide uppercase">
-      <a href="#home" class="nav-link text-graphite hover:text-ink transition-colors py-1 active">01 · Overview</a>
-      <a href="#projects" class="nav-link text-graphite hover:text-ink transition-colors py-1">02 · Case Studies</a>
-      <a href="#dashboard" class="nav-link text-graphite hover:text-ink transition-colors py-1">03 · Live Analytics</a>
-      <a href="#contact" class="nav-link text-graphite hover:text-ink transition-colors py-1">04 · Connect</a>
-    </div>
-    <button onclick="toggleMobileMenu()" class="md:hidden text-ink">
-      <i class="fa-solid fa-bars text-xl"></i>
-    </button>
-  </div>
-  <div id="mobile-menu" class="hidden md:hidden bg-paper border-b border-steelfaint px-6 py-4 flex flex-col gap-4 font-mono text-sm uppercase">
-    <a href="#home" onclick="toggleMobileMenu()">01 · Overview</a>
-    <a href="#projects" onclick="toggleMobileMenu()">02 · Case Studies</a>
-    <a href="#dashboard" onclick="toggleMobileMenu()">03 · Live Analytics</a>
-    <a href="#contact" onclick="toggleMobileMenu()">04 · Connect</a>
-  </div>
-</nav>
-
-<main class="pt-24 pb-16 max-w-6xl mx-auto px-6">
-
-  <!-- HOME -->
-  <section id="home-page" class="page-view active">
-    <div class="grid lg:grid-cols-2 gap-10 items-stretch py-10">
-      <div class="flex flex-col justify-center">
-        <div class="eyebrow mb-4">Dwg No. HA–001 / Industrial Engineer · Automation Strategist</div>
-        <h1 class="font-display text-5xl lg:text-6xl font-semibold leading-[1.05] mb-6 text-inkdeep">
-          Engineering <span id="typewriter" class="text-ink typing-cursor"></span>
-        </h1>
-        <p class="text-[17px] text-steel mb-8 max-w-lg leading-relaxed">
-          I bridge Lean Six Sigma process discipline with AI-driven automation — turning bottlenecked, manual workflows into self-healing systems that run themselves and report their own status.
-        </p>
-        <div class="flex flex-wrap gap-4">
-          <a href="#projects" class="bg-ink text-white px-7 py-3 font-mono text-sm font-medium tracking-wide hover:bg-inkdeep transition-colors">VIEW CASE STUDIES →</a>
-          <a href="#dashboard" class="border border-ink text-ink px-7 py-3 font-mono text-sm font-medium tracking-wide hover:bg-ink/5 transition-colors">LIVE METRICS</a>
-        </div>
-      </div>
-
-      <!-- Hero schematic: literal blueprint of the automation pipeline -->
-      <div class="sheet grid-field p-6 flex flex-col">
-        <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
-        <div class="eyebrow mb-4">Schematic — Multi-Agent Job Pipeline</div>
-        <svg viewBox="0 0 520 300" class="w-full flex-1" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram of a four stage automation pipeline: scrape, analyze, tailor, track">
-          <defs>
-            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M0,0 L10,5 L0,10 z" fill="#123A5E"/>
-            </marker>
-          </defs>
-          <line x1="70" y1="60" x2="230" y2="60" stroke="#123A5E" stroke-width="1.4" marker-end="url(#arrow)"/>
-          <line x1="290" y1="60" x2="450" y2="60" stroke="#123A5E" stroke-width="1.4" marker-end="url(#arrow)"/>
-          <line x1="450" y1="90" x2="450" y2="200" stroke="#123A5E" stroke-width="1.4" marker-end="url(#arrow)"/>
-          <line x1="420" y1="230" x2="100" y2="230" stroke="#123A5E" stroke-width="1.4" marker-end="url(#arrow)"/>
-          <line x1="70" y1="200" x2="70" y2="90" stroke="#123A5E" stroke-width="1.4" stroke-dasharray="3 3"/>
-
-          <g>
-            <rect x="10" y="30" width="120" height="60" fill="#FFFFFF" stroke="#123A5E" stroke-width="1.3"/>
-            <text x="70" y="55" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#123A5E" font-weight="600">01 SCRAPE</text>
-            <text x="70" y="72" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="#64707C">RSS · Jooble · Indeed</text>
-          </g>
-          <g>
-            <rect x="230" y="30" width="120" height="60" fill="#FFFFFF" stroke="#123A5E" stroke-width="1.3"/>
-            <text x="290" y="55" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#123A5E" font-weight="600">02 ANALYZE</text>
-            <text x="290" y="72" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="#64707C">LLM fit score</text>
-          </g>
-          <g>
-            <rect x="390" y="30" width="120" height="60" fill="#FFFFFF" stroke="#D14A0F" stroke-width="1.3"/>
-            <text x="450" y="55" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#D14A0F" font-weight="600">03 TAILOR</text>
-            <text x="450" y="72" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="#64707C">Cover letter gen</text>
-          </g>
-          <g>
-            <rect x="10" y="200" width="410" height="60" fill="#FFFFFF" stroke="#123A5E" stroke-width="1.3"/>
-            <text x="215" y="225" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#123A5E" font-weight="600">04 TRACK</text>
-            <text x="215" y="242" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="#64707C">Sheet log · retries on failure · Telegram alert</text>
-          </g>
-        </svg>
-        <div class="title-block -mx-6 -mb-6 mt-4">
-          <span>SCALE <b>N.T.S.</b></span>
-          <span>REV <b>C</b></span>
-          <span>SYS <b>n8n</b></span>
-        </div>
-      </div>
-    </div>
-
-    <!-- About -->
-    <div class="mt-20 pt-14 dim-line">
-      <div class="max-w-3xl">
-        <div class="eyebrow mb-3">Background</div>
-        <h3 class="font-display text-2xl font-semibold mb-5 text-inkdeep">Strategic Background</h3>
-        <p class="text-steel leading-relaxed mb-8">
-          Graduate of the University of Business &amp; Technology (UBT) and current Governance Intern at Sela Co., focused on organizational compliance and operational excellence. I don't just follow policies — I design systems that make following policies the path of least resistance.
-        </p>
-        <div class="grid sm:grid-cols-3 gap-4">
-          <div class="sheet p-4">
-            <span class="corner tl"></span><span class="corner br"></span>
-            <i class="fa-solid fa-layer-group text-ink mb-3"></i>
-            <h4 class="font-display font-semibold text-sm">Governance</h4>
-            <p class="text-xs text-steel mt-1">Compliance &amp; internal policy review</p>
-          </div>
-          <div class="sheet p-4">
-            <span class="corner tl"></span><span class="corner br"></span>
-            <i class="fa-solid fa-vial text-ink mb-3"></i>
-            <h4 class="font-display font-semibold text-sm">Lean Six Sigma</h4>
-            <p class="text-xs text-steel mt-1">DMAIC workflow optimization</p>
-          </div>
-          <div class="sheet p-4">
-            <span class="corner tl"></span><span class="corner br"></span>
-            <i class="fa-solid fa-code-branch text-ink mb-3"></i>
-            <h4 class="font-display font-semibold text-sm">Automation</h4>
-            <p class="text-xs text-steel mt-1">n8n, Python &amp; AI agent orchestration</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROJECTS -->
-  <section id="projects-page" class="page-view">
-    <div class="mb-10">
-      <div class="eyebrow mb-3">Dwg No. HA–002</div>
-      <h2 class="font-display text-4xl font-semibold mb-4 text-inkdeep">Industrial Case Studies</h2>
-      <p class="text-steel max-w-2xl leading-relaxed">Where data analysis directly informed process changes — measurable efficiency gains in critical infrastructure and personal-scale workflows.</p>
-    </div>
-
-    <div class="grid md:grid-cols-2 gap-6">
-      <!-- KAIA -->
-      <div class="sheet flex flex-col">
-        <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
-        <div class="h-40 grid-field flex items-center justify-center border-b border-steelfaint">
-          <i class="fa-solid fa-plane-departure text-5xl text-ink/25"></i>
-        </div>
-        <div class="p-7 flex-1 flex flex-col">
-          <div class="flex gap-2 mb-4 font-mono text-[10px] uppercase tracking-wider">
-            <span class="px-2 py-1 border border-ink text-ink">Industrial Eng.</span>
-            <span class="px-2 py-1 border border-redline text-redline">Capstone</span>
-          </div>
-          <h3 class="font-display text-xl font-semibold mb-3">KAIA Terminal 1 Optimization</h3>
-          <p class="text-steel text-sm mb-6 leading-relaxed">
-            Applied DMAIC methodology to the passenger check-in process at King Abdulaziz International Airport. Optimized resource allocation using Value Stream Mapping (VSM).
-          </p>
-          <div class="grid grid-cols-2 gap-3 mb-6 font-mono">
-            <div class="border border-steelfaint p-3">
-              <span class="block text-xl font-semibold text-ink">41%</span>
-              <span class="text-[9px] uppercase text-steel tracking-wider">Reduction in time</span>
-            </div>
-            <div class="border border-steelfaint p-3">
-              <span class="block text-xl font-semibold text-ink">50%</span>
-              <span class="text-[9px] uppercase text-steel tracking-wider">Queue decrease</span>
-            </div>
-          </div>
-          <button onclick="openModal('kaia-modal')" class="mt-auto text-ink font-mono text-sm font-medium inline-flex items-center gap-2 hover:text-redline transition-colors">
-            VIEW METHODOLOGY <i class="fa-solid fa-arrow-right"></i>
-          </button>
-        </div>
-        <div class="title-block"><span>PROJECT <b>KAIA-T1</b></span><span>TYPE <b>Capstone</b></span><span>REV <b>A</b></span></div>
-      </div>
-
-      <!-- AI Job Engine -->
-      <div class="sheet flex flex-col">
-        <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
-        <div class="h-40 grid-field flex items-center justify-center border-b border-steelfaint">
-          <i class="fa-solid fa-robot text-5xl text-redline/30"></i>
-        </div>
-        <div class="p-7 flex-1 flex flex-col">
-          <div class="flex gap-2 mb-4 font-mono text-[10px] uppercase tracking-wider">
-            <span class="px-2 py-1 border border-ink text-ink">Automation</span>
-            <span class="px-2 py-1 border border-steel text-steel">Personal IP</span>
-          </div>
-          <h3 class="font-display text-xl font-semibold mb-3">Multi-Agent AI Job Engine</h3>
-          <p class="text-steel text-sm mb-6 leading-relaxed">
-            A 4-agent autonomous pipeline built in n8n to scrape, analyze, tailor, and track job applications in real time.
-          </p>
-          <ul class="space-y-2 mb-6 font-mono text-xs text-steel">
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-redline"></i> Self-healing workflow with API retries</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-redline"></i> LLM-driven fit score analysis</li>
-          </ul>
-          <a href="https://github.com/hsndm566" target="_blank" class="mt-auto text-ink font-mono text-sm font-medium inline-flex items-center gap-2 hover:text-redline transition-colors">
-            SOURCE CODE <i class="fa-solid fa-code"></i>
-          </a>
-        </div>
-        <div class="title-block"><span>PROJECT <b>JOB-ENGINE</b></span><span>TYPE <b>n8n</b></span><span>REV <b>C</b></span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- DASHBOARD -->
-  <section id="dashboard-page" class="page-view">
-    <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-      <div>
-        <div class="eyebrow mb-3">Dwg No. HA–003</div>
-        <h2 class="font-display text-4xl font-semibold mb-4 text-inkdeep">Live Performance Analytics</h2>
-        <p class="text-steel max-w-2xl leading-relaxed">Real-time quantitative evidence of the AI Job Engine's output, fetched directly from an automated log.</p>
-      </div>
-      <div class="flex items-center gap-4 border border-steelfaint px-3 py-2 font-mono text-xs">
-        <span class="text-steel">STATUS:</span>
-        <span class="flex items-center gap-2 font-semibold text-ink"><span class="w-2 h-2 bg-redline rounded-full animate-pulse"></span> LIVE</span>
-        <button onclick="fetchSheetData()" class="hover:text-redline transition-colors" title="Refresh Data"><i class="fa-solid fa-rotate"></i></button>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 font-mono">
-      <div class="sheet p-5">
-        <span class="corner tl"></span><span class="corner br"></span>
-        <span class="text-steel text-[9px] uppercase tracking-widest block mb-2">Total Sent</span>
-        <div id="stat-total" class="text-2xl font-semibold text-ink">000</div>
-        <div class="text-[9px] text-steel mt-1">Cumulative</div>
-      </div>
-      <div class="sheet p-5">
-        <span class="corner tl"></span><span class="corner br"></span>
-        <span class="text-steel text-[9px] uppercase tracking-widest block mb-2">Replies</span>
-        <div id="stat-replies" class="text-2xl font-semibold text-ink">00</div>
-        <div class="text-[9px] text-steel mt-1">Positive interest</div>
-      </div>
-      <div class="sheet p-5">
-        <span class="corner tl"></span><span class="corner br"></span>
-        <span class="text-steel text-[9px] uppercase tracking-widest block mb-2">Interviews</span>
-        <div id="stat-interviews" class="text-2xl font-semibold text-redline">00</div>
-        <div class="text-[9px] text-steel mt-1">Active pipeline</div>
-      </div>
-      <div class="sheet p-5">
-        <span class="corner tl"></span><span class="corner br"></span>
-        <span class="text-steel text-[9px] uppercase tracking-widest block mb-2">Avg Fit Score</span>
-        <div id="stat-fit" class="text-2xl font-semibold text-ink">0.0</div>
-        <div class="text-[9px] text-steel mt-1">LLM confidence</div>
-      </div>
-    </div>
-
-    <div class="grid lg:grid-cols-2 gap-6">
-      <div class="sheet p-6">
-        <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
-        <div class="eyebrow mb-4">Status Breakdown</div>
-        <div class="relative w-full max-w-md mx-auto" style="height:320px;">
-          <canvas id="statusChart"></canvas>
-        </div>
-      </div>
-      <div class="sheet p-6 flex flex-col">
-        <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
-        <div class="eyebrow mb-4">Recent Activity</div>
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="text-left font-mono text-[10px] uppercase text-steel border-b border-steelfaint">
-              <th class="pb-3 font-medium">Company</th>
-              <th class="pb-3 font-medium">Fit</th>
-              <th class="pb-3 font-medium">Status</th>
-            </tr>
-          </thead>
-          <tbody id="activity-table-body"></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact-page" class="page-view">
-    <div class="mb-10">
-      <div class="eyebrow mb-3">Dwg No. HA–004</div>
-      <h2 class="font-display text-4xl font-semibold mb-4 text-inkdeep">Connect</h2>
-      <p class="text-steel max-w-2xl leading-relaxed">Open to roles and collaborations at the intersection of process engineering and automation.</p>
-    </div>
-
-    <div class="grid lg:grid-cols-2 gap-6">
-      <div class="sheet p-2">
-        <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
-        <div class="p-6">
-          <a href="mailto:hasanadam506@gmail.com" class="flex items-center gap-4 p-4 hover:bg-ink/5 transition-colors border border-transparent hover:border-steelfaint">
-            <div class="w-10 h-10 border border-ink flex items-center justify-center text-ink"><i class="fa-solid fa-envelope"></i></div>
-            <div><div class="text-xs font-mono uppercase text-steel">Email</div><div class="font-medium">hasanadam506@gmail.com</div></div>
-          </a>
-          <a href="https://linkedin.com/in/hsndm" target="_blank" class="flex items-center gap-4 p-4 hover:bg-ink/5 transition-colors border border-transparent hover:border-steelfaint">
-            <div class="w-10 h-10 border border-[#0077b5] flex items-center justify-center text-[#0077b5]"><i class="fa-brands fa-linkedin-in"></i></div>
-            <div><div class="text-xs font-mono uppercase text-steel">LinkedIn</div><div class="font-medium">linkedin.com/in/hsndm</div></div>
-          </a>
-          <a href="https://github.com/hsndm566" target="_blank" class="flex items-center gap-4 p-4 hover:bg-ink/5 transition-colors border border-transparent hover:border-steelfaint">
-            <div class="w-10 h-10 border border-graphite flex items-center justify-center text-graphite"><i class="fa-brands fa-github"></i></div>
-            <div><div class="text-xs font-mono uppercase text-steel">GitHub</div><div class="font-medium">github.com/hsndm566</div></div>
-          </a>
-        </div>
-      </div>
-
-      <div class="sheet p-7">
-        <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
-        <form id="contact-form" onsubmit="handleContact(event)" class="space-y-5">
-          <div>
-            <label class="block text-xs font-mono uppercase text-steel mb-2">Your Name</label>
-            <input type="text" required class="w-full bg-paper border border-steelfaint px-4 py-3 focus:ring-1 focus:ring-ink outline-none transition-all">
-          </div>
-          <div>
-            <label class="block text-xs font-mono uppercase text-steel mb-2">Work Email</label>
-            <input type="email" required class="w-full bg-paper border border-steelfaint px-4 py-3 focus:ring-1 focus:ring-ink outline-none transition-all">
-          </div>
-          <div>
-            <label class="block text-xs font-mono uppercase text-steel mb-2">Message</label>
-            <textarea rows="4" required class="w-full bg-paper border border-steelfaint px-4 py-3 focus:ring-1 focus:ring-ink outline-none transition-all"></textarea>
-          </div>
-          <button type="submit" class="w-full bg-ink text-white py-4 font-mono text-sm tracking-wide hover:bg-inkdeep transition-all flex items-center justify-center gap-2">
-            SEND INQUIRY <i class="fa-solid fa-paper-plane"></i>
-          </button>
-        </form>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<!-- KAIA MODAL -->
-<div id="kaia-modal" class="fixed inset-0 z-[100] bg-graphite/50 backdrop-blur-sm flex items-center justify-center p-6 hidden">
-  <div class="bg-white sheet max-w-2xl w-full max-h-[85vh] overflow-y-auto relative">
-    <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
-    <button onclick="closeModal('kaia-modal')" class="absolute top-6 right-6 w-9 h-9 border border-steelfaint flex items-center justify-center hover:border-ink transition-colors">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-    <div class="p-8 md:p-12">
-      <div class="eyebrow mb-3">Dwg No. HA-T1</div>
-      <h3 class="font-display text-2xl font-semibold mb-6 text-inkdeep">King Abdulaziz International Airport (KAIA) Optimization</h3>
-      <div class="space-y-6 text-steel leading-relaxed">
-        <div class="p-5 bg-ink/5 border-l-4 border-ink">
-          <h4 class="font-display font-semibold text-ink mb-2 text-sm">Challenge</h4>
-          <p class="text-sm">High wait times during peak hours at Terminal 1 check-in counters, leading to passenger dissatisfaction and missed service level agreements (SLAs).</p>
-        </div>
-        <div>
-          <h4 class="font-display font-semibold text-graphite mb-3 text-sm">Methodology: DMAIC</h4>
-          <ul class="space-y-3 text-sm font-mono">
-            <li class="flex gap-3"><span class="text-ink font-semibold">D</span> <span><b class="text-graphite font-sans font-medium">Define</b> — set goal to reduce processing time by 30%.</span></li>
-            <li class="flex gap-3"><span class="text-ink font-semibold">M</span> <span><b class="text-graphite font-sans font-medium">Measure</b> — time-and-motion studies of current check-in flows.</span></li>
-            <li class="flex gap-3"><span class="text-ink font-semibold">A</span> <span><b class="text-graphite font-sans font-medium">Analyze</b> — identified bottleneck in baggage-tag printing / ID sync.</span></li>
-            <li class="flex gap-3"><span class="text-ink font-semibold">I</span> <span><b class="text-graphite font-sans font-medium">Improve</b> — reconfigured counter layout, parallel verification streams.</span></li>
-            <li class="flex gap-3"><span class="text-ink font-semibold">C</span> <span><b class="text-graphite font-sans font-medium">Control</b> — implemented periodic KPI auditing.</span></li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="font-display font-semibold text-graphite mb-3 text-sm">Impact Summary</h4>
-          <div class="grid grid-cols-2 gap-4 font-mono">
-            <div class="text-center p-4 border border-steelfaint">
-              <div class="text-xl font-semibold text-ink">9.2m</div>
-              <div class="text-[9px] uppercase text-steel">Target time</div>
-            </div>
-            <div class="text-center p-4 border border-steelfaint">
-              <div class="text-xl font-semibold text-redline">+20%</div>
-              <div class="text-[9px] uppercase text-steel">Throughput</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="ambient-bg" aria-hidden="true">
+  <div class="ambient-blob b1"></div>
+  <div class="ambient-blob b2"></div>
+  <div class="ambient-blob b3"></div>
 </div>
 
-<footer class="border-t border-steelfaint py-10 bg-white">
-  <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-    <div class="text-xs font-mono text-steel">&copy; <span id="year"></span> Hasan Adam · Sheet HA-000 · Rev C</div>
-    <div class="flex gap-6 text-xs font-mono text-steel uppercase tracking-widest">
-      <a href="#home" class="hover:text-ink transition-colors">Home</a>
-      <a href="#projects" class="hover:text-ink transition-colors">Work</a>
-      <a href="#dashboard" class="hover:text-ink transition-colors">Analytics</a>
+<div id="nav-placeholder"></div>
+<script src="nav.js"></script>
+
+<main class="w-full px-5 sm:px-8 lg:px-14 pt-20 lg:pt-32 pb-14 max-w-5xl mx-auto min-h-[90vh]">
+  <section class="min-h-[60vh] flex flex-col justify-center pb-10 hero-glow-wrap" id="hero-section">
+    <canvas id="dotGrid" aria-hidden="true"></canvas>
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="hero-spotlight" aria-hidden="true"></div>
+    
+    <div class="fade-in hero-content">
+      <div class="text-sm font-semibold uppercase tracking-wider mb-3" style="color:var(--accent)" data-i18n="welcome_sub">Welcome to my portfolio</div>
+      <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-4" data-i18n="hero_title">
+        Hi, I'm <span style="color:var(--accent)">Hasan Adam</span>.<br>
+      </h1>
+      <h2 class="font-heading text-2xl sm:text-3xl font-bold leading-tight mb-4 h-8 sm:h-10">
+        <span id="heroTyping" aria-live="polite"></span><span class="typing-cursor">&nbsp;</span>
+      </h2>
+      <p class="max-w-xl text-base sm:text-lg mb-8 leading-relaxed" style="color:var(--text-dim)" data-i18n="hero_desc">
+        Industrial Engineer bridging Lean methodologies with AI automation. I build systems that solve bottlenecks—and track the results live.
+      </p>
+      <div class="flex flex-wrap gap-4">
+        <a href="projects.html" class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm">
+          <i class="fa-solid fa-diagram-project" aria-hidden="true"></i> <span data-i18n="btn_view_projects">View Projects</span>
+        </a>
+        <a href="dashboard.html" class="btn-outline inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm">
+          <i class="fa-solid fa-chart-line" aria-hidden="true"></i> <span data-i18n="btn_live_stats">Live Job Stats</span>
+        </a>
+      </div>
     </div>
-  </div>
-</footer>
+  </section>
 
-<script>
-  function navigate() {
-    const hash = window.location.hash || '#home';
-    const pageId = hash.substring(1) + '-page';
-    document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
-    const target = document.getElementById(pageId);
-    if (target) target.classList.add('active');
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.classList.toggle('active', link.getAttribute('href') === hash);
-    });
-    if (hash === '#dashboard') setTimeout(initDashboard, 100);
-  }
+  <section class="fade-in mt-12 pt-12 border-t" style="border-color:var(--border)">
+    <div class="grid grid-cols-1 md:grid-cols-[120px_1fr] gap-8 items-center">
+      <div class="avatar-circle w-28 h-28 rounded-full flex items-center justify-center font-heading text-3xl font-extrabold text-white shadow-lg mx-auto md:mx-0" style="background:linear-gradient(135deg, var(--accent), var(--accent-2));">HA</div>
+      <div>
+        <h2 class="font-heading text-xl font-bold mb-3" data-i18n="briefly_title">Briefly</h2>
+        <p class="text-sm leading-relaxed mb-4 max-w-2xl" style="color:var(--text-dim)" data-i18n="briefly_desc">
+          I'm a recent UBT graduate currently interning at Sela Co. in Governance. Beyond policy compliance, I apply Lean Six Sigma to operations (like optimizing KAIA airport workflows) and engineer AI solutions to automate complex processes.
+        </p>
+        <a href="about.html" class="text-sm font-semibold inline-flex items-center gap-2" style="color:var(--accent)">
+          <span data-i18n="btn_read_full">Read full background</span> <i class="fa-solid fa-arrow-right rtl-flip"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
 
-  window.addEventListener('hashchange', navigate);
-  window.addEventListener('load', () => {
-    navigate();
-    document.getElementById('year').textContent = new Date().getFullYear();
-    initTypewriter();
-  });
+<div class="text-center text-xs mt-14 mb-8" style="color:var(--text-faint)">
+  &copy; <span id="year"></span> <span data-i18n="footer_copy">Hasan Adam. Built with HTML, Tailwind, Chart.js & Google Sheets.</span>
+</div>
 
-  function initTypewriter() {
-    const el = document.getElementById('typewriter');
-    const strings = ["Workflows", "Supply Chains", "Operations", "Systems"];
-    let sIdx = 0, charIdx = 0, isDeleting = false;
-    function type() {
-      const current = strings[sIdx];
-      if (isDeleting) { el.textContent = current.substring(0, charIdx - 1); charIdx--; }
-      else { el.textContent = current.substring(0, charIdx + 1); charIdx++; }
-      if (!isDeleting && charIdx === current.length) { isDeleting = true; setTimeout(type, 1400); }
-      else if (isDeleting && charIdx === 0) { isDeleting = false; sIdx = (sIdx + 1) % strings.length; setTimeout(type, 400); }
-      else { setTimeout(type, isDeleting ? 45 : 95); }
-    }
-    type();
-  }
-
-  let statusChart = null;
-  async function initDashboard() {
-    const ctx = document.getElementById('statusChart').getContext('2d');
-    if (statusChart) statusChart.destroy();
-    statusChart = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Pending', 'Replied', 'Interview', 'Rejected'],
-        datasets: [{ data: [0,0,0,0], backgroundColor: ['#D7DCE1','#123A5E','#D14A0F','#8A8F96'], borderWidth: 0, hoverOffset: 8 }]
-      },
-      options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ font:{ family:'IBM Plex Mono', size:10 } } } }, cutout:'70%' }
-    });
-    fetchSheetData();
-  }
-
-  async function fetchSheetData() {
-    const SCRIPT_URL = "https://docs.google.com/spreadsheets/d/1rivD5luGlZqq6MCEUVvlT263OfUKXrzH6cr9cf0nG3A/gviz/tq?tqx=out:json&sheet=Job%20Applications%20Log";
-    try {
-      const response = await fetch(SCRIPT_URL);
-      const text = await response.text();
-      const json = JSON.parse(text.substring(47, text.length - 2));
-      const rows = json.table.rows;
-      const total = rows.length;
-      let interviews = 0, replies = 0, pending = 0, rejected = 0, fitSum = 0;
-      const activityList = [];
-      rows.forEach(r => {
-        const status = r.c[3]?.v?.toLowerCase() || 'sent';
-        const fit = r.c[2]?.v || 0;
-        const company = r.c[0]?.v || 'Unknown';
-        if (status.includes('interview')) interviews++;
-        else if (status.includes('replied')) replies++;
-        else if (status.includes('rejected')) rejected++;
-        else pending++;
-        fitSum += parseFloat(fit);
-        activityList.push({ company, fit, status });
-      });
-      document.getElementById('stat-total').textContent = total.toString().padStart(3, '0');
-      document.getElementById('stat-replies').textContent = replies.toString().padStart(2, '0');
-      document.getElementById('stat-interviews').textContent = interviews.toString().padStart(2, '0');
-      document.getElementById('stat-fit').textContent = (fitSum / total).toFixed(1);
-      statusChart.data.datasets[0].data = [pending, replies, interviews, rejected];
-      statusChart.update();
-      const tbody = document.getElementById('activity-table-body');
-      tbody.innerHTML = activityList.reverse().slice(0,5).map(a => `
-        <tr class="border-b border-steelfaint last:border-0">
-          <td class="py-3 font-medium text-graphite">${a.company}</td>
-          <td class="py-3 font-mono text-steel">${a.fit}%</td>
-          <td class="py-3"><span class="px-2 py-0.5 text-[9px] font-mono font-semibold uppercase tracking-wider border ${getStatusColor(a.status)}">${a.status}</span></td>
-        </tr>`).join('');
-    } catch (error) { console.error("Data Fetch Error:", error); }
-  }
-
-  function getStatusColor(s) {
-    if (s.includes('interview')) return 'border-redline text-redline';
-    if (s.includes('replied')) return 'border-ink text-ink';
-    if (s.includes('rejected')) return 'border-steel text-steel';
-    return 'border-steelfaint text-steel';
-  }
-
-  function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
-  function openModal(id) { document.getElementById(id).classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
-  function closeModal(id) { document.getElementById(id).classList.add('hidden'); document.body.style.overflow = 'auto'; }
-
-  function handleContact(e) {
-    e.preventDefault();
-    const btn = e.target.querySelector('button');
-    const original = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Processing...';
-    btn.disabled = true;
-    setTimeout(() => {
-      alert("This demonstration contact form is currently in 'Development Mode'. Please contact Hasan directly via email: hasanadam506@gmail.com");
-      btn.innerHTML = original;
-      btn.disabled = false;
-    }, 1000);
-  }
-</script>
+<script src="main.js"></script>
 </body>
 </html>
