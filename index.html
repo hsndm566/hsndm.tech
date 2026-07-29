@@ -18,7 +18,7 @@
     darkMode: 'class',
     theme: {
       extend: {
-        colors: { accent: '#EA580C', accent2: '#FBBF24' },
+        colors: { accent: '#A16207', accent2: '#CA8A04' },
         fontFamily: { sans: ['Inter', 'sans-serif'], arabic: ['Cairo', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
       }
     }
@@ -39,8 +39,8 @@
   --text-dim: #475569;
   --text-faint: #94a3b8;
   --border: rgba(0, 0, 0, 0.1);
-  --accent: #EA580C;
-  --accent-2: #F59E0B;
+  --accent: #A16207;
+  --accent-2: #CA8A04;
   --glass-bg: rgba(255, 255, 255, 0.6);
   --glass-border: rgba(255, 255, 255, 0.4);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
@@ -54,8 +54,8 @@
   --text-dim: #94a3b8;
   --text-faint: #475569;
   --border: rgba(255, 255, 255, 0.1);
-  --accent: #F97316;
-  --accent-2: #FBBF24;
+  --accent: #EAB308;
+  --accent-2: #FDE047;
   --glass-bg: rgba(17, 24, 39, 0.6);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
@@ -105,7 +105,7 @@ html[dir="rtl"] .font-heading { font-family: 'Cairo', sans-serif; }
   animation: float 20s infinite alternate ease-in-out;
 }
 .b1 { width: 400px; height: 400px; background: var(--accent); top: -100px; left: -100px; animation-delay: 0s; }
-.b2 { width: 300px; height: 300px; background: #111111; bottom: -50px; right: -50px; animation-delay: -5s; }
+.b2 { width: 300px; height: 300px; background: #1C1917; bottom: -50px; right: -50px; animation-delay: -5s; }
 .b3 { width: 350px; height: 350px; background: var(--accent-2); top: 40%; left: 50%; animation-delay: -10s; opacity: 0.2; }
 @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, 50px) scale(1.1); } }
 
@@ -148,7 +148,7 @@ html[dir="rtl"] .nav-link::after { left: auto; right: 0; }
     width: 6px; height: 6px; background: var(--accent);
     transition: top 0.05s, left 0.05s;
   }
-  .custom-cursor.hover { width: 48px; height: 48px; background-color: rgba(249, 115, 22, 0.15); border-color: transparent; }
+  .custom-cursor.hover { width: 48px; height: 48px; background-color: rgba(161, 98, 7, 0.18); border-color: transparent; }
 }
 
 .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
@@ -204,7 +204,7 @@ html[dir="rtl"] .timeline-item::before { left: auto; right: -1.85rem; }
 }
 .modal-backdrop.active .modal-panel { transform: scale(1); }
 
-.kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
+.kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
 .kpi-card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 0.9rem; padding: 0.9rem; text-align: center; }
 .kpi-value { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 800; color: var(--accent); line-height: 1; }
 .kpi-label { font-size: 0.7rem; color: var(--text-dim); margin-top: 0.35rem; }
@@ -214,7 +214,7 @@ html[dir="rtl"] .timeline-item::before { left: auto; right: -1.85rem; }
   background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text);
   outline: none; width: 100%; padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.875rem;
 }
-.form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15); }
+.form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(161, 98, 7, 0.15); }
 .floating-label {
   position: absolute; left: 1rem; top: 0.75rem; color: var(--text-faint); font-size: 0.875rem;
   transition: all 0.2s ease; pointer-events: none;
@@ -321,7 +321,7 @@ footer.site-footer {
 <!-- ============ NAV ============ -->
 <header id="desktop-nav" class="hidden lg:flex fixed top-0 w-full z-50 glass-flat rounded-none border-t-0 border-x-0 h-16 items-center px-8 justify-between" style="backdrop-filter:blur(12px); background:var(--glass-bg);">
   <a href="#home" data-page="home" class="nav-link-home flex items-center gap-2 magnetic-btn hover-target" style="text-decoration:none; color:var(--text);">
-    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-600 to-yellow-400 flex items-center justify-center text-white font-bold">H</div>
+    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-neutral-900 to-amber-600 flex items-center justify-center text-white font-bold">H</div>
     <span class="font-heading font-bold text-lg tracking-tight">Hasan Adam</span>
   </a>
   <nav>
@@ -424,34 +424,76 @@ footer.site-footer {
         </div>
 
         <div class="fade-in">
-          <p class="mb-4 leading-relaxed text-sm sm:text-base" style="color:var(--text-dim)" data-i18n="about_p1">I'm an Industrial Engineer with a BSc from UBT, currently interning at Sela Co. in the Governance department. There, I review and enhance internal policies for government compliance.</p>
+          <p class="mb-4 leading-relaxed text-sm sm:text-base" style="color:var(--text-dim)" data-i18n="about_p1">Industrial Engineer specializing in process optimization, supply chain logistics, and operations management — currently interning at Sela Co. in the Governance department, reviewing and enhancing internal policies for compliance. Proven ability to streamline workflows, coordinate cross-functional teams, and leverage Lean methodologies to drive measurable efficiency improvements.</p>
           <p class="mb-8 leading-relaxed text-sm sm:text-base" style="color:var(--text-dim)" data-i18n="about_p2">Outside of work, I built a multi‑agent job application engine — an n8n automation that scrapes, scores, tailors, and sends applications, boosting interviews by over 10%.</p>
 
-          <h3 class="font-heading text-base font-semibold mb-3" data-i18n="skills_title">Skills & Tools</h3>
-          <!-- FIX (c): restored full 8-chip skill set -->
+          <h3 class="font-heading text-base font-semibold mb-3" data-i18n="skills_title">Core Competencies</h3>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-8">
-            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-gears block text-xl mb-2"></i><span data-i18n="skill_1">Lean</span></div>
-            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-diagram-project block text-xl mb-2"></i><span data-i18n="skill_2">Optimization</span></div>
-            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-truck-fast block text-xl mb-2"></i><span data-i18n="skill_3">Supply Chain</span></div>
-            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-chart-simple block text-xl mb-2"></i><span data-i18n="skill_4">Data Analysis</span></div>
-            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-file-excel block text-xl mb-2"></i><span data-i18n="skill_5">Excel</span></div>
-            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-brands fa-python block text-xl mb-2"></i><span data-i18n="skill_6">Python</span></div>
-            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-people-group block text-xl mb-2"></i><span data-i18n="skill_7">Leadership</span></div>
-            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-shield-halved block text-xl mb-2"></i><span data-i18n="skill_8">Risk Mgmt</span></div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-gears block text-xl mb-2"></i><span data-i18n="skill_1">Lean Manufacturing</span></div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-diagram-project block text-xl mb-2"></i><span data-i18n="skill_2">Process Optimization</span></div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-truck-fast block text-xl mb-2"></i><span data-i18n="skill_3">Supply Chain Logistics</span></div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-boxes-stacked block text-xl mb-2"></i><span data-i18n="skill_4">Inventory Management</span></div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-handshake block text-xl mb-2"></i><span data-i18n="skill_5">Vendor Relations</span></div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-shield-halved block text-xl mb-2"></i><span data-i18n="skill_6">Risk Management</span></div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-people-group block text-xl mb-2"></i><span data-i18n="skill_7">Cross-Functional Leadership</span></div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-chart-simple block text-xl mb-2"></i><span data-i18n="skill_8">Data Analysis</span></div>
           </div>
 
-          <h3 class="font-heading text-base font-semibold mb-4" data-i18n="exp_title">Experience</h3>
+          <h3 class="font-heading text-base font-semibold mb-4" data-i18n="edu_title">Education</h3>
           <div class="timeline mb-8">
             <div class="timeline-item fade-in">
-              <div class="timeline-date" data-i18n="exp_sela_date">2025 – Present</div>
-              <h4 class="font-semibold text-sm mb-1" data-i18n="exp_sela">Governance Intern — Sela Co.</h4>
-              <p class="text-sm leading-relaxed" style="color:var(--text-dim)" data-i18n="exp_sela_desc">Reviewing and enhancing internal policies for government compliance.</p>
+              <div class="timeline-date" data-i18n="edu_ubt_date">March 2022 – Present</div>
+              <h4 class="font-semibold text-sm mb-1" data-i18n="edu_ubt">BSc Industrial Engineering — University of Business and Technology (UBT), Jeddah</h4>
+              <p class="text-sm leading-relaxed" style="color:var(--text-dim)" data-i18n="edu_ubt_desc">Coursework centered on Lean methodologies, process optimization, and supply chain management.</p>
             </div>
             <div class="timeline-item fade-in">
-              <div class="timeline-date" data-i18n="exp_ubt_date">2021 – 2025</div>
-              <h4 class="font-semibold text-sm mb-1" data-i18n="exp_ubt">BSc Industrial Engineering — UBT</h4>
-              <p class="text-sm leading-relaxed" style="color:var(--text-dim)" data-i18n="exp_ubt_desc">Focused on operations research, supply chain management, and Lean Six Sigma.</p>
+              <div class="timeline-date" data-i18n="edu_ipsj_date">January 2014 – November 2019</div>
+              <h4 class="font-semibold text-sm mb-1" data-i18n="edu_ipsj">STEM Diploma — International Philippine School in Jeddah (IPSJ)</h4>
+              <p class="text-sm leading-relaxed" style="color:var(--text-dim)" data-i18n="edu_ipsj_desc">Completed STEM-focused secondary diploma prior to university studies.</p>
             </div>
+          </div>
+
+          <h3 class="font-heading text-base font-semibold mb-4" data-i18n="exp_title">Professional Experience</h3>
+          <div class="timeline mb-8">
+            <div class="timeline-item fade-in">
+              <div class="timeline-date" data-i18n="exp_0_date">2025 – Present</div>
+              <h4 class="font-semibold text-sm mb-1" data-i18n="exp_0_title">Governance Intern — Sela Co., Jeddah</h4>
+              <p class="text-sm leading-relaxed" style="color:var(--text-dim)" data-i18n="exp_0_desc">Reviewing and enhancing internal policies for government compliance and operational excellence. (Current role.)</p>
+            </div>
+            <div class="timeline-item fade-in">
+              <div class="timeline-date" data-i18n="exp_1_date">June 2022 – December 2025</div>
+              <h4 class="font-semibold text-sm mb-1" data-i18n="exp_1_title">Logistics & Operations Coordinator — UBT, Jeddah</h4>
+              <p class="text-sm leading-relaxed" style="color:var(--text-dim)" data-i18n="exp_1_desc">Coordinated travel, accommodation, and logistics for international athletic contingents; recruited and directed volunteer workforces for events like the Jeddah Marathon; managed liaison operations for guest-experience continuity.</p>
+            </div>
+            <div class="timeline-item fade-in">
+              <div class="timeline-date" data-i18n="exp_2_date">March 2024 – August 2024</div>
+              <h4 class="font-semibold text-sm mb-1" data-i18n="exp_2_title">Purchasing Assistant — Aljabr, Dammam</h4>
+              <p class="text-sm leading-relaxed" style="color:var(--text-dim)" data-i18n="exp_2_desc">Directed procurement operations, optimized vendor relationships, and executed purchase orders backed by market research.</p>
+            </div>
+            <div class="timeline-item fade-in">
+              <div class="timeline-date" data-i18n="exp_3_date">February 2021 – November 2022</div>
+              <h4 class="font-semibold text-sm mb-1" data-i18n="exp_3_title">Production Management Secretary — Piece of Fabric Est., Jeddah</h4>
+              <p class="text-sm leading-relaxed" style="color:var(--text-dim)" data-i18n="exp_3_desc">Standardized production schedules to maximize output and minimize downtime; administered inventory audits and supply chain replenishment.</p>
+            </div>
+            <div class="timeline-item fade-in">
+              <div class="timeline-date" data-i18n="exp_4_date">January 2019 – December 2019</div>
+              <h4 class="font-semibold text-sm mb-1" data-i18n="exp_4_title">Educational Operations Assistant — AGS Advanced Generations School, Jeddah</h4>
+              <p class="text-sm leading-relaxed" style="color:var(--text-dim)" data-i18n="exp_4_desc">Supported structured learning environments through behavioral reinforcement and individualized support; streamlined communication between staff and stakeholders.</p>
+            </div>
+          </div>
+
+          <h3 class="font-heading text-base font-semibold mb-4" data-i18n="certs_title">Certifications</h3>
+          <ul class="mb-8 flex flex-col gap-2 text-sm leading-relaxed" style="color:var(--text-dim)">
+            <li class="flex items-start gap-2"><i class="fa-solid fa-certificate mt-1 text-xs" style="color:var(--accent)"></i><span data-i18n="cert_1">OSHA 30-Hour General Industry (Occupational Safety and Health)</span></li>
+            <li class="flex items-start gap-2"><i class="fa-solid fa-certificate mt-1 text-xs" style="color:var(--accent)"></i><span data-i18n="cert_2">ISO 9001:2015 & Risk Management Certificate (Quality Management Systems)</span></li>
+            <li class="flex items-start gap-2"><i class="fa-solid fa-certificate mt-1 text-xs" style="color:var(--accent)"></i><span data-i18n="cert_3">Business Analysis Virtual Work Experience (BCG & Misk)</span></li>
+            <li class="flex items-start gap-2"><i class="fa-solid fa-certificate mt-1 text-xs" style="color:var(--accent)"></i><span data-i18n="cert_4">Professional Certificate in Productivity (PCP)</span></li>
+          </ul>
+
+          <h3 class="font-heading text-base font-semibold mb-3" data-i18n="lang_title">Languages</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="skill-chip rounded-full px-4 py-2 text-sm font-medium" data-i18n="lang_en">English</span>
+            <span class="skill-chip rounded-full px-4 py-2 text-sm font-medium" data-i18n="lang_ar">Arabic</span>
           </div>
         </div>
       </div>
@@ -636,31 +678,26 @@ footer.site-footer {
       This capstone project applied Lean Management and the DMAIC framework to the passenger check-in process at KAIA Terminal 1. The goal: cut processing time, reduce queues, and balance workload.
     </p>
 
-    <!-- FIX (b): 4 KPI cards restored -->
+    <!-- KPI cards match the CV exactly: 40% check-in acceleration, 50% wait-time cut, 57% verification cut -->
     <div class="kpi-grid">
       <div class="kpi-card">
-        <div class="kpi-value">41%</div>
+        <div class="kpi-value">40%</div>
         <div class="kpi-label" data-i18n="kaia_kpi_1">Faster check-in time</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-value">50%</div>
-        <div class="kpi-label" data-i18n="kaia_kpi_2">Shorter queue waits</div>
+        <div class="kpi-label" data-i18n="kaia_kpi_2">Less waiting time</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-value">57%</div>
-        <div class="kpi-label" data-i18n="kaia_kpi_3">Faster doc verification</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-value">120</div>
-        <div class="kpi-label" data-i18n="kaia_kpi_4">More passengers/hr off-peak</div>
+        <div class="kpi-label" data-i18n="kaia_kpi_3">Faster verification</div>
       </div>
     </div>
 
     <ul class="text-sm leading-relaxed list-disc pl-5" style="color:var(--text-dim)">
-      <li data-i18n="kaia_b1">Average total check-in time dropped from 15.5 to 9.2 minutes.</li>
-      <li data-i18n="kaia_b2">Queue waiting time was roughly halved.</li>
-      <li data-i18n="kaia_b3">Document verification time fell by 57%.</li>
-      <li data-i18n="kaia_b4">Off-peak counter utilization improved, absorbing 120 additional passengers per hour without added staff.</li>
+      <li data-i18n="kaia_b1">Average check-in time dropped from 15.5 to 9.2 minutes — a 40% process acceleration.</li>
+      <li data-i18n="kaia_b2">Passenger waiting time decreased by 50%.</li>
+      <li data-i18n="kaia_b3">Manual verification time decreased by 57% through bottleneck identification and resource balancing.</li>
     </ul>
   </div>
 </div>
@@ -712,18 +749,41 @@ const translations = {
     job_title: "Industrial Engineer",
     loc: "Jeddah, Saudi Arabia",
     edu: "UBT",
-    about_p1: "I'm an Industrial Engineer with a BSc from UBT, currently interning at Sela Co. in the Governance department. There, I review and enhance internal policies for government compliance.",
+    about_p1: "Industrial Engineer specializing in process optimization, supply chain logistics, and operations management — currently interning at Sela Co. in the Governance department, reviewing and enhancing internal policies for compliance. Proven ability to streamline workflows, coordinate cross-functional teams, and leverage Lean methodologies to drive measurable efficiency improvements.",
     about_p2: "Outside of work, I built a multi‑agent job application engine — an n8n automation that scrapes, scores, tailors, and sends applications, boosting interviews by over 10%.",
-    skills_title: "Skills & Tools",
-    skill_1: "Lean", skill_2: "Optimization", skill_3: "Supply Chain", skill_4: "Data Analysis",
-    skill_5: "Excel", skill_6: "Python", skill_7: "Leadership", skill_8: "Risk Mgmt",
-    exp_title: "Experience",
-    exp_sela_date: "2025 – Present",
-    exp_sela: "Governance Intern — Sela Co.",
-    exp_sela_desc: "Reviewing and enhancing internal policies for government compliance.",
-    exp_ubt_date: "2021 – 2025",
-    exp_ubt: "BSc Industrial Engineering — UBT",
-    exp_ubt_desc: "Focused on operations research, supply chain management, and Lean Six Sigma.",
+    skills_title: "Core Competencies",
+    skill_1: "Lean Manufacturing", skill_2: "Process Optimization", skill_3: "Supply Chain Logistics", skill_4: "Inventory Management",
+    skill_5: "Vendor Relations", skill_6: "Risk Management", skill_7: "Cross-Functional Leadership", skill_8: "Data Analysis",
+    edu_title: "Education",
+    edu_ubt_date: "March 2022 – Present",
+    edu_ubt: "BSc Industrial Engineering — University of Business and Technology (UBT), Jeddah",
+    edu_ubt_desc: "Coursework centered on Lean methodologies, process optimization, and supply chain management.",
+    edu_ipsj_date: "January 2014 – November 2019",
+    edu_ipsj: "STEM Diploma — International Philippine School in Jeddah (IPSJ)",
+    edu_ipsj_desc: "Completed STEM-focused secondary diploma prior to university studies.",
+    exp_title: "Professional Experience",
+    exp_0_date: "2025 – Present",
+    exp_0_title: "Governance Intern — Sela Co., Jeddah",
+    exp_0_desc: "Reviewing and enhancing internal policies for government compliance and operational excellence. (Current role.)",
+    exp_1_date: "June 2022 – December 2025",
+    exp_1_title: "Logistics & Operations Coordinator — UBT, Jeddah",
+    exp_1_desc: "Coordinated travel, accommodation, and logistics for international athletic contingents; recruited and directed volunteer workforces for events like the Jeddah Marathon; managed liaison operations for guest-experience continuity.",
+    exp_2_date: "March 2024 – August 2024",
+    exp_2_title: "Purchasing Assistant — Aljabr, Dammam",
+    exp_2_desc: "Directed procurement operations, optimized vendor relationships, and executed purchase orders backed by market research.",
+    exp_3_date: "February 2021 – November 2022",
+    exp_3_title: "Production Management Secretary — Piece of Fabric Est., Jeddah",
+    exp_3_desc: "Standardized production schedules to maximize output and minimize downtime; administered inventory audits and supply chain replenishment.",
+    exp_4_date: "January 2019 – December 2019",
+    exp_4_title: "Educational Operations Assistant — AGS Advanced Generations School, Jeddah",
+    exp_4_desc: "Supported structured learning environments through behavioral reinforcement and individualized support; streamlined communication between staff and stakeholders.",
+    certs_title: "Certifications",
+    cert_1: "OSHA 30-Hour General Industry (Occupational Safety and Health)",
+    cert_2: "ISO 9001:2015 & Risk Management Certificate (Quality Management Systems)",
+    cert_3: "Business Analysis Virtual Work Experience (BCG & Misk)",
+    cert_4: "Professional Certificate in Productivity (PCP)",
+    lang_title: "Languages",
+    lang_en: "English", lang_ar: "Arabic",
     projects_sub: "Systems, workflows, and automation engineering.",
     filter_all: "All", filter_automation: "Automation", filter_lean: "Lean / Six Sigma",
     proj_1_title: "AI Job Engine",
@@ -734,13 +794,11 @@ const translations = {
     btn_case_study: "View Case Study",
     kaia_p1: "This capstone project applied Lean Management and the DMAIC framework to the passenger check-in process at KAIA Terminal 1. The goal: cut processing time, reduce queues, and balance workload.",
     kaia_kpi_1: "Faster check-in time",
-    kaia_kpi_2: "Shorter queue waits",
-    kaia_kpi_3: "Faster doc verification",
-    kaia_kpi_4: "More passengers/hr off-peak",
-    kaia_b1: "Average total check-in time dropped from 15.5 to 9.2 minutes.",
-    kaia_b2: "Queue waiting time was roughly halved.",
-    kaia_b3: "Document verification time fell by 57%.",
-    kaia_b4: "Off-peak counter utilization improved, absorbing 120 additional passengers per hour without added staff.",
+    kaia_kpi_2: "Less waiting time",
+    kaia_kpi_3: "Faster verification",
+    kaia_b1: "Average check-in time dropped from 15.5 to 9.2 minutes — a 40% process acceleration.",
+    kaia_b2: "Passenger waiting time decreased by 50%.",
+    kaia_b3: "Manual verification time decreased by 57% through bottleneck identification and resource balancing.",
     dash_sub: "Live data pulled directly from my metrics.",
     stat_sent: "Sent Today", stat_replies: "Replies", stat_interviews: "Interviews", stat_total: "Total Sent",
     chart_title: "Status Breakdown",
@@ -783,18 +841,41 @@ const translations = {
     job_title: "مهندس صناعي",
     loc: "جدة، المملكة العربية السعودية",
     edu: "جامعة الأعمال والتكنولوجيا",
-    about_p1: "أنا مهندس صناعي حاصل على بكالوريوس من جامعة الأعمال والتكنولوجيا، وأتدرب حاليًا في شركة صلة في إدارة الحوكمة. أقوم هناك بمراجعة وتحسين السياسات الداخلية للامتثال الحكومي.",
+    about_p1: "مهندس صناعي متخصص في تحسين العمليات، ولوجستيات سلاسل الإمداد، وإدارة العمليات — يتدرب حاليًا في شركة صلة في إدارة الحوكمة، حيث يراجع ويحسّن السياسات الداخلية للامتثال. لديه قدرة مثبتة على تبسيط مسارات العمل، وتنسيق فرق متعددة الوظائف، وتوظيف منهجيات الإدارة اللينة لتحقيق تحسينات ملموسة في الكفاءة.",
     about_p2: "خارج نطاق العمل، قمت ببناء محرك تقديم للوظائف متعدد الوكلاء — أتمتة عبر n8n تقوم بجمع الوظائف وتقييم التوافق وتخصيص السيرة الذاتية وإرسالها، مما زاد من فرص المقابلات بنسبة 10%.",
-    skills_title: "المهارات والأدوات",
-    skill_1: "الإدارة اللينة (Lean)", skill_2: "التحسين", skill_3: "سلاسل الإمداد", skill_4: "تحليل البيانات",
-    skill_5: "إكسل", skill_6: "بايثون", skill_7: "القيادة", skill_8: "إدارة المخاطر",
-    exp_title: "الخبرات",
-    exp_sela_date: "2025 – الحاضر",
-    exp_sela: "متدرب حوكمة — شركة صلة",
-    exp_sela_desc: "مراجعة وتحسين السياسات الداخلية للامتثال الحكومي.",
-    exp_ubt_date: "2021 – 2025",
-    exp_ubt: "بكالوريوس هندسة صناعية — جامعة الأعمال والتكنولوجيا",
-    exp_ubt_desc: "التركيز على بحوث العمليات، وإدارة سلاسل الإمداد، ومنهجيات ستة سيجما اللينة.",
+    skills_title: "الكفاءات الأساسية",
+    skill_1: "التصنيع اللين (Lean)", skill_2: "تحسين العمليات", skill_3: "لوجستيات سلاسل الإمداد", skill_4: "إدارة المخزون",
+    skill_5: "علاقات الموردين", skill_6: "إدارة المخاطر", skill_7: "القيادة متعددة الوظائف", skill_8: "تحليل البيانات",
+    edu_title: "التعليم",
+    edu_ubt_date: "مارس 2022 – الحاضر",
+    edu_ubt: "بكالوريوس هندسة صناعية — جامعة الأعمال والتكنولوجيا (UBT)، جدة",
+    edu_ubt_desc: "التركيز على منهجيات الإدارة اللينة، وتحسين العمليات، وإدارة سلاسل الإمداد.",
+    edu_ipsj_date: "يناير 2014 – نوفمبر 2019",
+    edu_ipsj: "دبلوم STEM — المدرسة الفلبينية الدولية في جدة (IPSJ)",
+    edu_ipsj_desc: "إتمام دبلوم ثانوي متخصص في STEM قبل الدراسة الجامعية.",
+    exp_title: "الخبرة المهنية",
+    exp_0_date: "2025 – الحاضر",
+    exp_0_title: "متدرب حوكمة — شركة صلة، جدة",
+    exp_0_desc: "مراجعة وتحسين السياسات الداخلية للامتثال الحكومي والتميز التشغيلي. (الدور الحالي.)",
+    exp_1_date: "يونيو 2022 – ديسمبر 2025",
+    exp_1_title: "منسق لوجستيات وعمليات — جامعة الأعمال والتكنولوجيا، جدة",
+    exp_1_desc: "تنسيق السفر والإقامة واللوجستيات للوفود الرياضية الدولية؛ توظيف وقيادة فرق تطوعية لفعاليات مثل ماراثون جدة؛ إدارة عمليات التنسيق لضمان استمرارية تجربة الضيوف.",
+    exp_2_date: "مارس 2024 – أغسطس 2024",
+    exp_2_title: "مساعد مشتريات — الجبر، الدمام",
+    exp_2_desc: "إدارة عمليات الشراء، وتحسين العلاقات مع الموردين، وتنفيذ أوامر الشراء بالاستناد إلى أبحاث السوق.",
+    exp_3_date: "فبراير 2021 – نوفمبر 2022",
+    exp_3_title: "سكرتير إدارة الإنتاج — مؤسسة قطعة قماش، جدة",
+    exp_3_desc: "توحيد جداول الإنتاج لزيادة الإنتاجية وتقليل التوقف؛ إدارة عمليات جرد المخزون وتجديد سلسلة الإمداد.",
+    exp_4_date: "يناير 2019 – ديسمبر 2019",
+    exp_4_title: "مساعد عمليات تعليمية — مدرسة AGS للأجيال المتقدمة، جدة",
+    exp_4_desc: "دعم بيئات تعليمية منظمة من خلال التعزيز السلوكي والدعم الفردي؛ تبسيط التواصل بين الموظفين وأصحاب المصلحة.",
+    certs_title: "الشهادات",
+    cert_1: "OSHA 30 ساعة للصناعة العامة (السلامة والصحة المهنية)",
+    cert_2: "شهادة ISO 9001:2015 وإدارة المخاطر (أنظمة إدارة الجودة)",
+    cert_3: "تجربة عمل افتراضية في تحليل الأعمال (BCG وميسك)",
+    cert_4: "شهادة احترافية في الإنتاجية (PCP)",
+    lang_title: "اللغات",
+    lang_en: "الإنجليزية", lang_ar: "العربية",
     projects_sub: "الأنظمة، ومسارات العمل، وهندسة الأتمتة.",
     filter_all: "الكل", filter_automation: "الأتمتة", filter_lean: "الإدارة اللينة / 6 سيجما",
     proj_1_title: "محرك الوظائف الذكي",
@@ -805,13 +886,11 @@ const translations = {
     btn_case_study: "عرض دراسة الحالة",
     kaia_p1: "قام مشروع التخرج هذا بتطبيق الإدارة الرشيقة وإطار DMAIC على عملية تسجيل الدخول للركاب في صالة KAIA رقم 1. الهدف: تقليل وقت المعالجة، وتقليل الطوابير، وموازنة عبء العمل.",
     kaia_kpi_1: "وقت تسجيل دخول أسرع",
-    kaia_kpi_2: "طوابير أقصر",
+    kaia_kpi_2: "وقت انتظار أقل",
     kaia_kpi_3: "تحقق أسرع من الوثائق",
-    kaia_kpi_4: "ركاب إضافيون بالساعة خارج الذروة",
-    kaia_b1: "انخفض متوسط وقت تسجيل الدخول الكلي من 15.5 إلى 9.2 دقيقة.",
-    kaia_b2: "انخفض وقت انتظار الطابور إلى النصف تقريباً.",
-    kaia_b3: "انخفض وقت التحقق من الوثائق بنسبة 57%.",
-    kaia_b4: "تحسن استغلال المكاتب خارج أوقات الذروة، مما استوعب 120 راكباً إضافياً في الساعة دون موظفين إضافيين.",
+    kaia_b1: "انخفض متوسط وقت تسجيل الدخول من 15.5 إلى 9.2 دقيقة — تسريع بنسبة 40% في العملية.",
+    kaia_b2: "انخفض وقت انتظار الركاب بنسبة 50%.",
+    kaia_b3: "انخفض وقت التحقق اليدوي بنسبة 57% من خلال تحديد الاختناقات وموازنة الموارد.",
     dash_sub: "بيانات حية مستمدة مباشرة من مقاييسي.",
     stat_sent: "تم الإرسال اليوم", stat_replies: "الردود", stat_interviews: "المقابلات", stat_total: "إجمالي المرسل",
     chart_title: "تفصيل الحالات",
@@ -1217,7 +1296,7 @@ function initCharts() {
       labels: ['Applied', 'Interview', 'Rejected', 'Offer'],
       datasets: [{
         data: [d.statusBreakdown.applied, d.statusBreakdown.interview, d.statusBreakdown.rejected, d.statusBreakdown.offer],
-        backgroundColor: ['#EA580C', '#10b981', '#ef4444', '#FBBF24'],
+        backgroundColor: ['#A16207', '#10b981', '#ef4444', '#EAB308'],
         borderWidth: 0,
         hoverOffset: 4
       }]
@@ -1235,12 +1314,12 @@ function initCharts() {
       datasets: [{
         label: 'Applications',
         data: d.weeklyTrend,
-        borderColor: '#EA580C',
-        backgroundColor: 'rgba(234, 88, 12, 0.12)',
+        borderColor: '#A16207',
+        backgroundColor: 'rgba(161, 98, 7, 0.12)',
         borderWidth: 2,
         tension: 0.4,
         fill: true,
-        pointBackgroundColor: '#EA580C'
+        pointBackgroundColor: '#A16207'
       }]
     },
     options: {
@@ -1273,7 +1352,7 @@ function initHeatmap() {
     cell.className = 'heatmap-cell';
     const intensity = Math.random();
     if (intensity > 0.5) {
-      cell.style.backgroundColor = `rgba(234, 88, 12, ${intensity})`;
+      cell.style.backgroundColor = `rgba(161, 98, 7, ${intensity})`;
     }
     cell.title = `Contributions: ${Math.floor(intensity * 10)}`;
     container.appendChild(cell);
