@@ -1,7 +1,3 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
@@ -22,7 +18,7 @@
     darkMode: 'class',
     theme: {
       extend: {
-        colors: { accent: '#2563eb', accent2: '#3b82f6' },
+        colors: { accent: '#EA580C', accent2: '#FBBF24' },
         fontFamily: { sans: ['Inter', 'sans-serif'], arabic: ['Cairo', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
       }
     }
@@ -43,8 +39,8 @@
   --text-dim: #475569;
   --text-faint: #94a3b8;
   --border: rgba(0, 0, 0, 0.1);
-  --accent: #2563eb;
-  --accent-2: #3b82f6;
+  --accent: #EA580C;
+  --accent-2: #F59E0B;
   --glass-bg: rgba(255, 255, 255, 0.6);
   --glass-border: rgba(255, 255, 255, 0.4);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
@@ -58,8 +54,8 @@
   --text-dim: #94a3b8;
   --text-faint: #475569;
   --border: rgba(255, 255, 255, 0.1);
-  --accent: #3b82f6;
-  --accent-2: #60a5fa;
+  --accent: #F97316;
+  --accent-2: #FBBF24;
   --glass-bg: rgba(17, 24, 39, 0.6);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
@@ -109,7 +105,7 @@ html[dir="rtl"] .font-heading { font-family: 'Cairo', sans-serif; }
   animation: float 20s infinite alternate ease-in-out;
 }
 .b1 { width: 400px; height: 400px; background: var(--accent); top: -100px; left: -100px; animation-delay: 0s; }
-.b2 { width: 300px; height: 300px; background: #8b5cf6; bottom: -50px; right: -50px; animation-delay: -5s; }
+.b2 { width: 300px; height: 300px; background: #111111; bottom: -50px; right: -50px; animation-delay: -5s; }
 .b3 { width: 350px; height: 350px; background: var(--accent-2); top: 40%; left: 50%; animation-delay: -10s; opacity: 0.2; }
 @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, 50px) scale(1.1); } }
 
@@ -152,7 +148,7 @@ html[dir="rtl"] .nav-link::after { left: auto; right: 0; }
     width: 6px; height: 6px; background: var(--accent);
     transition: top 0.05s, left 0.05s;
   }
-  .custom-cursor.hover { width: 48px; height: 48px; background-color: rgba(59, 130, 246, 0.1); border-color: transparent; }
+  .custom-cursor.hover { width: 48px; height: 48px; background-color: rgba(249, 115, 22, 0.15); border-color: transparent; }
 }
 
 .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
@@ -218,7 +214,7 @@ html[dir="rtl"] .timeline-item::before { left: auto; right: -1.85rem; }
   background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text);
   outline: none; width: 100%; padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.875rem;
 }
-.form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+.form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15); }
 .floating-label {
   position: absolute; left: 1rem; top: 0.75rem; color: var(--text-faint); font-size: 0.875rem;
   transition: all 0.2s ease; pointer-events: none;
@@ -325,7 +321,7 @@ footer.site-footer {
 <!-- ============ NAV ============ -->
 <header id="desktop-nav" class="hidden lg:flex fixed top-0 w-full z-50 glass-flat rounded-none border-t-0 border-x-0 h-16 items-center px-8 justify-between" style="backdrop-filter:blur(12px); background:var(--glass-bg);">
   <a href="#home" data-page="home" class="nav-link-home flex items-center gap-2 magnetic-btn hover-target" style="text-decoration:none; color:var(--text);">
-    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-blue-400 flex items-center justify-center text-white font-bold">H</div>
+    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-600 to-yellow-400 flex items-center justify-center text-white font-bold">H</div>
     <span class="font-heading font-bold text-lg tracking-tight">Hasan Adam</span>
   </a>
   <nav>
@@ -686,6 +682,7 @@ window.dashboardData = {
   interviews: 2,      // TODO: pull from Google Sheets
   totalSent: 142,     // TODO: pull from Google Sheets
   monthlyGoal: 100,   // TODO: pull from Google Sheets
+  goalProgressPct: 85, // TODO: pull from Google Sheets
   statusBreakdown: { applied: 75, interview: 12, rejected: 10, offer: 3 }, // TODO
   weeklyTrend: [5, 12, 8, 15, 22, 18] // TODO
 };
@@ -1220,7 +1217,7 @@ function initCharts() {
       labels: ['Applied', 'Interview', 'Rejected', 'Offer'],
       datasets: [{
         data: [d.statusBreakdown.applied, d.statusBreakdown.interview, d.statusBreakdown.rejected, d.statusBreakdown.offer],
-        backgroundColor: ['#3b82f6', '#10b981', '#ef4444', '#f59e0b'],
+        backgroundColor: ['#EA580C', '#10b981', '#ef4444', '#FBBF24'],
         borderWidth: 0,
         hoverOffset: 4
       }]
@@ -1238,12 +1235,12 @@ function initCharts() {
       datasets: [{
         label: 'Applications',
         data: d.weeklyTrend,
-        borderColor: '#2563eb',
-        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+        borderColor: '#EA580C',
+        backgroundColor: 'rgba(234, 88, 12, 0.12)',
         borderWidth: 2,
         tension: 0.4,
         fill: true,
-        pointBackgroundColor: '#2563eb'
+        pointBackgroundColor: '#EA580C'
       }]
     },
     options: {
@@ -1276,7 +1273,7 @@ function initHeatmap() {
     cell.className = 'heatmap-cell';
     const intensity = Math.random();
     if (intensity > 0.5) {
-      cell.style.backgroundColor = `rgba(37, 99, 235, ${intensity})`;
+      cell.style.backgroundColor = `rgba(234, 88, 12, ${intensity})`;
     }
     cell.title = `Contributions: ${Math.floor(intensity * 10)}`;
     container.appendChild(cell);
@@ -1288,8 +1285,9 @@ function initGoalBar() {
   const label = document.getElementById('goal-label');
   if (!bar) return;
   const d = window.dashboardData;
-  const pct = Math.min(100, Math.round((d.totalSent >= d.monthlyGoal ? 100 : (d.sentToday, d.monthlyGoal ? (85) : 0)));
-  // Use the monthly progress figure directly from the data source (fallback 85%)
+  // Goal progress comes from the data source directly (fallback 85%) —
+  // wire this to a real "applications this month / monthlyGoal" figure
+  // once fetchDashboardData() pulls from Google Sheets.
   const goalPct = d.goalProgressPct || 85;
   if (label) label.textContent = `${Math.round((goalPct/100) * d.monthlyGoal)} / ${d.monthlyGoal}`;
   bar.style.width = '0%';
