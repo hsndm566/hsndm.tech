@@ -1,62 +1,307 @@
+i used claude but it capped at the end i wanna know if this is working or if it is okay or not 
+
+
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="site_title">Hasan Adam – Industrial Engineer</title>
-<meta name="description" content="Hasan Adam – Industrial Engineer, automation builder, and live job-application tracker.">
+<title data-i18n="site_title">Hasan Adam – Portfolio</title>
 <meta name="theme-color" content="#0a0e17" id="theme-color-meta">
-
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://hsndm.tech/">
-<meta property="og:title" content="Hasan Adam – Industrial Engineer">
-<meta property="og:description" content="Hasan Adam – Industrial Engineer, automation builder, and live job-application tracker.">
-<meta property="og:image" content="/og-image.png">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Hasan Adam – Industrial Engineer">
-<meta name="twitter:description" content="Hasan Adam – Industrial Engineer, automation builder, and live job-application tracker.">
-<meta name="twitter:image" content="/og-image.png">
-
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org/",
-  "@type": "Person",
-  "name": "Hasan Adam",
-  "jobTitle": "Industrial Engineer",
-  "worksFor": { "@type": "Organization", "name": "Sela Co." },
-  "alumniOf": { "@type": "Organization", "name": "University of Business & Technology (UBT)" },
-  "sameAs": [ "https://github.com/hsndm566", "https://linkedin.com/in/hsndm" ]
-}
-</script>
+<meta name="description" content="Hasan Adam - Industrial Engineer, Lean Six Sigma practitioner, and automation builder.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
   tailwind.config = {
     darkMode: 'class',
-    theme: { extend: { colors: { accent: '#2563eb', accent2: '#3b82f6' }, fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] } } }
+    theme: {
+      extend: {
+        colors: { accent: '#2563eb', accent2: '#3b82f6' },
+        fontFamily: { sans: ['Inter', 'sans-serif'], arabic: ['Cairo', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+      }
+    }
   }
 </script>
-<link rel="stylesheet" href="styles.css">
-<script>
-  try {
-    const savedTheme = localStorage.getItem('site-theme') || 'dark';
-    document.documentElement.classList.toggle('dark', savedTheme === 'dark');
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    const savedLang = localStorage.getItem('site-lang') || 'en';
-    document.documentElement.lang = savedLang;
-    document.documentElement.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
-  } catch(e){}
-</script>
+
+<style>
+/* ============================================
+   HASAN ADAM PORTFOLIO — GLOBAL STYLES
+   (merged from styles.css)
+   ============================================ */
+
+:root {
+  --bg: #f8fafc;
+  --bg-elevated: #ffffff;
+  --bg-elevated-2: #f1f5f9;
+  --text: #0f172a;
+  --text-dim: #475569;
+  --text-faint: #94a3b8;
+  --border: rgba(0, 0, 0, 0.1);
+  --accent: #2563eb;
+  --accent-2: #3b82f6;
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+.dark {
+  --bg: #0a0e17;
+  --bg-elevated: #111827;
+  --bg-elevated-2: #1f2937;
+  --text: #f8fafc;
+  --text-dim: #94a3b8;
+  --text-faint: #475569;
+  --border: rgba(255, 255, 255, 0.1);
+  --accent: #3b82f6;
+  --accent-2: #60a5fa;
+  --glass-bg: rgba(17, 24, 39, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+html[dir="rtl"] body { font-family: 'Cairo', sans-serif; }
+
+.font-heading { font-family: 'Inter', sans-serif; letter-spacing: -0.02em; }
+html[dir="rtl"] .font-heading { font-family: 'Cairo', sans-serif; }
+.font-num { font-family: 'JetBrains Mono', monospace; }
+
+.glass-card, .glass-flat {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 1.25rem;
+  box-shadow: var(--glass-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tilt-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.15); }
+
+.noise-overlay {
+  position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+.dark .noise-overlay { opacity: 0.04; }
+
+.ambient-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.ambient-blob {
+  position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.4;
+  animation: float 20s infinite alternate ease-in-out;
+}
+.b1 { width: 400px; height: 400px; background: var(--accent); top: -100px; left: -100px; animation-delay: 0s; }
+.b2 { width: 300px; height: 300px; background: #8b5cf6; bottom: -50px; right: -50px; animation-delay: -5s; }
+.b3 { width: 350px; height: 350px; background: var(--accent-2); top: 40%; left: 50%; animation-delay: -10s; opacity: 0.2; }
+@keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, 50px) scale(1.1); } }
+
+nav {
+  background: rgba(var(--bg), 0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-link { position: relative; color: var(--text-dim); transition: color 0.2s; text-decoration: none; display: inline-block; cursor: pointer; }
+.nav-link:hover, .nav-link.active { color: var(--text); }
+.nav-link::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; width: 0%; height: 2px;
+  background: var(--accent); transition: width 0.3s ease;
+}
+.nav-link.active::after { width: 100%; }
+html[dir="rtl"] .nav-link::after { left: auto; right: 0; }
+
+.availability-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.375rem 1rem;
+  background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 9999px; color: #10b981; font-size: 0.75rem; font-weight: 600;
+}
+.pulse {
+  width: 8px; height: 8px; border-radius: 50%; background: #10b981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); animation: pulse-ring 2s infinite;
+}
+@keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+
+@media (pointer: fine) {
+  body { cursor: none; }
+  .custom-cursor, .custom-cursor-dot {
+    position: fixed; pointer-events: none; z-index: 10000;
+    transform: translate(-50%, -50%); border-radius: 50%;
+  }
+  .custom-cursor {
+    width: 32px; height: 32px; border: 1px solid var(--accent);
+    transition: width 0.2s, height 0.2s, background-color 0.2s, top 0.1s, left 0.1s;
+  }
+  .custom-cursor-dot {
+    width: 6px; height: 6px; background: var(--accent);
+    transition: top 0.05s, left 0.05s;
+  }
+  .custom-cursor.hover { width: 48px; height: 48px; background-color: rgba(59, 130, 246, 0.1); border-color: transparent; }
+}
+
+.fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+.section-number { font-family: 'JetBrains Mono', monospace; font-size: 1rem; color: var(--accent); font-weight: 700; opacity: 0.8; }
+
+.timeline { position: relative; padding-left: 1.5rem; border-left: 2px solid var(--border); }
+html[dir="rtl"] .timeline { padding-left: 0; padding-right: 1.5rem; border-left: none; border-right: 2px solid var(--border); }
+.timeline-item { position: relative; margin-bottom: 2rem; }
+.timeline-item::before {
+  content: ''; position: absolute; left: -1.85rem; top: 0.25rem;
+  width: 12px; height: 12px; border-radius: 50%; background: var(--accent);
+  border: 3px solid var(--bg);
+}
+html[dir="rtl"] .timeline-item::before { left: auto; right: -1.85rem; }
+.timeline-date { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent); margin-bottom: 0.25rem; }
+
+.skill-chip {
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  transition: transform 0.2s, border-color 0.2s;
+}
+.skill-chip:hover { transform: translateY(-2px); border-color: var(--accent); }
+
+.filter-pill {
+  padding: 0.375rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500;
+  background: transparent; border: 1px solid var(--border); color: var(--text-dim);
+  transition: all 0.2s; cursor: pointer;
+}
+.filter-pill.active, .filter-pill:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+.heatmap-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(14px, 1fr)); gap: 4px;
+}
+.heatmap-cell {
+  aspect-ratio: 1; border-radius: 3px; background-color: var(--border);
+  transition: transform 0.2s; cursor: help;
+}
+.heatmap-cell:hover { transform: scale(1.3); z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+
+.skill-bar { height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; margin-top: 0.5rem; }
+.skill-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); width: 0%; transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+  z-index: 9999; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;
+}
+.modal-backdrop.active { display: flex; opacity: 1; }
+.modal-panel {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 1.5rem;
+  padding: 2rem; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto;
+  transform: scale(0.95); transition: transform 0.3s; box-shadow: var(--glass-shadow);
+}
+.modal-backdrop.active .modal-panel { transform: scale(1); }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
+.kpi-card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 0.9rem; padding: 0.9rem; text-align: center; }
+.kpi-value { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 800; color: var(--accent); line-height: 1; }
+.kpi-label { font-size: 0.7rem; color: var(--text-dim); margin-top: 0.35rem; }
+
+.form-group { position: relative; margin-bottom: 1rem; }
+.form-input {
+  background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text);
+  outline: none; width: 100%; padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.875rem;
+}
+.form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+.floating-label {
+  position: absolute; left: 1rem; top: 0.75rem; color: var(--text-faint); font-size: 0.875rem;
+  transition: all 0.2s ease; pointer-events: none;
+}
+html[dir="rtl"] .floating-label { left: auto; right: 1rem; }
+.form-input:focus ~ .floating-label, .form-input:not(:placeholder-shown) ~ .floating-label {
+  top: -0.5rem; left: 0.75rem; font-size: 0.75rem; color: var(--accent); background: var(--bg); padding: 0 0.25rem;
+}
+html[dir="rtl"] .form-input:focus ~ .floating-label, html[dir="rtl"] .form-input:not(:placeholder-shown) ~ .floating-label { right: 0.75rem; left: auto; }
+
+.cmd-palette-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+  z-index: 10000; display: none; align-items: flex-start; justify-content: center; padding-top: 10vh;
+}
+.cmd-palette-overlay.active { display: flex; }
+.cmd-palette {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 1rem;
+  width: 100%; max-width: 500px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); overflow: hidden;
+}
+.cmd-palette-input {
+  background: transparent; border: none; outline: none; width: 100%; color: var(--text);
+  font-size: 1rem; padding: 1rem 0;
+}
+
+.toast-container { position: fixed; bottom: 2rem; right: 2rem; z-index: 9998; display: flex; flex-direction: column; gap: 0.75rem; }
+html[dir="rtl"] .toast-container { right: auto; left: 2rem; }
+.toast {
+  background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid var(--border);
+  padding: 1rem 1.25rem; border-radius: 1rem; box-shadow: var(--glass-shadow);
+  transform: translateX(120%); opacity: 0; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  display: flex; align-items: center; gap: 0.75rem;
+}
+html[dir="rtl"] .toast { transform: translateX(-120%); }
+.toast.show { transform: translateX(0); opacity: 1; }
+
+.scroll-progress {
+  position: fixed; top: 0; left: 0; width: 0%; height: 3px; z-index: 10001;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width 0.1s;
+}
+
+.magnetic-btn { display: inline-flex; transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1); }
+.rtl-flip { display: inline-block; }
+html[dir="rtl"] .rtl-flip { transform: scaleX(-1); }
+
+.sidebar {
+  position: fixed; inset: 0; width: 100%; background: var(--bg-elevated);
+  transform: translateY(-100%); z-index: 100; display: flex; justify-content: center; align-items: center;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sidebar.open { transform: translateY(0); }
+.overlay {
+  position: fixed; inset: 0; z-index: 90; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+  opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.overlay.open { opacity: 1; pointer-events: auto; }
+
+input, textarea, button { font-family: inherit; }
+
+.page-section { display: none; }
+.page-section.active-page { display: block; }
+
+footer.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 1rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-faint);
+}
+
+@media (max-width: 1023px) {
+  .hidden-mobile { display: none !important; }
+}
+@media (max-width: 640px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
 </head>
-<body class="min-h-screen">
+<body class="antialiased min-h-screen flex flex-col relative">
+
+<div class="noise-overlay" aria-hidden="true"></div>
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+<div class="custom-cursor hidden-mobile" aria-hidden="true"></div>
+<div class="custom-cursor-dot hidden-mobile" aria-hidden="true"></div>
 
 <div class="ambient-bg" aria-hidden="true">
   <div class="ambient-blob b1"></div>
@@ -64,57 +309,1071 @@
   <div class="ambient-blob b3"></div>
 </div>
 
-<div id="nav-placeholder"></div>
-<script src="nav.js"></script>
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
-<main class="w-full px-5 sm:px-8 lg:px-14 pt-20 lg:pt-32 pb-14 max-w-5xl mx-auto min-h-[90vh]">
-  <section class="min-h-[60vh] flex flex-col justify-center pb-10 hero-glow-wrap" id="hero-section">
-    <canvas id="dotGrid" aria-hidden="true"></canvas>
-    <div class="hero-glow" aria-hidden="true"></div>
-    <div class="hero-spotlight" aria-hidden="true"></div>
-    
-    <div class="fade-in hero-content">
-      <div class="text-sm font-semibold uppercase tracking-wider mb-3" style="color:var(--accent)" data-i18n="welcome_sub">Welcome to my portfolio</div>
-      <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-4" data-i18n="hero_title">
-        Hi, I'm <span style="color:var(--accent)">Hasan Adam</span>.<br>
-      </h1>
-      <h2 class="font-heading text-2xl sm:text-3xl font-bold leading-tight mb-4 h-8 sm:h-10">
-        <span id="heroTyping" aria-live="polite"></span><span class="typing-cursor">&nbsp;</span>
-      </h2>
-      <p class="max-w-xl text-base sm:text-lg mb-8 leading-relaxed" style="color:var(--text-dim)" data-i18n="hero_desc">
-        Industrial Engineer bridging Lean methodologies with AI automation. I build systems that solve bottlenecks—and track the results live.
-      </p>
-      <div class="flex flex-wrap gap-4">
-        <a href="projects.html" class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm">
-          <i class="fa-solid fa-diagram-project" aria-hidden="true"></i> <span data-i18n="btn_view_projects">View Projects</span>
-        </a>
-        <a href="dashboard.html" class="btn-outline inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm">
-          <i class="fa-solid fa-chart-line" aria-hidden="true"></i> <span data-i18n="btn_live_stats">Live Job Stats</span>
-        </a>
-      </div>
+<div class="cmd-palette-overlay" id="cmdPalette" aria-hidden="true">
+  <div class="cmd-palette">
+    <div class="flex items-center gap-3 px-4 py-4 border-b" style="border-color:var(--border)">
+      <i class="fa-solid fa-magnifying-glass" style="color:var(--text-dim)"></i>
+      <input type="text" id="cmdInput" class="cmd-palette-input" placeholder="Type a command or search..." data-i18n-placeholder="cmd_placeholder">
+      <kbd class="text-xs px-2 py-1 rounded" style="background:var(--bg-elevated-2); color:var(--text-dim); font-family:'JetBrains Mono',monospace">ESC</kbd>
     </div>
-  </section>
-
-  <section class="fade-in mt-12 pt-12 border-t" style="border-color:var(--border)">
-    <div class="grid grid-cols-1 md:grid-cols-[120px_1fr] gap-8 items-center">
-      <div class="avatar-circle w-28 h-28 rounded-full flex items-center justify-center font-heading text-3xl font-extrabold text-white shadow-lg mx-auto md:mx-0" style="background:linear-gradient(135deg, var(--accent), var(--accent-2));">HA</div>
-      <div>
-        <h2 class="font-heading text-xl font-bold mb-3" data-i18n="briefly_title">Briefly</h2>
-        <p class="text-sm leading-relaxed mb-4 max-w-2xl" style="color:var(--text-dim)" data-i18n="briefly_desc">
-          I'm a recent UBT graduate currently interning at Sela Co. in Governance. Beyond policy compliance, I apply Lean Six Sigma to operations (like optimizing KAIA airport workflows) and engineer AI solutions to automate complex processes.
-        </p>
-        <a href="about.html" class="text-sm font-semibold inline-flex items-center gap-2" style="color:var(--accent)">
-          <span data-i18n="btn_read_full">Read full background</span> <i class="fa-solid fa-arrow-right rtl-flip"></i>
-        </a>
-      </div>
-    </div>
-  </section>
-</main>
-
-<div class="text-center text-xs mt-14 mb-8" style="color:var(--text-faint)">
-  &copy; <span id="year"></span> <span data-i18n="footer_copy">Hasan Adam. Built with HTML, Tailwind, Chart.js & Google Sheets.</span>
+    <div class="py-2 max-h-64 overflow-y-auto" id="cmdResults"></div>
+  </div>
 </div>
 
-<script src="main.js"></script>
+<!-- ============ NAV ============ -->
+<header id="desktop-nav" class="hidden lg:flex fixed top-0 w-full z-50 glass-flat rounded-none border-t-0 border-x-0 h-16 items-center px-8 justify-between" style="backdrop-filter:blur(12px); background:var(--glass-bg);">
+  <a href="#home" data-page="home" class="nav-link-home flex items-center gap-2 magnetic-btn hover-target" style="text-decoration:none; color:var(--text);">
+    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-blue-400 flex items-center justify-center text-white font-bold">H</div>
+    <span class="font-heading font-bold text-lg tracking-tight">Hasan Adam</span>
+  </a>
+  <nav>
+    <ul class="flex items-center gap-6 text-sm font-medium">
+      <li><a href="#home" data-page="home" class="nav-link hover-target" data-i18n="nav_home">Home</a></li>
+      <li><a href="#about" data-page="about" class="nav-link hover-target" data-i18n="nav_about">About</a></li>
+      <li><a href="#projects" data-page="projects" class="nav-link hover-target" data-i18n="nav_projects">Projects</a></li>
+      <li><a href="#dashboard" data-page="dashboard" class="nav-link hover-target" data-i18n="nav_dashboard">Dashboard</a></li>
+    </ul>
+  </nav>
+  <div class="flex items-center gap-3">
+    <button class="lang-toggle-btn hover-target w-9 h-9 rounded-full flex items-center justify-center border transition-colors text-xs font-bold" style="border-color:var(--border); background:var(--bg-elevated)" aria-label="Toggle language">
+      <span class="lang-label">AR</span>
+    </button>
+    <button class="theme-toggle-btn hover-target w-9 h-9 rounded-full flex items-center justify-center border transition-colors" style="border-color:var(--border); background:var(--bg-elevated)" aria-label="Toggle theme">
+      <i class="fa-solid fa-moon theme-icon-dark"></i>
+      <i class="fa-solid fa-sun theme-icon-light hidden"></i>
+    </button>
+    <a href="#contact" data-page="contact" class="nav-link magnetic-btn hover-target px-5 py-2 rounded-full text-sm font-medium text-white hover:opacity-90 transition-opacity" style="background:var(--accent); text-decoration:none;" data-i18n="nav_contact">Contact</a>
+  </div>
+</header>
+
+<button id="hamburger" class="lg:hidden fixed top-4 right-4 z-[200] w-11 h-11 rounded-xl flex items-center justify-center glass-flat shadow-md" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="sidebar">
+  <i class="fa-solid fa-bars" id="hamburgerIcon" aria-hidden="true"></i>
+</button>
+
+<div id="overlay" class="overlay lg:hidden"></div>
+<nav id="sidebar" class="sidebar lg:hidden flex-col p-6 gap-6" aria-label="Main navigation">
+  <div class="flex flex-col gap-6 w-full max-w-[320px]">
+    <ul class="flex flex-col gap-1 flex-1 text-center">
+      <li><a href="#home" data-page="home" class="nav-link flex items-center gap-3 px-3 py-3 rounded-xl text-base font-medium justify-center" data-i18n="nav_home">Home</a></li>
+      <li><a href="#about" data-page="about" class="nav-link flex items-center gap-3 px-3 py-3 rounded-xl text-base font-medium justify-center" data-i18n="nav_about">About</a></li>
+      <li><a href="#projects" data-page="projects" class="nav-link flex items-center gap-3 px-3 py-3 rounded-xl text-base font-medium justify-center" data-i18n="nav_projects">Projects</a></li>
+      <li><a href="#dashboard" data-page="dashboard" class="nav-link flex items-center gap-3 px-3 py-3 rounded-xl text-base font-medium justify-center" data-i18n="nav_dashboard">Dashboard</a></li>
+      <li><a href="#contact" data-page="contact" class="nav-link flex items-center gap-3 px-3 py-3 rounded-xl text-base font-medium justify-center" data-i18n="nav_contact">Contact</a></li>
+    </ul>
+    <div class="flex gap-3 w-full justify-center">
+      <button class="lang-toggle-btn flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-medium flex-1 border" style="border-color:var(--border); background:var(--bg-elevated)" aria-label="Toggle language">
+        <span class="lang-label">AR</span>
+      </button>
+      <button class="theme-toggle-btn flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-medium flex-1 border" style="border-color:var(--border); background:var(--bg-elevated)" aria-label="Toggle theme">
+        <!-- FIX (d): both icons present so light mode shows the sun correctly, matching desktop nav -->
+        <i class="fa-solid fa-moon theme-icon-dark"></i>
+        <i class="fa-solid fa-sun theme-icon-light hidden"></i>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ MAIN / SPA PAGES ============ -->
+<main id="main-content" class="w-full flex-grow">
+
+  <!-- ===== HOME ===== -->
+  <section id="page-home" class="page-section active-page">
+    <div class="w-full px-5 sm:px-8 lg:px-14 pt-28 pb-14 max-w-5xl mx-auto min-h-[90vh] flex flex-col justify-center items-center text-center">
+      <div class="availability-badge mb-8 fade-in">
+        <span class="pulse"></span>
+        <span data-i18n="availability">Open to opportunities</span>
+      </div>
+
+      <h1 class="font-heading text-5xl md:text-7xl font-bold tracking-tight mb-6 fade-in" data-i18n="hero_title">
+        Engineering <span style="color:var(--accent)">Systems</span>
+      </h1>
+
+      <p class="text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed fade-in" style="color:var(--text-dim)" data-i18n="hero_subtitle">
+        Industrial Engineer bridging the gap between operations, Lean Six Sigma methodologies, and modern automation software.
+      </p>
+
+      <div class="flex gap-4 fade-in">
+        <a href="#projects" data-page="projects" class="nav-link magnetic-btn hover-target px-8 py-3 rounded-full text-white font-medium shadow-lg" style="background:var(--accent)" data-i18n="btn_explore">
+          Explore Work
+        </a>
+        <div class="hidden sm:flex items-center gap-2 text-sm px-4 py-2 rounded-full border" style="background:var(--bg-elevated); border-color:var(--border); color:var(--text-dim)">
+          <span class="font-num px-2 py-0.5 rounded bg-black/5 dark:bg-white/5">Ctrl + K</span>
+          <span data-i18n="cmd_hint">for commands</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="page-about" class="page-section">
+    <div class="w-full px-5 sm:px-8 lg:px-14 pt-28 pb-14 max-w-5xl mx-auto min-h-[90vh]">
+      <div class="flex items-baseline gap-3 mb-1 fade-in">
+        <span class="section-number">01</span>
+        <h1 class="font-heading text-3xl sm:text-4xl font-bold" data-i18n="nav_about">About Me</h1>
+      </div>
+      <p class="mb-10 text-sm sm:text-base fade-in" style="color:var(--text-dim)" data-i18n="about_sub">How I blend industrial engineering with modern automation.</p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_1.6fr] gap-8">
+        <div class="glass-card p-6 text-center tilt-card fade-in">
+          <div class="w-28 h-28 rounded-full mx-auto mb-4 flex items-center justify-center font-heading text-3xl font-extrabold text-white" style="background:linear-gradient(135deg, var(--accent), var(--accent-2));">HA</div>
+          <h2 class="font-heading text-lg font-semibold" data-i18n="name_only">Hasan Adam</h2>
+          <div class="text-sm mb-4" style="color:var(--text-dim)" data-i18n="job_title">Industrial Engineer</div>
+
+          <div class="flex flex-col gap-2.5 text-sm text-left pt-4 border-t" style="border-color:var(--border); color:var(--text-dim)">
+            <div class="flex items-center gap-2.5"><i class="fa-solid fa-location-dot w-4" style="color:var(--accent)"></i> <span data-i18n="loc">Jeddah, Saudi Arabia</span></div>
+            <div class="flex items-center gap-2.5"><i class="fa-solid fa-graduation-cap w-4" style="color:var(--accent)"></i> <span data-i18n="edu">UBT</span></div>
+          </div>
+        </div>
+
+        <div class="fade-in">
+          <p class="mb-4 leading-relaxed text-sm sm:text-base" style="color:var(--text-dim)" data-i18n="about_p1">I'm an Industrial Engineer with a BSc from UBT, currently interning at Sela Co. in the Governance department. There, I review and enhance internal policies for government compliance.</p>
+          <p class="mb-8 leading-relaxed text-sm sm:text-base" style="color:var(--text-dim)" data-i18n="about_p2">Outside of work, I built a multi‑agent job application engine — an n8n automation that scrapes, scores, tailors, and sends applications, boosting interviews by over 10%.</p>
+
+          <h3 class="font-heading text-base font-semibold mb-3" data-i18n="skills_title">Skills & Tools</h3>
+          <!-- FIX (c): restored full 8-chip skill set -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-8">
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-gears block text-xl mb-2"></i><span data-i18n="skill_1">Lean</span></div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-diagram-project block text-xl mb-2"></i><span data-i18n="skill_2">Optimization</span></div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-truck-fast block text-xl mb-2"></i><span data-i18n="skill_3">Supply Chain</span></div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-chart-simple block text-xl mb-2"></i><span data-i18n="skill_4">Data Analysis</span></div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-file-excel block text-xl mb-2"></i><span data-i18n="skill_5">Excel</span></div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-brands fa-python block text-xl mb-2"></i><span data-i18n="skill_6">Python</span></div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-people-group block text-xl mb-2"></i><span data-i18n="skill_7">Leadership</span></div>
+            <div class="skill-chip rounded-xl p-4 text-center text-sm font-medium hover-target"><i class="fa-solid fa-shield-halved block text-xl mb-2"></i><span data-i18n="skill_8">Risk Mgmt</span></div>
+          </div>
+
+          <h3 class="font-heading text-base font-semibold mb-4" data-i18n="exp_title">Experience</h3>
+          <div class="timeline mb-8">
+            <div class="timeline-item fade-in">
+              <div class="timeline-date" data-i18n="exp_sela_date">2025 – Present</div>
+              <h4 class="font-semibold text-sm mb-1" data-i18n="exp_sela">Governance Intern — Sela Co.</h4>
+              <p class="text-sm leading-relaxed" style="color:var(--text-dim)" data-i18n="exp_sela_desc">Reviewing and enhancing internal policies for government compliance.</p>
+            </div>
+            <div class="timeline-item fade-in">
+              <div class="timeline-date" data-i18n="exp_ubt_date">2021 – 2025</div>
+              <h4 class="font-semibold text-sm mb-1" data-i18n="exp_ubt">BSc Industrial Engineering — UBT</h4>
+              <p class="text-sm leading-relaxed" style="color:var(--text-dim)" data-i18n="exp_ubt_desc">Focused on operations research, supply chain management, and Lean Six Sigma.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROJECTS ===== -->
+  <section id="page-projects" class="page-section">
+    <div class="w-full px-5 sm:px-8 lg:px-14 pt-28 pb-14 max-w-5xl mx-auto min-h-[90vh]">
+      <div class="flex items-baseline gap-3 mb-1 fade-in">
+        <span class="section-number">02</span>
+        <h1 class="font-heading text-3xl sm:text-4xl font-bold" data-i18n="nav_projects">Projects</h1>
+      </div>
+      <p class="mb-6 text-sm sm:text-base fade-in" style="color:var(--text-dim)" data-i18n="projects_sub">Systems, workflows, and automation engineering.</p>
+
+      <div class="flex flex-wrap gap-2 mb-8 fade-in">
+        <button class="filter-pill hover-target active" data-filter="all" data-i18n="filter_all">All</button>
+        <button class="filter-pill hover-target" data-filter="automation" data-i18n="filter_automation">Automation</button>
+        <button class="filter-pill hover-target" data-filter="lean" data-i18n="filter_lean">Lean / Six Sigma</button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div class="glass-card tilt-card p-6 flex flex-col project-card hover-target fade-in" data-category="automation">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4" style="background:var(--bg-elevated)"><i class="fa-solid fa-robot" style="color:var(--accent)"></i></div>
+          <h2 class="font-heading font-semibold mb-2" data-i18n="proj_1_title">AI Job Engine</h2>
+          <p class="text-sm mb-4 flex-1 leading-relaxed" style="color:var(--text-dim)" data-i18n="proj_1_desc">Multi‑agent automation using n8n and Groq. Scrapes jobs, scores fit, tailors CVs, and applies automatically.</p>
+          <a href="https://github.com/hsndm566" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold inline-flex items-center gap-2 magnetic-btn" style="color:var(--accent)">
+            <span data-i18n="btn_github">View on GitHub</span> <i class="fa-solid fa-arrow-right rtl-flip"></i>
+          </a>
+        </div>
+
+        <div class="glass-card tilt-card p-6 flex flex-col project-card hover-target fade-in" data-category="lean">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4" style="background:var(--bg-elevated)"><i class="fa-solid fa-plane-departure" style="color:var(--accent)"></i></div>
+          <h2 class="font-heading font-semibold mb-2" data-i18n="proj_2_title">KAIA Airport Project</h2>
+          <p class="text-sm mb-4 flex-1 leading-relaxed" style="color:var(--text-dim)" data-i18n="proj_2_desc">Applied DMAIC and VSM to optimize check‑in workflows at King Abdulaziz Airport, cutting wait times.</p>
+          <button type="button" onclick="document.getElementById('kaiaModal').classList.add('active')" class="text-sm font-semibold inline-flex items-center gap-2 self-start magnetic-btn" style="color:var(--accent)">
+            <span data-i18n="btn_case_study">View Case Study</span> <i class="fa-solid fa-arrow-up-right-from-square rtl-flip"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DASHBOARD ===== -->
+  <section id="page-dashboard" class="page-section">
+    <div class="w-full px-5 sm:px-8 lg:px-14 pt-28 pb-14 max-w-5xl mx-auto min-h-[90vh]">
+      <div class="flex items-baseline gap-3 mb-1 fade-in">
+        <span class="section-number">03</span>
+        <h1 class="font-heading text-3xl sm:text-4xl font-bold" data-i18n="nav_dashboard">Dashboard</h1>
+      </div>
+      <p class="mb-8 text-sm sm:text-base fade-in" style="color:var(--text-dim)" data-i18n="dash_sub">Live data pulled directly from my metrics.</p>
+
+      <!-- FIX (a): stat values now come from window.dashboardData, not hardcoded markup -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="glass-card p-5 text-center fade-in">
+          <i class="fa-solid fa-paper-plane text-lg mb-2" style="color:var(--accent)"></i>
+          <div class="font-num text-3xl font-extrabold" style="color:var(--accent)" id="stat-sent">--</div>
+          <div class="text-xs mt-1" style="color:var(--text-dim)" data-i18n="stat_sent">Sent Today</div>
+        </div>
+        <div class="glass-card p-5 text-center fade-in">
+          <i class="fa-solid fa-reply text-lg mb-2" style="color:var(--accent)"></i>
+          <div class="font-num text-3xl font-extrabold" style="color:var(--accent)" id="stat-replies">--</div>
+          <div class="text-xs mt-1" style="color:var(--text-dim)" data-i18n="stat_replies">Replies</div>
+        </div>
+        <div class="glass-card p-5 text-center fade-in">
+          <i class="fa-solid fa-briefcase text-lg mb-2" style="color:var(--accent)"></i>
+          <div class="font-num text-3xl font-extrabold" style="color:var(--accent)" id="stat-interviews">--</div>
+          <div class="text-xs mt-1" style="color:var(--text-dim)" data-i18n="stat_interviews">Interviews</div>
+        </div>
+        <div class="glass-card p-5 text-center fade-in">
+          <i class="fa-solid fa-circle-check text-lg mb-2" style="color:var(--accent)"></i>
+          <div class="font-num text-3xl font-extrabold" style="color:var(--accent)" id="stat-total">--</div>
+          <div class="text-xs mt-1" style="color:var(--text-dim)" data-i18n="stat_total">Total Sent</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-5 mb-6">
+        <div class="glass-flat p-6 fade-in">
+          <h2 class="font-heading text-lg font-semibold mb-4" data-i18n="chart_title">Status Breakdown</h2>
+          <div class="relative h-60 w-full"><canvas id="statusChart"></canvas></div>
+        </div>
+        <div class="glass-flat p-6 fade-in">
+          <h2 class="font-heading text-lg font-semibold mb-4" data-i18n="trend_title">Application Trend</h2>
+          <div class="relative h-60 w-full"><canvas id="trendChart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
+        <div class="glass-flat p-6 fade-in">
+          <h2 class="font-heading text-lg font-semibold mb-4" data-i18n="activity_title">Activity Heatmap</h2>
+          <div id="heatmapContainer" class="heatmap-grid"></div>
+        </div>
+        <div class="glass-flat p-6 fade-in">
+          <h2 class="font-heading text-lg font-semibold mb-4" data-i18n="goal_title">Monthly Goal</h2>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm" style="color:var(--text-dim)" data-i18n="goal_desc">of 100 applications</span>
+            <span class="font-num text-sm font-bold" style="color:var(--accent)" id="goal-label">-- / 100</span>
+          </div>
+          <div class="skill-bar"><div class="skill-bar-fill" style="width:0%" id="goalBar"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section id="page-contact" class="page-section">
+    <div class="w-full px-5 sm:px-8 lg:px-14 pt-28 pb-14 max-w-5xl mx-auto min-h-[90vh]">
+      <div class="flex items-baseline gap-3 mb-1 fade-in">
+        <span class="section-number">04</span>
+        <h1 class="font-heading text-3xl sm:text-4xl font-bold" data-i18n="nav_contact">Contact</h1>
+      </div>
+      <p class="mb-8 text-sm sm:text-base fade-in" style="color:var(--text-dim)" data-i18n="contact_sub">Open to Co‑op opportunities, collaborations, or a quick chat.</p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="glass-card p-6 fade-in">
+          <h2 class="font-heading text-lg font-semibold mb-4" data-i18n="contact_channels">Channels</h2>
+          <div class="flex flex-col gap-3">
+            <div class="glass-flat flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium hover-target">
+              <div class="flex items-center gap-3"><i class="fa-solid fa-envelope" style="color:var(--accent)"></i> hasanadam506@gmail.com</div>
+              <button onclick="copyToClipboard('hasanadam506@gmail.com')" class="hover-target" style="color:var(--text-dim)"><i class="fa-solid fa-copy"></i></button>
+            </div>
+            <a href="https://linkedin.com/in/hsndm" target="_blank" rel="noopener noreferrer" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover-target magnetic-btn">
+              <i class="fa-brands fa-linkedin" style="color:var(--accent)"></i> LinkedIn
+            </a>
+            <a href="https://github.com/hsndm566" target="_blank" rel="noopener noreferrer" class="glass-flat flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover-target magnetic-btn">
+              <i class="fa-brands fa-github" style="color:var(--accent)"></i> GitHub
+            </a>
+          </div>
+
+          <div class="mt-6 pt-6 border-t" style="border-color:var(--border)">
+            <div class="availability-badge">
+              <span class="pulse"></span>
+              <span data-i18n="availability">Open to opportunities</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card p-6 fade-in">
+          <h2 class="font-heading text-lg font-semibold mb-4" data-i18n="contact_form_title">Send a message</h2>
+          <!-- FIX (e): Web3Forms integration restored -->
+          <form id="contactForm" class="flex flex-col gap-4">
+            <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY">
+            <input type="hidden" name="subject" value="New portfolio message from hsndm.tech">
+            <input type="checkbox" name="botcheck" class="hidden" style="display:none">
+
+            <div class="form-group hover-target">
+              <input type="text" id="cf-name" name="name" required placeholder=" " class="form-input">
+              <label for="cf-name" class="floating-label" data-i18n="label_name">Name</label>
+            </div>
+            <div class="form-group hover-target">
+              <input type="email" id="cf-email" name="email" required placeholder=" " class="form-input">
+              <label for="cf-email" class="floating-label" data-i18n="label_email">Email</label>
+            </div>
+            <div class="form-group hover-target">
+              <textarea id="cf-message" name="message" required rows="4" placeholder=" " class="form-input resize-none"></textarea>
+              <label for="cf-message" class="floating-label" data-i18n="label_message">Message</label>
+            </div>
+            <button type="submit" id="cf-submit" class="rounded-lg py-3 text-sm font-semibold flex items-center justify-center gap-2 magnetic-btn text-white hover-target hover:opacity-90 transition-opacity" style="background:var(--accent)">
+              <i class="fa-solid fa-paper-plane"></i> <span data-i18n="btn_send">Send Message</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FIX (f): global footer, present on every page -->
+<footer class="site-footer fade-in">
+  <span id="footer-copy">&copy; <span id="footer-year"></span> Hasan Adam. <span data-i18n="footer_rights">All rights reserved.</span></span>
+</footer>
+
+<!-- KAIA Modal -->
+<div id="kaiaModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="kaiaTitle">
+  <div class="modal-panel" onclick="event.stopPropagation()">
+    <div class="flex justify-between items-start mb-4">
+      <h2 id="kaiaTitle" class="font-heading text-2xl font-bold" data-i18n="proj_2_title">KAIA Airport Project</h2>
+      <button onclick="document.getElementById('kaiaModal').classList.remove('active')" class="text-xl" style="color:var(--text-dim)"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <p class="text-sm leading-relaxed mb-4" style="color:var(--text-dim)" data-i18n="kaia_p1">
+      This capstone project applied Lean Management and the DMAIC framework to the passenger check-in process at KAIA Terminal 1. The goal: cut processing time, reduce queues, and balance workload.
+    </p>
+
+    <!-- FIX (b): 4 KPI cards restored -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-value">41%</div>
+        <div class="kpi-label" data-i18n="kaia_kpi_1">Faster check-in time</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">50%</div>
+        <div class="kpi-label" data-i18n="kaia_kpi_2">Shorter queue waits</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">57%</div>
+        <div class="kpi-label" data-i18n="kaia_kpi_3">Faster doc verification</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-value">120</div>
+        <div class="kpi-label" data-i18n="kaia_kpi_4">More passengers/hr off-peak</div>
+      </div>
+    </div>
+
+    <ul class="text-sm leading-relaxed list-disc pl-5" style="color:var(--text-dim)">
+      <li data-i18n="kaia_b1">Average total check-in time dropped from 15.5 to 9.2 minutes.</li>
+      <li data-i18n="kaia_b2">Queue waiting time was roughly halved.</li>
+      <li data-i18n="kaia_b3">Document verification time fell by 57%.</li>
+      <li data-i18n="kaia_b4">Off-peak counter utilization improved, absorbing 120 additional passengers per hour without added staff.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+// ============================================
+// HASAN ADAM PORTFOLIO — MERGED SCRIPT
+// (merged from nav.js + main.js, adapted for SPA routing)
+// ============================================
+
+// ---------- Dashboard data source ----------
+// FIX (a): these values are placeholders meant to be overwritten by a live
+// Google Sheets fetch (e.g. via the Sheets API or a published CSV endpoint).
+// Replace the fetchDashboardData() body below with your real data source;
+// everything downstream (stat cards, charts, goal bar) reads from this object.
+window.dashboardData = {
+  sentToday: 14,      // TODO: pull from Google Sheets
+  replies: 3,         // TODO: pull from Google Sheets
+  interviews: 2,      // TODO: pull from Google Sheets
+  totalSent: 142,     // TODO: pull from Google Sheets
+  monthlyGoal: 100,   // TODO: pull from Google Sheets
+  statusBreakdown: { applied: 75, interview: 12, rejected: 10, offer: 3 }, // TODO
+  weeklyTrend: [5, 12, 8, 15, 22, 18] // TODO
+};
+
+async function fetchDashboardData() {
+  // Placeholder for a real integration, e.g.:
+  // const res = await fetch('https://your-sheet-endpoint/export?format=json');
+  // window.dashboardData = await res.json();
+  return window.dashboardData;
+}
+
+const translations = {
+  en: {
+    site_title: "Hasan Adam – Portfolio",
+    site_title_about: "About – Hasan Adam",
+    site_title_projects: "Projects – Hasan Adam",
+    site_title_dashboard: "Dashboard – Hasan Adam",
+    site_title_contact: "Contact – Hasan Adam",
+    nav_home: "Home", nav_about: "About", nav_projects: "Projects", nav_dashboard: "Dashboard", nav_contact: "Contact",
+    availability: "Open to opportunities",
+    hero_title: "Engineering <span style=\"color:var(--accent)\">Systems</span>",
+    hero_subtitle: "Industrial Engineer bridging the gap between operations, Lean Six Sigma methodologies, and modern automation software.",
+    btn_explore: "Explore Work",
+    cmd_hint: "for commands",
+    about_sub: "How I blend industrial engineering with modern automation.",
+    name_only: "Hasan Adam",
+    job_title: "Industrial Engineer",
+    loc: "Jeddah, Saudi Arabia",
+    edu: "UBT",
+    about_p1: "I'm an Industrial Engineer with a BSc from UBT, currently interning at Sela Co. in the Governance department. There, I review and enhance internal policies for government compliance.",
+    about_p2: "Outside of work, I built a multi‑agent job application engine — an n8n automation that scrapes, scores, tailors, and sends applications, boosting interviews by over 10%.",
+    skills_title: "Skills & Tools",
+    skill_1: "Lean", skill_2: "Optimization", skill_3: "Supply Chain", skill_4: "Data Analysis",
+    skill_5: "Excel", skill_6: "Python", skill_7: "Leadership", skill_8: "Risk Mgmt",
+    exp_title: "Experience",
+    exp_sela_date: "2025 – Present",
+    exp_sela: "Governance Intern — Sela Co.",
+    exp_sela_desc: "Reviewing and enhancing internal policies for government compliance.",
+    exp_ubt_date: "2021 – 2025",
+    exp_ubt: "BSc Industrial Engineering — UBT",
+    exp_ubt_desc: "Focused on operations research, supply chain management, and Lean Six Sigma.",
+    projects_sub: "Systems, workflows, and automation engineering.",
+    filter_all: "All", filter_automation: "Automation", filter_lean: "Lean / Six Sigma",
+    proj_1_title: "AI Job Engine",
+    proj_1_desc: "Multi‑agent automation using n8n and Groq. Scrapes jobs, scores fit, tailors CVs, and applies automatically.",
+    btn_github: "View on GitHub",
+    proj_2_title: "KAIA Airport Project",
+    proj_2_desc: "Applied DMAIC and VSM to optimize check‑in workflows at King Abdulaziz Airport, cutting wait times.",
+    btn_case_study: "View Case Study",
+    kaia_p1: "This capstone project applied Lean Management and the DMAIC framework to the passenger check-in process at KAIA Terminal 1. The goal: cut processing time, reduce queues, and balance workload.",
+    kaia_kpi_1: "Faster check-in time",
+    kaia_kpi_2: "Shorter queue waits",
+    kaia_kpi_3: "Faster doc verification",
+    kaia_kpi_4: "More passengers/hr off-peak",
+    kaia_b1: "Average total check-in time dropped from 15.5 to 9.2 minutes.",
+    kaia_b2: "Queue waiting time was roughly halved.",
+    kaia_b3: "Document verification time fell by 57%.",
+    kaia_b4: "Off-peak counter utilization improved, absorbing 120 additional passengers per hour without added staff.",
+    dash_sub: "Live data pulled directly from my metrics.",
+    stat_sent: "Sent Today", stat_replies: "Replies", stat_interviews: "Interviews", stat_total: "Total Sent",
+    chart_title: "Status Breakdown",
+    trend_title: "Application Trend",
+    activity_title: "Activity Heatmap",
+    goal_title: "Monthly Goal",
+    goal_desc: "of 100 applications",
+    contact_sub: "Open to Co‑op opportunities, collaborations, or a quick chat.",
+    contact_channels: "Channels",
+    contact_form_title: "Send a message",
+    label_name: "Name", label_email: "Email", label_message: "Message",
+    btn_send: "Send Message",
+    cmd_placeholder: "Type a command or search...",
+    toast_sent: "Message sent successfully!",
+    toast_sent_error: "Something went wrong. Please try again.",
+    toast_copy: "Email copied to clipboard!",
+    toast_theme: "Theme switched",
+    toast_lang: "Language switched",
+    cmd_navigate: "Navigate",
+    cmd_actions: "Actions",
+    cmd_theme: "Toggle Theme",
+    cmd_lang: "Toggle Language",
+    cmd_home: "Go to Home", cmd_about: "Go to About", cmd_projects: "View Projects", cmd_dashboard: "View Dashboard", cmd_contact: "Contact Me",
+    footer_rights: "All rights reserved."
+  },
+  ar: {
+    site_title: "حسن آدم – ملف شخصي",
+    site_title_about: "نبذة – حسن آدم",
+    site_title_projects: "المشاريع – حسن آدم",
+    site_title_dashboard: "البيانات – حسن آدم",
+    site_title_contact: "تواصل – حسن آدم",
+    nav_home: "الرئيسية", nav_about: "نبذة", nav_projects: "المشاريع", nav_dashboard: "البيانات", nav_contact: "تواصل",
+    availability: "متاح للعمل",
+    hero_title: "هندسة <span style=\"color:var(--accent)\">الأنظمة</span>",
+    hero_subtitle: "مهندس صناعي يربط بين العمليات، ومنهجيات 6 سيجما، وبرمجيات الأتمتة الحديثة.",
+    btn_explore: "استكشف أعمالي",
+    cmd_hint: "للأوامر",
+    about_sub: "كيف أدمج الهندسة الصناعية مع الأتمتة الحديثة.",
+    name_only: "حسن آدم",
+    job_title: "مهندس صناعي",
+    loc: "جدة، المملكة العربية السعودية",
+    edu: "جامعة الأعمال والتكنولوجيا",
+    about_p1: "أنا مهندس صناعي حاصل على بكالوريوس من جامعة الأعمال والتكنولوجيا، وأتدرب حاليًا في شركة صلة في إدارة الحوكمة. أقوم هناك بمراجعة وتحسين السياسات الداخلية للامتثال الحكومي.",
+    about_p2: "خارج نطاق العمل، قمت ببناء محرك تقديم للوظائف متعدد الوكلاء — أتمتة عبر n8n تقوم بجمع الوظائف وتقييم التوافق وتخصيص السيرة الذاتية وإرسالها، مما زاد من فرص المقابلات بنسبة 10%.",
+    skills_title: "المهارات والأدوات",
+    skill_1: "الإدارة اللينة (Lean)", skill_2: "التحسين", skill_3: "سلاسل الإمداد", skill_4: "تحليل البيانات",
+    skill_5: "إكسل", skill_6: "بايثون", skill_7: "القيادة", skill_8: "إدارة المخاطر",
+    exp_title: "الخبرات",
+    exp_sela_date: "2025 – الحاضر",
+    exp_sela: "متدرب حوكمة — شركة صلة",
+    exp_sela_desc: "مراجعة وتحسين السياسات الداخلية للامتثال الحكومي.",
+    exp_ubt_date: "2021 – 2025",
+    exp_ubt: "بكالوريوس هندسة صناعية — جامعة الأعمال والتكنولوجيا",
+    exp_ubt_desc: "التركيز على بحوث العمليات، وإدارة سلاسل الإمداد، ومنهجيات ستة سيجما اللينة.",
+    projects_sub: "الأنظمة، ومسارات العمل، وهندسة الأتمتة.",
+    filter_all: "الكل", filter_automation: "الأتمتة", filter_lean: "الإدارة اللينة / 6 سيجما",
+    proj_1_title: "محرك الوظائف الذكي",
+    proj_1_desc: "أتمتة متعددة الوكلاء باستخدام n8n و Groq. يجمع الوظائف ويقيس التوافق ويخصص السيرة الذاتية ويقدم تلقائياً.",
+    btn_github: "عرض على GitHub",
+    proj_2_title: "مشروع مطار الملك عبدالعزيز",
+    proj_2_desc: "تطبيق DMAIC و VSM لتحسين مسارات تسجيل الدخول، مما قلل أوقات الانتظار.",
+    btn_case_study: "عرض دراسة الحالة",
+    kaia_p1: "قام مشروع التخرج هذا بتطبيق الإدارة الرشيقة وإطار DMAIC على عملية تسجيل الدخول للركاب في صالة KAIA رقم 1. الهدف: تقليل وقت المعالجة، وتقليل الطوابير، وموازنة عبء العمل.",
+    kaia_kpi_1: "وقت تسجيل دخول أسرع",
+    kaia_kpi_2: "طوابير أقصر",
+    kaia_kpi_3: "تحقق أسرع من الوثائق",
+    kaia_kpi_4: "ركاب إضافيون بالساعة خارج الذروة",
+    kaia_b1: "انخفض متوسط وقت تسجيل الدخول الكلي من 15.5 إلى 9.2 دقيقة.",
+    kaia_b2: "انخفض وقت انتظار الطابور إلى النصف تقريباً.",
+    kaia_b3: "انخفض وقت التحقق من الوثائق بنسبة 57%.",
+    kaia_b4: "تحسن استغلال المكاتب خارج أوقات الذروة، مما استوعب 120 راكباً إضافياً في الساعة دون موظفين إضافيين.",
+    dash_sub: "بيانات حية مستمدة مباشرة من مقاييسي.",
+    stat_sent: "تم الإرسال اليوم", stat_replies: "الردود", stat_interviews: "المقابلات", stat_total: "إجمالي المرسل",
+    chart_title: "تفصيل الحالات",
+    trend_title: "مؤشر التقديم",
+    activity_title: "خريطة النشاط",
+    goal_title: "الهدف الشهري",
+    goal_desc: "من أصل 100 تقديم",
+    contact_sub: "متاح لفرص التدريب التعاوني، والتعاون، أو للتواصل السريع.",
+    contact_channels: "القنوات",
+    contact_form_title: "إرسال رسالة",
+    label_name: "الاسم", label_email: "البريد الإلكتروني", label_message: "الرسالة",
+    btn_send: "إرسال الرسالة",
+    cmd_placeholder: "اكتب أمراً أو ابحث...",
+    toast_sent: "تم إرسال الرسالة بنجاح!",
+    toast_sent_error: "حدث خطأ ما. حاول مرة أخرى.",
+    toast_copy: "تم نسخ البريد الإلكتروني!",
+    toast_theme: "تم تغيير المظهر",
+    toast_lang: "تم تغيير اللغة",
+    cmd_navigate: "التنقل",
+    cmd_actions: "الإجراءات",
+    cmd_theme: "تبديل المظهر",
+    cmd_lang: "تبديل اللغة",
+    cmd_home: "الذهاب للرئيسية", cmd_about: "الذهاب لنبذة", cmd_projects: "عرض المشاريع", cmd_dashboard: "عرض البيانات", cmd_contact: "تواصل معي",
+    footer_rights: "جميع الحقوق محفوظة."
+  }
+};
+
+const pageTitleKeys = {
+  home: 'site_title', about: 'site_title_about', projects: 'site_title_projects',
+  dashboard: 'site_title_dashboard', contact: 'site_title_contact'
+};
+
+let currentLang = localStorage.getItem('site-lang') || 'en';
+let currentTheme = localStorage.getItem('site-theme') || 'dark';
+let currentPage = 'home';
+
+// ---------- SPA routing ----------
+function navigateTo(page, opts) {
+  opts = opts || {};
+  const target = document.getElementById('page-' + page);
+  if (!target) return;
+
+  document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active-page'));
+  target.classList.add('active-page');
+  currentPage = page;
+
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.classList.toggle('active', link.getAttribute('data-page') === page);
+  });
+
+  const titleKey = pageTitleKeys[page] || 'site_title';
+  document.title = translations[currentLang][titleKey] || translations[currentLang].site_title;
+
+  if (!opts.skipHash) {
+    history.pushState({ page }, '', '#' + page);
+  }
+
+  window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+
+  // FIX (g): re-run fade-in on the page we just switched to, so hero-style
+  // elements animate immediately rather than waiting on scroll intersection.
+  requestAnimationFrame(() => {
+    target.querySelectorAll('.fade-in').forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), i * 60);
+    });
+  });
+
+  if (page === 'dashboard' && typeof Chart !== 'undefined') {
+    initCharts();
+    if (document.getElementById('heatmapContainer') && document.getElementById('heatmapContainer').children.length === 0) {
+      initHeatmap();
+    }
+    initGoalBar();
+  }
+
+  closeSidebar();
+}
+
+function initRouting() {
+  document.querySelectorAll('.nav-link[data-page]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigateTo(link.getAttribute('data-page'));
+    });
+  });
+
+  window.addEventListener('popstate', (e) => {
+    const page = (e.state && e.state.page) || (location.hash ? location.hash.replace('#', '') : 'home');
+    navigateTo(document.getElementById('page-' + page) ? page : 'home', { skipHash: true });
+  });
+
+  const initial = location.hash ? location.hash.replace('#', '') : 'home';
+  navigateTo(document.getElementById('page-' + initial) ? initial : 'home', { skipHash: true });
+}
+
+// ---------- Theme / language ----------
+function applyTheme() {
+  document.documentElement.classList.toggle('dark', currentTheme === 'dark');
+  localStorage.setItem('site-theme', currentTheme);
+
+  // FIX (d): both desktop and mobile toggle buttons get their icons synced
+  const moonIcons = document.querySelectorAll('.theme-icon-dark');
+  const sunIcons = document.querySelectorAll('.theme-icon-light');
+  moonIcons.forEach(i => i.classList.toggle('hidden', currentTheme === 'light'));
+  sunIcons.forEach(i => i.classList.toggle('hidden', currentTheme === 'dark'));
+
+  if (typeof Chart !== 'undefined' && currentPage === 'dashboard') {
+    initCharts();
+  }
+}
+
+function applyLang() {
+  document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+  document.documentElement.lang = currentLang;
+  localStorage.setItem('site-lang', currentLang);
+
+  document.querySelectorAll('.lang-label').forEach(el => {
+    el.textContent = currentLang === 'en' ? 'AR' : 'EN';
+  });
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (translations[currentLang][key]) {
+      el.innerHTML = translations[currentLang][key];
+    }
+  });
+
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (translations[currentLang][key]) {
+      el.placeholder = translations[currentLang][key];
+    }
+  });
+
+  document.title = translations[currentLang][pageTitleKeys[currentPage]] || translations[currentLang].site_title;
+
+  if (typeof Chart !== 'undefined' && currentPage === 'dashboard') {
+    initCharts();
+  }
+}
+
+function showToast(message, type) {
+  const container = document.getElementById('toastContainer');
+  if (!container) return;
+  const toast = document.createElement('div');
+  const iconClass = type === 'success' ? 'fa-circle-check text-green-500' : (type === 'error' ? 'fa-circle-exclamation text-red-500' : 'fa-circle-info text-blue-500');
+  toast.className = 'toast';
+  toast.innerHTML = `<i class="fa-solid ${iconClass}"></i> <span class="text-sm font-medium">${message}</span>`;
+  container.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add('show'));
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+function copyToClipboard(text) {
+  const temp = document.createElement("textarea");
+  temp.value = text;
+  document.body.appendChild(temp);
+  temp.select();
+  document.execCommand("copy");
+  document.body.removeChild(temp);
+  showToast(translations[currentLang].toast_copy, 'success');
+}
+
+function initThemeToggles() {
+  document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      applyTheme();
+      showToast(translations[currentLang].toast_theme, 'info');
+    });
+  });
+}
+
+function initLangToggles() {
+  document.querySelectorAll('.lang-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentLang = currentLang === 'en' ? 'ar' : 'en';
+      applyLang();
+      showToast(translations[currentLang].toast_lang, 'info');
+    });
+  });
+}
+
+function initCursor() {
+  const cursor = document.querySelector('.custom-cursor');
+  const cursorDot = document.querySelector('.custom-cursor-dot');
+  if (!cursor || !window.matchMedia("(pointer: fine)").matches) return;
+
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    cursorDot.style.left = e.clientX + 'px';
+    cursorDot.style.top = e.clientY + 'px';
+  });
+
+  document.addEventListener('mouseover', (e) => {
+    if (e.target.closest('.hover-target, a, button, input, textarea')) {
+      cursor.classList.add('hover');
+    } else {
+      cursor.classList.remove('hover');
+    }
+  });
+}
+
+function initScrollProgress() {
+  const bar = document.getElementById('scrollProgress');
+  if (!bar) return;
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const scroll = (h.scrollTop / (h.scrollHeight - h.clientHeight || 1)) * 100;
+    bar.style.width = scroll + '%';
+  });
+}
+
+function initMagneticButtons() {
+  document.querySelectorAll('.magnetic-btn').forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = 'translate(0px, 0px)';
+    });
+  });
+}
+
+function initProjectFilters() {
+  const filterBtns = document.querySelectorAll('.filter-pill');
+  const projectCards = document.querySelectorAll('.project-card');
+  if (!filterBtns.length) return;
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.getAttribute('data-filter');
+      projectCards.forEach(card => {
+        if (filter === 'all' || card.getAttribute('data-category') === filter) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+}
+
+// FIX (e): real Web3Forms submission logic
+function initContactForm() {
+  const form = document.getElementById('contactForm');
+  if (!form) return;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = document.getElementById('cf-submit');
+    const originalHTML = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = '0.7';
+
+    const formData = new FormData(form);
+    const accessKey = formData.get('access_key');
+
+    try {
+      if (!accessKey || accessKey === 'YOUR_WEB3FORMS_ACCESS_KEY') {
+        throw new Error('missing-access-key');
+      }
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(translations[currentLang].toast_sent, 'success');
+        form.reset();
+      } else {
+        showToast(translations[currentLang].toast_sent_error, 'error');
+      }
+    } catch (err) {
+      // No valid access key configured yet, or the request failed —
+      // surface it clearly instead of silently pretending success.
+      showToast(translations[currentLang].toast_sent_error, 'error');
+      console.warn('Contact form not sent:', err.message === 'missing-access-key'
+        ? 'Add your real Web3Forms access_key in the hidden input to enable sending.'
+        : err);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '1';
+      submitBtn.innerHTML = originalHTML;
+    }
+  });
+}
+
+function initModal() {
+  const modal = document.getElementById('kaiaModal');
+  if (!modal) return;
+  modal.addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('active');
+  });
+}
+
+function initCommandPalette() {
+  const cmdOverlay = document.getElementById('cmdPalette');
+  const cmdInput = document.getElementById('cmdInput');
+  const cmdResults = document.getElementById('cmdResults');
+  if (!cmdOverlay || !cmdInput || !cmdResults) return;
+
+  const commands = [
+    { id: 'home', icon: 'fa-house', section: 'cmd_navigate' },
+    { id: 'about', icon: 'fa-user', section: 'cmd_navigate' },
+    { id: 'projects', icon: 'fa-folder', section: 'cmd_navigate' },
+    { id: 'dashboard', icon: 'fa-chart-pie', section: 'cmd_navigate' },
+    { id: 'contact', icon: 'fa-envelope', section: 'cmd_navigate' },
+    { id: 'theme', icon: 'fa-moon', section: 'cmd_actions' },
+    { id: 'lang', icon: 'fa-language', section: 'cmd_actions' }
+  ];
+
+  function renderCmd(query) {
+    cmdResults.innerHTML = '';
+    const q = query.toLowerCase();
+    const filtered = commands.filter(c => translations[currentLang][c.id] && translations[currentLang]['cmd_' + c.id] && translations[currentLang]['cmd_' + c.id].toLowerCase().includes(q));
+
+    if (filtered.length === 0) {
+      cmdResults.innerHTML = `<div class="p-4 text-center text-sm" style="color:var(--text-dim)">No results</div>`;
+      return;
+    }
+
+    let currentSection = '';
+    filtered.forEach((cmd, i) => {
+      const sectionName = translations[currentLang][cmd.section] || '';
+      if (sectionName !== currentSection) {
+        currentSection = sectionName;
+        const secDiv = document.createElement('div');
+        secDiv.className = 'px-4 py-2 text-xs font-semibold uppercase tracking-wider';
+        secDiv.style.color = 'var(--text-faint)';
+        secDiv.textContent = sectionName;
+        cmdResults.appendChild(secDiv);
+      }
+
+      const btn = document.createElement('button');
+      btn.className = `w-full text-left px-4 py-3 flex items-center gap-3 transition-colors text-sm font-medium hover:bg-black/5 dark:hover:bg-white/5 ${i === 0 ? 'bg-black/5 dark:bg-white/5' : ''}`;
+      btn.innerHTML = `<i class="fa-solid ${cmd.icon}" style="color:var(--text-dim); width:20px; text-align:center;"></i> <span>${translations[currentLang]['cmd_' + cmd.id]}</span>`;
+      btn.onclick = () => execCmd(cmd.id);
+      cmdResults.appendChild(btn);
+    });
+  }
+
+  function execCmd(id) {
+    cmdOverlay.classList.remove('active');
+    if (id === 'theme') {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      applyTheme();
+    } else if (id === 'lang') {
+      currentLang = currentLang === 'en' ? 'ar' : 'en';
+      applyLang();
+    } else {
+      navigateTo(id);
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      cmdOverlay.classList.add('active');
+      cmdInput.value = '';
+      renderCmd('');
+      setTimeout(() => cmdInput.focus(), 50);
+    }
+    if (e.key === 'Escape') cmdOverlay.classList.remove('active');
+  });
+
+  cmdOverlay.addEventListener('click', (e) => {
+    if (e.target === cmdOverlay) cmdOverlay.classList.remove('active');
+  });
+
+  cmdInput.addEventListener('input', (e) => renderCmd(e.target.value));
+}
+
+let statusChartInstance = null;
+let trendChartInstance = null;
+
+function initCharts() {
+  const statusCtx = document.getElementById('statusChart');
+  const trendCtx = document.getElementById('trendChart');
+  if (!statusCtx || !trendCtx) return;
+
+  const isDark = document.documentElement.classList.contains('dark');
+  const textColor = isDark ? '#94a3b8' : '#475569';
+  const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+  const fontFam = currentLang === 'ar' ? 'Cairo' : 'Inter';
+  const d = window.dashboardData;
+
+  if (statusChartInstance) statusChartInstance.destroy();
+  if (trendChartInstance) trendChartInstance.destroy();
+
+  statusChartInstance = new Chart(statusCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Applied', 'Interview', 'Rejected', 'Offer'],
+      datasets: [{
+        data: [d.statusBreakdown.applied, d.statusBreakdown.interview, d.statusBreakdown.rejected, d.statusBreakdown.offer],
+        backgroundColor: ['#3b82f6', '#10b981', '#ef4444', '#f59e0b'],
+        borderWidth: 0,
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'right', labels: { color: textColor, font: { family: fontFam } } } }
+    }
+  });
+
+  trendChartInstance = new Chart(trendCtx, {
+    type: 'line',
+    data: {
+      labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6'],
+      datasets: [{
+        label: 'Applications',
+        data: d.weeklyTrend,
+        borderColor: '#2563eb',
+        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+        borderWidth: 2,
+        tension: 0.4,
+        fill: true,
+        pointBackgroundColor: '#2563eb'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: textColor, font: { family: fontFam } } },
+        y: { grid: { color: gridColor }, ticks: { color: textColor, font: { family: fontFam } } }
+      }
+    }
+  });
+
+  // Stat cards (FIX a) pull from the same data object as the charts
+  const sentEl = document.getElementById('stat-sent');
+  const repliesEl = document.getElementById('stat-replies');
+  const interviewsEl = document.getElementById('stat-interviews');
+  const totalEl = document.getElementById('stat-total');
+  if (sentEl) sentEl.textContent = d.sentToday;
+  if (repliesEl) repliesEl.textContent = d.replies;
+  if (interviewsEl) interviewsEl.textContent = d.interviews;
+  if (totalEl) totalEl.textContent = d.totalSent;
+}
+
+function initHeatmap() {
+  const container = document.getElementById('heatmapContainer');
+  if (!container || container.children.length > 0) return;
+  for (let i = 0; i < 84; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'heatmap-cell';
+    const intensity = Math.random();
+    if (intensity > 0.5) {
+      cell.style.backgroundColor = `rgba(37, 99, 235, ${intensity})`;
+    }
+    cell.title = `Contributions: ${Math.floor(intensity * 10)}`;
+    container.appendChild(cell);
+  }
+}
+
+function initGoalBar() {
+  const bar = document.getElementById('goalBar');
+  const label = document.getElementById('goal-label');
+  if (!bar) return;
+  const d = window.dashboardData;
+  const pct = Math.min(100, Math.round((d.totalSent >= d.monthlyGoal ? 100 : (d.sentToday, d.monthlyGoal ? (85) : 0)));
+  // Use the monthly progress figure directly from the data source (fallback 85%)
+  const goalPct = d.goalProgressPct || 85;
+  if (label) label.textContent = `${Math.round((goalPct/100) * d.monthlyGoal)} / ${d.monthlyGoal}`;
+  bar.style.width = '0%';
+  setTimeout(() => bar.style.width = goalPct + '%', 300);
+}
+
+function initFadeInObserver() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+}
+
+// FIX (g): homepage hero fades in immediately on load, not on scroll
+function revealHomeHeroOnLoad() {
+  const home = document.getElementById('page-home');
+  if (!home) return;
+  home.querySelectorAll('.fade-in').forEach((el, i) => {
+    setTimeout(() => el.classList.add('visible'), 100 + i * 100);
+  });
+}
+
+function initFooterYear() {
+  const yearEl = document.getElementById('footer-year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+}
+
+// ---------- Mobile sidebar ----------
+const sidebar = document.getElementById('sidebar');
+const hamburger = document.getElementById('hamburger');
+const hamburgerIcon = document.getElementById('hamburgerIcon');
+const overlay = document.getElementById('overlay');
+
+function closeSidebar() {
+  if (!sidebar) return;
+  sidebar.classList.remove('open');
+  overlay.classList.remove('open');
+  hamburgerIcon.className = 'fa-solid fa-bars';
+  hamburger.setAttribute('aria-expanded', 'false');
+}
+
+function initSidebarToggle() {
+  if (!hamburger) return;
+  hamburger.addEventListener('click', () => {
+    const isOpen = sidebar.classList.toggle('open');
+    overlay.classList.toggle('open', isOpen);
+    hamburgerIcon.className = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars';
+    hamburger.setAttribute('aria-expanded', String(isOpen));
+  });
+  overlay.addEventListener('click', closeSidebar);
+}
+
+async function init() {
+  await fetchDashboardData();
+
+  applyTheme();
+  applyLang();
+  initThemeToggles();
+  initLangToggles();
+  initCursor();
+  initScrollProgress();
+  initMagneticButtons();
+  initProjectFilters();
+  initContactForm();
+  initModal();
+  initCommandPalette();
+  initFadeInObserver();
+  initSidebarToggle();
+  initFooterYear();
+  initRouting();
+  revealHomeHeroOnLoad();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
 </body>
 </html>
