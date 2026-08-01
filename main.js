@@ -126,6 +126,39 @@ document.querySelectorAll('.lang-toggle-btn').forEach(btn => btn.addEventListene
   setLanguage(currentLang);
 }));
 
+
+/* ---- CURSOR GLOW ---- */
+(function initCursorGlow(){
+  const glow = document.createElement('div'); glow.className='cursor-glow'; document.body.appendChild(glow);
+  let trails = [];
+  document.addEventListener('mousemove', (e) => {
+    glow.style.left = e.clientX+'px'; glow.style.top = e.clientY+'px';
+    if (trails.length < 8) {
+      const t = document.createElement('div'); t.className='cursor-trail';
+      t.style.left = e.clientX+'px'; t.style.top = e.clientY+'px'; document.body.appendChild(t);
+      trails.push(t); setTimeout(() => { t.remove(); trails = trails.filter(x=>x!==t); }, 600);
+    }
+  });
+  document.querySelectorAll('a, button, input, textarea, .clickable').forEach(el => {
+    el.addEventListener('mouseenter', () => glow.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => glow.classList.remove('hovering'));
+  });
+})();
+
+/* ---- FLOATING PARTICLES ---- */
+(function initParticles(){
+  const container = document.createElement('div'); container.className='particles-container'; document.body.appendChild(container);
+  const colors = ['#2563eb','#3b82f6','#a855f7','#22c55e','#60a5fa'];
+  for (let i=0;i<30;i++) {
+    const p = document.createElement('div'); p.className='particle';
+    p.style.left = Math.random()*100+'%'; p.style.width = (2 + Math.random()*5)+'px';
+    p.style.height = p.style.width; p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration = (8 + Math.random()*16)+'s'; p.style.animationDelay = Math.random()*15+'s';
+    container.appendChild(p);
+  }
+})();
+
+
 document.addEventListener('DOMContentLoaded', () => {
   const savedLang = document.documentElement.lang || 'en';
   setLanguage(savedLang);
