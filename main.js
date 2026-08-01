@@ -127,6 +127,42 @@ document.querySelectorAll('.lang-toggle-btn').forEach(btn => btn.addEventListene
 }));
 
 
+
+/* ---- SCROLL PROGRESS BAR ---- */
+(function initScrollProgress(){
+  const bar = document.createElement('div'); bar.id = 'scroll-progress'; document.body.prepend(bar);
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = h > 0 ? ((window.scrollY / h)*100)+'%' : '0%';
+  }, {passive:true});
+})();
+
+/* ---- ENHANCED 3D TILT WITH GLARE ---- */
+(function initEnhancedTilt(){
+  document.querySelectorAll('.tilt-card').forEach(card => {
+    if (!card.querySelector('.glare')) {
+      const glare = document.createElement('div'); glare.className='glare'; card.appendChild(glare);
+    }
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const px = (e.clientX - rect.left)/rect.width - 0.5;
+      const py = (e.clientY - rect.top)/rect.height - 0.5;
+      card.style.transform = 'translateY(-4px) rotateX('+(-py*8).toFixed(2)+'deg) rotateY('+(px*8).toFixed(2)+'deg)';
+      card.style.setProperty('--gx', ((e.clientX-rect.left)/rect.width*100)+'%');
+      card.style.setProperty('--gy', ((e.clientY-rect.top)/rect.height*100)+'%');
+    });
+    card.addEventListener('mouseleave', () => { card.style.transform=''; card.style.setProperty('--gx','50%'); card.style.setProperty('--gy','50%'); });
+  });
+})();
+
+/* ---- STAGGER OBSERVER ---- */
+(function initStagger(){
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.stagger').forEach(el => observer.observe(el));
+})();
+
 /* ---- CURSOR GLOW ---- */
 (function initCursorGlow(){
   const glow = document.createElement('div'); glow.className='cursor-glow'; document.body.appendChild(glow);
