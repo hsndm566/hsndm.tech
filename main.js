@@ -128,6 +128,81 @@ document.querySelectorAll('.lang-toggle-btn').forEach(btn => btn.addEventListene
 
 
 
+
+/* ---- THREE.JS 3D HERO SCENE ---- */
+(function initThreeHero(){
+  const canvas = document.getElementById('three-canvas');
+  if (!canvas) return;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 100);
+  camera.position.z = 15;
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  // lights
+  scene.add(new THREE.AmbientLight(0x2563eb, 0.6));
+  const light = new THREE.PointLight(0xa855f7, 0.8); light.position.set(5,5,5); scene.add(light);
+
+  // main wireframe icosahedron
+  const geo = new THREE.IcosahedronGeometry(2.2, 1);
+  const mat = new THREE.MeshStandardMaterial({ color:0x2563eb, wireframe:true, emissive:0x1a3a6a, emissiveIntensity:0.3 });
+  const ico = new THREE.Mesh(geo, mat); scene.add(ico);
+
+  // floating particles
+  const pgeo = new THREE.BufferGeometry(); const pcount = 200;
+  const pos = new Float32Array(pcount*3);
+  for(let i=0;i<pcount*3;i++) pos[i] = (Math.random()-0.5)*14;
+  pgeo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  const pmat = new THREE.PointsMaterial({ color:0x3b82f6, size:0.04 });
+  const particles = new THREE.Points(pgeo, pmat); scene.add(particles);
+
+  // ring
+  const rgeo = new THREE.TorusGeometry(3, 0.08, 16, 100);
+  const rmat = new THREE.MeshStandardMaterial({ color:0x7ee787, emissive:0x1a3a0a, emissiveIntensity:0.2 });
+  const ring = new THREE.Mesh(rgeo, rmat); ring.rotation.x = Math.PI/3; scene.add(ring);
+
+  let mx=0, my=0;
+  document.addEventListener('mousemove', (e) => { mx=(e.clientX/window.innerWidth-0.5)*2; my=(e.clientY/window.innerHeight-0.5)*2; });
+
+  function animate(){
+    requestAnimationFrame(animate);
+    ico.rotation.x += 0.003; ico.rotation.y += 0.005;
+    ring.rotation.z += 0.002; ring.rotation.y += 0.003;
+    particles.rotation.y -= 0.001; particles.rotation.x += 0.0005;
+    camera.position.x += (mx*3 - camera.position.x)*0.02;
+    camera.position.y += (-my*1.5 - camera.position.y)*0.02;
+    renderer.render(scene, camera);
+  }
+
+  window.addEventListener('resize', ()=>{
+    camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) animate();
+  else { ico.rotation.x=0.2; ico.rotation.y=0.4; ring.rotation.x=Math.PI/3; renderer.render(scene, camera); }
+})();
+
+/* ---- SWUP PAGE TRANSITIONS ---- */
+(function initSwup(){
+  if (typeof Swup === 'undefined') return;
+  const swup = new Swup({
+    containers: ['#swup'],
+    animationSelector: '[class*="swup-transition"]',
+    cache: true,
+    linkSelector: 'a[href^="' + window.location.origin + '"]:not([data-no-swup]), a[href^="./"]:not([data-no-swup]), a[href^="/"]:not([data-no-swup])'
+  });
+  swup.on('contentReplaced', () => {
+    if (typeof window.initHeroTyping === 'function') window.initHeroTyping();
+    if (typeof window.initThreeHero === 'function') window.initThreeHero();
+    if (typeof window.initEnhancedTilt === 'function') window.initEnhancedTilt();
+    if (typeof window.initStagger === 'function') window.initStagger();
+    if (typeof window.initCursorGlow === 'function') {}
+    fadeObserver.observe(document.querySelector('.fade-in'));
+  });
+})();
+
 /* ---- SCROLL PROGRESS BAR ---- */
 (function initScrollProgress(){
   const bar = document.createElement('div'); bar.id = 'scroll-progress'; document.body.prepend(bar);
