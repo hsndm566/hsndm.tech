@@ -255,6 +255,17 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 }
 
 
+
+/* ---- Swup page transitions ---- */
+.swup-transition-fade { transition: opacity .35s ease, transform .35s ease; }
+html.is-animating .swup-transition-fade { opacity: 0; transform: translateY(8px); }
+html.is-leaving .swup-transition-fade { opacity: 0; transform: translateY(-8px); }
+
+/* Three.js canvas */
+#three-canvas { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5; }
+[data-theme="light"] #three-canvas { opacity: 0.25; }
+
+
 .modal-backdrop {
   position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
   display: flex; align-items: center; justify-content: center; padding: 1.2rem; opacity: 0; pointer-events: none; transition: opacity .3s ease;
