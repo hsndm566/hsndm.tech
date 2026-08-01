@@ -171,9 +171,16 @@ window.sendJulieMessage = async function() {
   const timeoutId = setTimeout(() => controller.abort(), 8000);
 
   try {
-    const res = await fetch('https://hsndm566.app.n8n.cloud/webhook/joulie-chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: msg }), signal: controller.signal });
+    const res = await fetch('https://julie-proxy.hsndm.workers.dev/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg }),
+      signal: controller.signal });
     clearTimeout(timeoutId);
     const data = await res.json();
+    typingIndicator.remove();
+    const divBot = document.createElement('div'); divBot.className = 'msg bot';
+    divBot.textContent = (data.reply) || "I'm here! But I didn't understand that.";
     typingIndicator.remove();
     const divBot = document.createElement('div'); divBot.className = 'msg bot'; divBot.textContent = data.reply || "I'm here! But I didn't understand that.";
     msgsContainer.appendChild(divBot); divBot.scrollIntoView({ behavior: 'smooth' });
