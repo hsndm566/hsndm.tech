@@ -3,122 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="site_title_dashboard">Dashboard – Hasan Adam</title>
-<meta name="theme-color" content="#0a0e17" id="theme-color-meta">
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = { darkMode: 'class', theme: { extend: { colors: { accent: '#2563eb', accent2: '#3b82f6' }, fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] } } } }
-</script>
-<link rel="stylesheet" href="styles.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script>
-  try {
-    const savedTheme = localStorage.getItem('site-theme') || 'dark';
-    document.documentElement.classList.toggle('dark', savedTheme === 'dark');
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    const savedLang = localStorage.getItem('site-lang') || 'en';
-    document.documentElement.lang = savedLang;
-    document.documentElement.dir = savedLang === 'ar' ? 'rtl' : 'ltr';
-  } catch(e){}
-</script>
+<title>Live Dashboard — Hasan Adam</title>
+<meta name="description" content="Live AutoApply SA engine dashboard.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://unpkg.com/swup@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
-<body class="min-h-screen">
-
-<div class="ambient-bg" aria-hidden="true">
-  <div class="ambient-blob b1"></div>
-  <div class="ambient-blob b2"></div>
-  <div class="ambient-blob b3"></div>
-</div>
-
-<div id="nav-placeholder"></div>
-<script src="nav.js"></script>
-
-<main id="swup" class="swup-transition-fade" class="w-full px-5 sm:px-8 lg:px-14 pt-20 lg:pt-32 pb-14 max-w-5xl mx-auto min-h-[90vh]">
-  <section class="py-4">
-    <div class="fade-in flex items-baseline gap-3 mb-1">
-      <span class="font-num font-bold" style="color:var(--accent)">03</span>
-      <h1 class="font-heading text-3xl sm:text-4xl font-bold" data-i18n="nav_dashboard">Job Dashboard</h1>
+<body>
+<canvas id="bg-canvas"></canvas><div class="grain"></div><div class="glow-cursor" id="glow-cursor"></div>
+<nav class="topbar">
+  <a class="brand" href="index.html"><span class="dot">⚙</span> Hasan Adam</a>
+  <div class="navlinks">
+    <a href="index.html">Home</a><a href="about.html">About</a>
+    <a href="projects.html">Projects</a><a href="dashboard.html" class="active">Live Dashboard</a><a href="contact.html">Contact</a>
+  </div>
+</nav>
+<div class="wrap">
+  <section class="section reveal" style="padding-top:50px">
+    <div style="font-family:'Space Grotesk';font-weight:700;color:var(--accent);font-size:.9rem;letter-spacing:2px">03 · LIVE DASHBOARD</div>
+    <h2 class="title" style="margin:8px 0 6px">AutoApply SA — engine telemetry</h2>
+    <p class="sub">Live data from the job-acquisition engine. Auto-refreshes every 60s.</p>
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:22px;font-size:.85rem;color:var(--dim)">
+      <span class="badge" style="margin:0"><span class="pulse"></span> live</span>
+      <span>Last update: <strong id="lastUpdate" style="color:var(--text)">loading…</strong></span>
+      <span id="engineState" style="color:var(--green)">● engine online</span>
     </div>
-    <p class="fade-in mb-8 text-sm sm:text-base" style="color:var(--text-dim)" data-i18n="dash_sub">Live data pulled directly from my Google Sheet tracker.</p>
-
-    <div class="fade-in flex flex-wrap gap-3 mb-6">
-      <div class="glass-flat flex items-center gap-2 px-4 py-2 rounded-full text-sm" style="color:var(--text-dim)">
-        <i class="fa-solid fa-clock" aria-hidden="true"></i> <span data-i18n="last_updated">Last updated:</span> <strong id="lastUpdate" class="font-num" style="color:var(--text)" aria-live="polite">loading...</strong>
-      </div>
-      <button id="refreshBtn" class="glass-flat flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold" style="color:var(--accent)" aria-label="Refresh dashboard data now">
-        <i class="fa-solid fa-rotate-right" aria-hidden="true"></i> <span data-i18n="btn_refresh">Refresh now</span>
-      </button>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:26px">
+      <div class="card" style="padding:22px;text-align:center"><div style="font-family:'Space Grotesk';font-size:2.2rem;font-weight:700;color:var(--accent)" id="k-sent">—</div><div style="font-size:.68rem;color:var(--dim);text-transform:uppercase;letter-spacing:1.4px">Sent Today</div></div>
+      <div class="card" style="padding:22px;text-align:center"><div style="font-family:'Space Grotesk';font-size:2.2rem;font-weight:700;color:var(--accent)" id="k-replies">—</div><div style="font-size:.68rem;color:var(--dim);text-transform:uppercase;letter-spacing:1.4px">Replies</div></div>
+      <div class="card" style="padding:22px;text-align:center"><div style="font-family:'Space Grotesk';font-size:2.2rem;font-weight:700;color:var(--accent)" id="k-interviews">—</div><div style="font-size:.68rem;color:var(--dim);text-transform:uppercase;letter-spacing:1.4px">Interviews</div></div>
+      <div class="card" style="padding:22px;text-align:center"><div style="font-family:'Space Grotesk';font-size:2.2rem;font-weight:700;color:var(--accent)" id="k-total">—</div><div style="font-size:.68rem;color:var(--dim);text-transform:uppercase;letter-spacing:1.4px">Total Sent</div></div>
     </div>
-
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-      <div class="fade-in glass-card p-5 text-center">
-        <i class="fa-solid fa-paper-plane text-lg mb-2" style="color:var(--accent)"></i>
-        <div class="font-num text-3xl font-extrabold skeleton" style="color:var(--accent)" id="sent">00</div>
-        <div class="text-xs mt-1" style="color:var(--text-dim)" data-i18n="stat_sent">Sent Today</div>
-      </div>
-      <div class="fade-in glass-card p-5 text-center">
-        <i class="fa-solid fa-reply text-lg mb-2" style="color:var(--accent)"></i>
-        <div class="font-num text-3xl font-extrabold skeleton" style="color:var(--accent)" id="replies">00</div>
-        <div class="text-xs mt-1" style="color:var(--text-dim)" data-i18n="stat_replies">Replies</div>
-      </div>
-      <div class="fade-in glass-card p-5 text-center">
-        <i class="fa-solid fa-briefcase text-lg mb-2" style="color:var(--accent)"></i>
-        <div class="font-num text-3xl font-extrabold skeleton" style="color:var(--accent)" id="interviews">00</div>
-        <div class="text-xs mt-1" style="color:var(--text-dim)" data-i18n="stat_interviews">Interviews</div>
-      </div>
-      <div class="fade-in glass-card p-5 text-center">
-        <i class="fa-solid fa-circle-check text-lg mb-2" style="color:var(--accent)"></i>
-        <div class="font-num text-3xl font-extrabold skeleton" style="color:var(--accent)" id="total">00</div>
-        <div class="text-xs mt-1" style="color:var(--text-dim)" data-i18n="stat_total">Total Sent</div>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-5">
-      <div class="fade-in glass-flat p-6">
-        <h2 class="font-heading text-lg font-semibold mb-4" data-i18n="chart_title">Status Breakdown</h2>
-        <div class="relative h-60"><canvas id="statusChart" role="img" aria-label="Status Doughnut Chart"></canvas></div>
-      </div>
-
-      <div class="fade-in glass-flat p-6">
-        <h2 class="font-heading text-lg font-semibold mb-4" data-i18n="table_title">Recent Activity</h2>
-        <div class="overflow-x-auto">
-          <table class="w-full text-sm text-left align-start-rtl">
-            <thead>
-              <tr style="border-bottom:1px solid var(--border)">
-                <th class="py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)" data-i18n="th_company">Company</th>
-                <th class="py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)" data-i18n="th_job">Job Title</th>
-                <th class="py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)" data-i18n="th_score">Score</th>
-                <th class="py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)" data-i18n="th_status">Status</th>
-                <th class="py-2 px-2 font-semibold text-xs" style="color:var(--text-dim)" data-i18n="th_date">Date</th>
-              </tr>
-            </thead>
-            <tbody id="recentBody">
-              <tr>
-                <td class="py-2 px-2"><span class="skeleton block h-4 w-20">&nbsp;</span></td>
-                <td class="py-2 px-2"><span class="skeleton block h-4 w-24">&nbsp;</span></td>
-                <td class="py-2 px-2"><span class="skeleton block h-4 w-10">&nbsp;</span></td>
-                <td class="py-2 px-2"><span class="skeleton block h-4 w-14">&nbsp;</span></td>
-                <td class="py-2 px-2"><span class="skeleton block h-4 w-16">&nbsp;</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <div class="grid" style="grid-template-columns:1fr 1.6fr;gap:18px">
+      <div class="panel"><h3 style="font-family:'Space Grotesk';margin-bottom:14px">Status Breakdown</h3><div style="height:240px"><canvas id="statusChart"></canvas></div></div>
+      <div class="panel"><h3 style="font-family:'Space Grotesk';margin-bottom:14px">Recent Activity</h3>
+        <div style="overflow-x:auto"><table style="width:100%;font-size:.85rem;text-align:left;border-collapse:collapse">
+          <thead><tr style="color:var(--dim);border-bottom:1px solid var(--border)"><th style="padding:8px 6px">Company</th><th style="padding:8px 6px">Title</th><th style="padding:8px 6px">Status</th><th style="padding:8px 6px">Date</th></tr></thead>
+          <tbody id="recentBody"></tbody>
+        </table></div>
       </div>
     </div>
   </section>
-</main>
-
-<div class="text-center text-xs mt-14 mb-8" style="color:var(--text-faint)">
-  &copy; <span id="year"></span> <span data-i18n="footer_copy">Hasan Adam. Built with HTML, Tailwind, Chart.js & Google Sheets.</span>
+  <footer class="foot"><div>© <span id="year"></span> Hasan Adam · Built with HTML, Three.js &amp; Claude.</div></footer>
 </div>
-<script src="main.js"></script>
+<div id="joulie-bubble" title="Ask Julie">🤖</div>
+<div id="joulie-chat">
+  <div style="padding:14px 18px;background:linear-gradient(135deg,#3b82f6,#a855f7);font-weight:700;display:flex;justify-content:space-between;align-items:center"><span>Julie · AI Copilot</span><span style="cursor:pointer;opacity:.85" onclick="document.getElementById('joulie-chat').classList.remove('open')">✕</span></div>
+  <div id="joulie-msgs"></div>
+  <div id="joulie-input-row"><input id="joulie-in" placeholder="Ask Julie anything…"><button id="joulie-send">Send</button></div>
+</div>
+<script src="assets/site.js"></script>
+<script>
+/* dashboard.json is written by the engine. Falls back to seed if missing. */
+var SEED={sentToday:14,replies:2,interviews:1,total:48,lastUpdate:"2026-08-02",
+  breakdown:{Sent:48,Replies:2,Interviews:1,Pending:12},
+  recent:[{company:"Al-Hoty",title:"Ops & Supply Chain",status:"Replied",date:"2026-08-02"},
+          {company:"AkzoNobel",title:"Industrial Engineer",status:"Applied",date:"2026-08-02"},
+          {company:"JASARA",title:"Logistics/SCM",status:"Applied",date:"2026-08-02"},
+          {company:"NESR",title:"Supply Chain",status:"Auto-reply",date:"2026-08-01"}]};
+function render(d){
+  d=d||SEED;
+  document.getElementById('k-sent').textContent=d.sentToday;
+  document.getElementById('k-replies').textContent=d.replies;
+  document.getElementById('k-interviews').textContent=d.interviews;
+  document.getElementById('k-total').textContent=d.total;
+  document.getElementById('lastUpdate').textContent=d.lastUpdate||"—";
+  var tb=document.getElementById('recentBody');tb.innerHTML="";
+  (d.recent||[]).forEach(function(r){var tr=document.createElement('tr');tr.style.borderBottom='1px solid var(--border)';
+    tr.innerHTML='<td style="padding:8px 6px">'+r.company+'</td><td style="padding:8px 6px;color:var(--dim)">'+r.title+'</td><td style="padding:8px 6px;color:var(--green)">'+r.status+'</td><td style="padding:8px 6px;color:var(--dim)">'+r.date+'</td>';tb.appendChild(tr);});
+  if(window._chart)window._chart.destroy();
+  window._chart=new Chart(document.getElementById('statusChart'),{type:'doughnut',
+    data:{labels:Object.keys(d.breakdown||SEED.breakdown),datasets:[{data:Object.values(d.breakdown||SEED.breakdown),
+      backgroundColor:['#3b82f6','#22c55e','#a855f7','#22d3ee'],borderColor:'rgba(0,0,0,0)'}]},
+    options:{plugins:{legend:{labels:{color:'#9aa6bd'}}},cutout:'62%'}});
+}
+fetch('dashboard.json?t='+Date.now()).then(function(r){return r.json();}).then(render).catch(function(){render(SEED);});
+setInterval(function(){fetch('dashboard.json?t='+Date.now()).then(function(r){return r.json();}).then(render).catch(function(){});},60000);
+</script>
 </body>
 </html>
