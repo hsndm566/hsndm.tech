@@ -111,10 +111,25 @@
     input.addEventListener('keydown',function(e){if(e.key==='Enter'){var v=input.value.trim();if(v){ask(v);input.value='';}}});
   }
 
+  /* ---- mobile nav toggle ---- */
+  function initNav(){
+    var burger=document.getElementById('hamburger');
+    var links=document.getElementById('navlinks');
+    if(!burger||!links)return;
+    burger.addEventListener('click',function(){
+      var open=links.classList.toggle('open');
+      burger.classList.toggle('open',open);
+      burger.setAttribute('aria-expanded',open?'true':'false');
+    });
+    links.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click',function(){links.classList.remove('open');burger.classList.remove('open');burger.setAttribute('aria-expanded','false');});
+    });
+  }
+
   /* ---- boot ---- */
   function boot(){
     initGlobe(document.getElementById('bg-canvas'));
-    initGlow(); initReveal(); initCards(); initStatus(); initJulie();
+    initGlow(); initReveal(); initCards(); initStatus(); initJulie(); initNav();
     var y=document.getElementById('year'); if(y)y.textContent=new Date().getFullYear();
   }
   if(document.readyState==='loading'){
