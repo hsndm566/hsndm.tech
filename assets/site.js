@@ -5,7 +5,7 @@
   /* ---- Rotating dot-globe (self-contained, Three.js from CDN w/ fallback handled in HTML) ---- */
   function initGlobe(canvas){
     if(!window.THREE || !canvas) return;
-    var renderer=new THREE.WebGLRenderer({canvas:canvas,alpha:true,antialias:true});
+    var renderer=new THREE.WebGLRenderer({canvas:canvas,alpha:true,antialias:true,preserveDrawingBuffer:true});
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
     function size(){renderer.setSize(window.innerWidth,window.innerHeight,false);}
     size();
