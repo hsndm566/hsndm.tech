@@ -112,11 +112,16 @@
   }
 
   /* ---- boot ---- */
-  window.addEventListener('DOMContentLoaded',function(){
+  function boot(){
     initGlobe(document.getElementById('bg-canvas'));
     initGlow(); initReveal(); initCards(); initStatus(); initJulie();
     var y=document.getElementById('year'); if(y)y.textContent=new Date().getFullYear();
-  });
+  }
+  if(document.readyState==='loading'){
+    window.addEventListener('DOMContentLoaded',boot);
+  } else {
+    boot();
+  }
 
   /* expose for pages that load THREE before DOMContentLoaded (CDN) */
   window.__hasanInitGlobe=initGlobe;
