@@ -58,6 +58,8 @@ a{color:inherit;text-decoration:none}
 .hero-media{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;opacity:.35;filter:grayscale(1) contrast(1.05)}
 .hero-video-wrap{max-width:920px;margin-left:auto;margin-right:auto;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);box-shadow:0 24px 60px -20px rgba(0,0,0,.15)}
 .hero-video{width:100%;display:block;filter:grayscale(.2)}
+.bg-video{position:fixed;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;opacity:.12;filter:grayscale(1) contrast(1.05);pointer-events:none}
+.upload-desk{width:100%;max-width:420px;border-radius:var(--radius-lg);margin-bottom:8px;filter:grayscale(.2);border:1px solid var(--border)}
 .features-media{max-width:920px;margin-left:auto;margin-right:auto;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);box-shadow:0 24px 60px -20px rgba(0,0,0,.15)}
 .feature-img{width:100%;display:block;filter:grayscale(.15) contrast(1.02)}
 .hero-inner{position:relative;z-index:2;width:100%;padding:140px 0 100px}
@@ -205,6 +207,9 @@ a{color:inherit;text-decoration:none}
 </head>
 <body>
 <div id="cursorGlow"></div>
+<video class="bg-video" autoplay muted loop playsinline poster="assets/media/section.jpg" onerror="this.style.display='none'">
+  <source src="assets/media/showcase.mp4" type="video/mp4">
+</video>
 <nav class="nav" id="mainNav">
   <div class="wrap nav-inner">
     <div class="brand"><span class="dot"></span> AutoApply SA</div>
@@ -297,11 +302,6 @@ a{color:inherit;text-decoration:none}
       <div class="step reveal"><div class="step-num">02</div><h3>Get matched</h3><p>We scan 500+ live Gulf listings and surface the roles where your profile has the highest probability of success.</p></div>
       <div class="step reveal"><div class="step-num">03</div><h3>We apply 24/7</h3><p>The engine tailors cover letters, fills portals, sends emails, and verifies delivery — while you sleep.</p></div>
     </div>
-    <div class="hero-video-wrap reveal" style="margin-top:64px">
-      <video class="hero-video" autoplay muted loop playsinline poster="assets/media/section.jpg" onerror="this.style.display='none'">
-        <source src="assets/media/showcase.mp4" type="video/mp4">
-      </video>
-    </div>
   </div>
 </section>
 <section class="stats-band">
@@ -322,6 +322,7 @@ a{color:inherit;text-decoration:none}
       <p>Upload your CV and our AI shows your best-fit target roles in seconds.</p>
     </div>
     <div class="upload-card">
+      <img src="assets/media/desk.jpg" alt="Your desk, automated" class="upload-desk" onerror="this.style.display='none'">
       <div class="upload-drop" id="uploadDrop">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-3)"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         <div class="upload-text">Upload your CV</div>
