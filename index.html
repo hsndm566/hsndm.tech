@@ -816,25 +816,29 @@ const FIELD_MAP=[
   {title:'Mechanical & Electrical',ar:'الهندسة الميكانيكية والكهربائية',kw:['mechanical','electrical','maintenance','hvac','plc','automation','technician','manufacturing','ميكانيكا','كهرباء'],items:['Mechanical Engineer','Electrical Engineer','Maintenance Engineer']},
   {title:'IT & Support',ar:'تقنية المعلومات والدعم',kw:['it support','network','system admin','helpdesk','cisco','windows server','cyber','security','infrastructure','دعم فني','شبكات'],items:['IT Support Specialist','Network Administrator','Systems Administrator']},
   {title:'Customer Service',ar:'خدمة العملاء',kw:['customer service','call center','support agent','client service','guest','reception','خدمة عملاء'],items:['Customer Service Representative','Call Center Agent','Client Support Specialist']},
-  {title:'Teaching & Education',ar:'التعليم والتدريب',kw:['teacher','teaching','lecturer','tutor','curriculum','education','training','معلم','تدريس','تدريب'],items:['Teacher','Training Specialist','Academic Coordinator']},
+  {title:'Teaching & Education',ar:'التعليم والتدريب',kw:['teacher','teaching','lecturer','tutor','curriculum','classroom','school','pedagog','academic coordinator','معلم','تدريس','مدرسة'],items:['Teacher','Training Specialist','Academic Coordinator']},
   {title:'Operations Management',ar:'إدارة العمليات',kw:['operations','process improvement','lean','six sigma','productivity','kaizen','عمليات','تحسين'],items:['Operations Lead','Process Improvement Specialist','Operations Coordinator']},
   {title:'Logistics & Supply Chain',ar:'اللوجستيات وسلسلة الإمداد',kw:['logistics','supply chain','warehouse','procurement','inventory','shipping','freight','import','export','لوجستيات','مشتريات','مستودع'],items:['Logistics Coordinator','Supply Chain Analyst','Warehouse Supervisor']},
   {title:'Project Management',ar:'إدارة المشاريع',kw:['project manager','pmp','primavera','ms project','stakeholder','scope','milestone','مشاريع'],items:['Project Manager','Project Coordinator','PMO Analyst']}
 ];
 function demoLists(cvText){
   const t=String(cvText||'').toLowerCase();
-  /* No readable CV text: show a neutral prompt, never a fake match */
-  if(t.length<60){
-    return [{title:'Tell us your target roles',items:['Send your CV on WhatsApp','We read it manually','You get a real match']}];
-  }
-  const scored=FIELD_MAP.map(f=>{
-    let n=0; f.kw.forEach(k=>{ if(t.indexOf(k)>-1) n++; });
+  const ASK=[{title:'Tell us your target roles',items:['Send your CV on WhatsApp','We read it manually','You get a real match']}];
+  /* Too little readable text (scanned PDF / binary docx): never fake a match */
+  if(t.length<25) return ASK;
+  const scored=FIELD_MAP.map(function(f){
+    var n=0; f.kw.forEach(function(k){ if(t.indexOf(k)>-1) n++; });
     return {f:f,score:n};
-  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
-  if(!scored.length){
-    return [{title:'Tell us your target roles',items:['Send your CV on WhatsApp','We read it manually','You get a real match']}];
-  }
-  return scored.slice(0,3).map(x=>({title:x.f.title,items:x.f.items}));
+  }).filter(function(x){return x.score>0;}).sort(function(a,b){return b.score-a.score;});
+  if(!scored.length) return ASK;
+  /* Only show extra fields if they are a genuine signal, not a single
+     stray keyword. A weak 2nd/3rd match is worse than showing one. */
+  var top=scored[0].score;
+  var keep=scored.filter(function(x,i){
+    if(i===0) return true;
+    return x.score>=2 && x.score>=top*0.6;
+  });
+  return keep.slice(0,3).map(function(x){return {title:x.f.title,items:x.f.items};});
 }
 function showLists(lists){
   if(!psyLists)return;
