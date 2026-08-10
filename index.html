@@ -7,6 +7,13 @@
 <meta name="description" content="AutoApply SA engineers applications to 500+ Gulf roles while you sleep. Jeddah, KSA.">
 <meta property="og:title" content="AutoApply SA — Your 24/7 AI Job Engine">
 <meta property="og:description" content="AutoApply SA finds, tailors, and submits applications to 500+ Gulf roles — around the clock.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hsndm.tech/">
+<meta property="og:image" content="https://hsndm.tech/assets/media/hero.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hsndm.tech/assets/media/hero.jpg">
+<link rel="canonical" href="https://hsndm.tech/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23111%22/><text y=%2270%22 x=%2250%22 text-anchor=%22middle%22 font-size=%2258%22 font-family=%22Arial%22 fill=%22white%22>A</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -416,7 +423,7 @@ a{color:inherit;text-decoration:none}
     <h2 class="reveal" data-i18n="contact_h2">Let's get you applied.</h2>
     <p class="reveal" data-i18n="contact_p">Reach Hasan directly — WhatsApp, Instagram, or LinkedIn.</p>
     <div class="reveal" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-      <a class="btn btn-white" href="https://wa.me/hsndm_" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn btn-white" href="https://wa.me/966571448656" target="_blank" rel="noopener">WhatsApp</a>
       <a class="btn btn-outline-white" href="https://instagram.com/hsndm_" target="_blank" rel="noopener">Instagram</a>
       <a class="btn btn-outline-white" href="https://linkedin.com/in/hsndm" target="_blank" rel="noopener">LinkedIn</a>
     </div>
@@ -431,11 +438,11 @@ a{color:inherit;text-decoration:none}
       </div>
       <div class="footer-col"><h4 data-i18n="nav_product">Product</h4><a href="#how" data-i18n="nav_how">How it works</a><a href="#upload">CV Upload</a><a href="#pricing" data-i18n="nav_pricing">Pricing</a></div>
       <div class="footer-col"><h4 data-i18n="footer_company">Company</h4><a href="#faq" data-i18n="nav_faq">FAQ</a><a href="#contact" data-i18n="nav_contact">Contact</a></div>
-      <div class="footer-col"><h4 data-i18n="footer_connect">Connect</h4><a href="https://wa.me/hsndm_" target="_blank" rel="noopener">WhatsApp · hsndm_</a><a href="https://instagram.com/hsndm_" target="_blank" rel="noopener">Instagram · hsndm_</a><a href="https://linkedin.com/in/hsndm" target="_blank" rel="noopener">LinkedIn · hsndm</a></div>
+      <div class="footer-col"><h4 data-i18n="footer_connect">Connect</h4><a href="https://wa.me/966571448656" target="_blank" rel="noopener">WhatsApp · hsndm_</a><a href="https://instagram.com/hsndm_" target="_blank" rel="noopener">Instagram · hsndm_</a><a href="https://linkedin.com/in/hsndm" target="_blank" rel="noopener">LinkedIn · hsndm</a></div>
     </div>
     <div class="footer-bottom">
       <div class="footer-social">
-        <a href="https://wa.me/hsndm_" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="https://wa.me/966571448656" target="_blank" rel="noopener">WhatsApp</a>
         <a href="https://instagram.com/hsndm_" target="_blank" rel="noopener">Instagram</a>
         <a href="https://linkedin.com/in/hsndm" target="_blank" rel="noopener">LinkedIn</a>
       </div>
@@ -764,13 +771,22 @@ cvInput.addEventListener('change',async(e)=>{
 function readFileText(file){
   return new Promise(resolve=>{
     const r=new FileReader();
-    r.onload=()=>resolve(String(r.result||''));
+    r.onload=()=>{
+      let t=String(r.result||'');
+      /* PDF/DOCX read as raw bytes produce binary noise. Strip it so the
+         matcher never receives junk it will silently fail on. */
+      t=t.replace(/[^\x09\x0A\x0D\x20-\x7E\u0600-\u06FF]/g,' ')
+         .replace(/\s{2,}/g,' ').trim();
+      const letters=(t.match(/[A-Za-z\u0600-\u06FF]/g)||[]).length;
+      /* Too little real text = unreadable format (scanned PDF, binary docx) */
+      resolve(letters < 120 ? '' : t);
+    };
     r.onerror=()=>resolve('');
-    try{r.readAsText(file);}catch{resolve('');}
+    try{r.readAsText(file);}catch(e){resolve('');}
   });
 }
 async function getCareerLists(cvText){
-  if(!AI_API_KEY)return demoLists();
+  if(!AI_API_KEY||/\.\.\./.test(AI_API_KEY))return demoLists(cvText);
   const prompt='You are an AI career matcher for AutoApply SA. Given this CV, identify the candidate best-fit target roles. Return exactly 3 career fields, each with 3 specific job titles that fit THIS person. Respond ONLY as strict JSON (no markdown): [{"title":"Field","items":["Job","Job","Job"]}]. CV:\n'+(cvText||'Generic professional CV').slice(0,4000);
   try{
     const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
@@ -782,15 +798,43 @@ async function getCareerLists(cvText){
     const content=data.choices?.[0]?.message?.content||'[]';
     const parsed=JSON.parse(content.replace(/```json|```/g,'').trim());
     if(Array.isArray(parsed)&&parsed.length&&parsed[0].title)return parsed;
-  }catch(err){console.warn('AI match failed, demo fallback',err);}
-  return demoLists();
+  }catch(err){console.warn('AI match failed, keyword fallback',err);}
+  return demoLists(cvText);
 }
-function demoLists(){
-  return [
-    {title:'Operations Management',items:['Operations Lead','Process Improvement','Ops Coordinator']},
-    {title:'Logistics & Supply Chain',items:['Logistics Coordinator','Supply Chain Analyst','Warehouse Manager']},
-    {title:'Industrial Engineering',items:['IE Analyst','Lean Engineer','Continuous Improvement']}
-  ];
+/* Keyword-derived fallback. Previously this returned a hardcoded
+   Operations/Logistics/IE list, so EVERY visitor saw the same three
+   fields regardless of their CV. Now it reads the CV text. */
+const FIELD_MAP=[
+  {title:'Software & Engineering',ar:'البرمجة والهندسة التقنية',kw:['software','developer','javascript','python','java','react','node','backend','frontend','full stack','programmer','api','database','sql','devops','مطور','برمجة'],items:['Software Engineer','Backend Developer','Full Stack Developer']},
+  {title:'Data & Analytics',ar:'البيانات والتحليل',kw:['data','analyst','analytics','machine learning','power bi','tableau','statistics','sql','excel','dashboard','بيانات','تحليل'],items:['Data Analyst','Business Intelligence Analyst','Data Scientist']},
+  {title:'Accounting & Finance',ar:'المحاسبة والمالية',kw:['accounting','accountant','finance','financial','audit','tax','sap fico','bookkeep','payable','receivable','cpa','محاسب','مالية'],items:['Accountant','Financial Analyst','Finance Officer']},
+  {title:'Sales & Business Development',ar:'المبيعات وتطوير الأعمال',kw:['sales','business development','account manager','client','revenue','crm','quota','b2b','مبيعات','تطوير أعمال'],items:['Sales Executive','Account Manager','Business Development Manager']},
+  {title:'Marketing & Digital',ar:'التسويق الرقمي',kw:['marketing','seo','social media','content','brand','campaign','digital marketing','advertis','تسويق','محتوى'],items:['Marketing Specialist','Digital Marketing Executive','Social Media Manager']},
+  {title:'Human Resources',ar:'الموارد البشرية',kw:['human resources','recruit','talent','hr ','payroll','onboarding','employee relations','موارد بشرية','توظيف'],items:['HR Specialist','Recruiter','HR Coordinator']},
+  {title:'Healthcare & Medical',ar:'الرعاية الصحية',kw:['nurse','nursing','medical','clinical','patient','hospital','pharmac','doctor','physician','health','تمريض','طبي','صحة'],items:['Registered Nurse','Clinical Coordinator','Medical Officer']},
+  {title:'Civil & Construction',ar:'الهندسة المدنية والإنشاءات',kw:['civil','construction','site engineer','structural','autocad','quantity survey','architect','hse','مدني','إنشاءات'],items:['Civil Engineer','Site Engineer','Project Engineer']},
+  {title:'Mechanical & Electrical',ar:'الهندسة الميكانيكية والكهربائية',kw:['mechanical','electrical','maintenance','hvac','plc','automation','technician','manufacturing','ميكانيكا','كهرباء'],items:['Mechanical Engineer','Electrical Engineer','Maintenance Engineer']},
+  {title:'IT & Support',ar:'تقنية المعلومات والدعم',kw:['it support','network','system admin','helpdesk','cisco','windows server','cyber','security','infrastructure','دعم فني','شبكات'],items:['IT Support Specialist','Network Administrator','Systems Administrator']},
+  {title:'Customer Service',ar:'خدمة العملاء',kw:['customer service','call center','support agent','client service','guest','reception','خدمة عملاء'],items:['Customer Service Representative','Call Center Agent','Client Support Specialist']},
+  {title:'Teaching & Education',ar:'التعليم والتدريب',kw:['teacher','teaching','lecturer','tutor','curriculum','education','training','معلم','تدريس','تدريب'],items:['Teacher','Training Specialist','Academic Coordinator']},
+  {title:'Operations Management',ar:'إدارة العمليات',kw:['operations','process improvement','lean','six sigma','productivity','kaizen','عمليات','تحسين'],items:['Operations Lead','Process Improvement Specialist','Operations Coordinator']},
+  {title:'Logistics & Supply Chain',ar:'اللوجستيات وسلسلة الإمداد',kw:['logistics','supply chain','warehouse','procurement','inventory','shipping','freight','import','export','لوجستيات','مشتريات','مستودع'],items:['Logistics Coordinator','Supply Chain Analyst','Warehouse Supervisor']},
+  {title:'Project Management',ar:'إدارة المشاريع',kw:['project manager','pmp','primavera','ms project','stakeholder','scope','milestone','مشاريع'],items:['Project Manager','Project Coordinator','PMO Analyst']}
+];
+function demoLists(cvText){
+  const t=String(cvText||'').toLowerCase();
+  /* No readable CV text: show a neutral prompt, never a fake match */
+  if(t.length<60){
+    return [{title:'Tell us your target roles',items:['Send your CV on WhatsApp','We read it manually','You get a real match']}];
+  }
+  const scored=FIELD_MAP.map(f=>{
+    let n=0; f.kw.forEach(k=>{ if(t.indexOf(k)>-1) n++; });
+    return {f:f,score:n};
+  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
+  if(!scored.length){
+    return [{title:'Tell us your target roles',items:['Send your CV on WhatsApp','We read it manually','You get a real match']}];
+  }
+  return scored.slice(0,3).map(x=>({title:x.f.title,items:x.f.items}));
 }
 function showLists(lists){
   if(!psyLists)return;
