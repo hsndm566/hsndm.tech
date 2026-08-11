@@ -4,6 +4,7 @@
  */
 import { useEffect, useMemo } from "react";
 import { ArrowRight, CheckCircle2, MessageCircle, ShieldCheck } from "lucide-react";
+import { applyPageSeo } from "@/lib/seo";
 import { Link } from "wouter";
 
 const WHATSAPP_URL = "https://wa.me/966571448656?text=Hi%20AutoApply%20SA%2C%20I%20just%20sent%20a%20campaign%20enquiry%20and%20would%20like%20to%20continue.";
@@ -12,8 +13,7 @@ export default function ThankYou() {
   const name = useMemo(() => new URLSearchParams(window.location.search).get("name"), []);
 
   useEffect(() => {
-    document.title = "Enquiry Received | AutoApply SA";
-    document.querySelector('meta[name="description"]')?.setAttribute("content", "Your AutoApply SA campaign enquiry has been received. Continue with the team on WhatsApp for the fastest response.");
+    applyPageSeo({ title: "Enquiry Received | AutoApply SA", description: "Your AutoApply SA campaign enquiry has been received. Continue with the team on WhatsApp for the fastest response.", path: "/thank-you", noindex: true });
   }, []);
 
   return (

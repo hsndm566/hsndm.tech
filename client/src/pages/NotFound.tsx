@@ -4,12 +4,12 @@
  */
 import { useEffect } from "react";
 import { ArrowLeft, ArrowRight, SearchX } from "lucide-react";
+import { applyPageSeo } from "@/lib/seo";
 import { Link } from "wouter";
 
 export default function NotFound() {
   useEffect(() => {
-    document.title = "Page Not Found | AutoApply SA";
-    document.querySelector('meta[name="description"]')?.setAttribute("content", "The requested AutoApply SA page could not be found. Return to the application engine or start a campaign.");
+    applyPageSeo({ title: "Page Not Found | AutoApply SA", description: "The requested AutoApply SA page could not be found. Return to the application engine or start a campaign.", path: "/404", noindex: true });
   }, []);
 
   return (
@@ -32,4 +32,3 @@ export default function NotFound() {
     </main>
   );
 }
-

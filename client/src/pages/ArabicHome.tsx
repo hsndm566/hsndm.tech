@@ -3,11 +3,17 @@
  * composition, concise Arabic service copy, and the same high-contrast campaign journey.
  */
 import { ArrowLeft, ArrowUpRight, Check, MessageCircle, ShieldCheck } from "lucide-react";
+import { useEffect } from "react";
+import { applyPageSeo } from "@/lib/seo";
 import { Link } from "wouter";
 
 const WHATSAPP_URL = "https://wa.me/966571448656?text=مرحباً%20AutoApply%20SA،%20أرغب%20في%20بدء%20حملة%20تقديم.";
 
 export default function ArabicHome() {
+  useEffect(() => {
+    applyPageSeo({ title: "أوتوأبلاي السعودية | محرّك التقديم الوظيفي", description: "أوتوأبلاي السعودية يساعد الباحثين عن عمل داخل المملكة العربية السعودية على تنظيم طلباتهم وتحديد الأدوار المناسبة.", path: "/ar" });
+  }, []);
+
   return (
     <main className="arabic-page" lang="ar" dir="rtl">
       <header className="arabic-header page-frame">

@@ -4,6 +4,7 @@
  */
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, FileText, ShieldCheck } from "lucide-react";
+import { applyPageSeo } from "@/lib/seo";
 import { Link, useLocation } from "wouter";
 
 const campaignLanes = ["Operations", "Logistics", "Sales", "Technology", "Hospitality", "Other"];
@@ -16,8 +17,7 @@ export default function Enquire() {
   const [fileName, setFileName] = useState("");
 
   useEffect(() => {
-    document.title = "Start a Campaign | AutoApply SA";
-    document.querySelector('meta[name="description"]')?.setAttribute("content", "Start an AutoApply SA campaign and share the essential details for your Saudi Arabia job search.");
+    applyPageSeo({ title: "Start a Campaign | AutoApply SA", description: "Start an AutoApply SA campaign and share the essential details for your Saudi Arabia job search.", path: "/enquire" });
   }, []);
 
   const chooseFile = (event: ChangeEvent<HTMLInputElement>) => {

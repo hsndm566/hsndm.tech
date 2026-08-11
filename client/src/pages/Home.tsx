@@ -3,8 +3,10 @@
  * deliberate asymmetry, near-black ink, warm paper, and signal vermilion used only for action.
  */
 import { ChangeEvent, DragEvent, useEffect, useRef, useState } from "react";
+import HeroMedia from "@/components/HeroMedia";
 import { MapView } from "@/components/Map";
 import { demoLists, readCvText } from "@/lib/careerMatcher";
+import { applyPageSeo } from "@/lib/seo";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -81,6 +83,12 @@ const faqs = [
   },
 ];
 
+const campaignStages = [
+  { label: "CV signals", title: "Read the signal", detail: "Skills, experience, and language are prepared for a Saudi Arabia role search.", status: "INPUT READY" },
+  { label: "Role lanes", title: "Confirm the direction", detail: "Your preferred city, industry, seniority, and language create a focused campaign brief.", status: "TARGETING READY" },
+  { label: "Application rhythm", title: "Put the search in motion", detail: "The next step is tailored applications and a visible record of campaign activity.", status: "CAMPAIGN ACTIVE" },
+];
+
 function RailLabel({ children }: { children: React.ReactNode }) {
   return <span className="rail-label">{children}</span>;
 }
@@ -100,12 +108,12 @@ export default function Home() {
   const [scanProgress, setScanProgress] = useState(0);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
   const [matchPreferences, setMatchPreferences] = useState<MatchPreferences>({ city: "Jeddah", industry: "all", seniority: "Any level", language: "English" });
+  const [campaignStage, setCampaignStage] = useState(1);
   const scanFrame = useRef<number | null>(null);
   const scanVersion = useRef(0);
 
   useEffect(() => {
-    document.title = "AutoApply SA | AI Job Application Engine for Saudi Arabia";
-    document.querySelector('meta[name="description"]')?.setAttribute("content", "AutoApply SA helps job seekers across Saudi Arabia organise, tailor, and submit applications with a 24/7 AI application engine based in Jeddah.");
+    applyPageSeo({ title: "AutoApply SA | AI Job Application Engine for Saudi Arabia", description: "AutoApply SA helps job seekers across Saudi Arabia organise, tailor, and submit applications with a 24/7 AI application engine based in Jeddah.", path: "/" });
   }, []);
 
   useEffect(() => () => {
@@ -224,7 +232,7 @@ export default function Home() {
 
       <main id="top">
         <section className="hero" aria-labelledby="hero-heading">
-          <img className="hero-image" src="/manus-storage/autoapply-hero-operations_ad007abc.jpg" alt="Professional reviewing a job application at a laptop" />
+          <HeroMedia poster="/manus-storage/autoapply-hero-operations_ad007abc.jpg" alt="Professional reviewing a job application at a laptop" />
           <div className="hero-overlay" />
           <div className="hero-structure" aria-hidden="true">
             <span className="hero-grid-line one" />
@@ -432,8 +440,8 @@ export default function Home() {
 
         <section className="campaign-preview section-ink">
           <div className="page-frame campaign-preview-grid">
-            <div className="campaign-preview-copy"><div className="section-kicker inverse"><Clock3 size={15} /> BEFORE YOU COMMIT</div><h2>See the campaign <i>take shape.</i></h2><p className="section-summary inverse-summary">A focused preview of the steps your Saudi Arabia campaign follows—from the first CV signal to an organised progress report.</p><Link href="/enquire" className="text-button light-text">Open your campaign brief <MoveRight size={17} /></Link></div>
-            <div className="campaign-dashboard" aria-label="Example campaign status dashboard"><div className="dashboard-top"><span>SAUDI CAMPAIGN / PREVIEW</span><b>JEDDAH · ACTIVE</b></div><div className="dashboard-progress"><span>01</span><div><b>CV signals read</b><small>Skills and experience prepared for matching</small></div><Check size={16} /></div><div className="dashboard-progress"><span>02</span><div><b>Role lanes confirmed</b><small>Preference-led list for Saudi Arabia</small></div><Check size={16} /></div><div className="dashboard-progress active"><span>03</span><div><b>Applications in preparation</b><small>Tailoring and submission route selected</small></div><Clock3 size={16} /></div><div className="dashboard-progress quiet"><span>04</span><div><b>Campaign report due</b><small>Clear view of work completed and next actions</small></div><ArrowUpRight size={16} /></div></div>
+            <div className="campaign-preview-copy"><div className="section-kicker inverse"><Clock3 size={15} /> BEFORE YOU COMMIT</div><h2>See the campaign <i>take shape.</i></h2><p className="section-summary inverse-summary">Use the step switcher to see how the Saudi Arabia campaign moves from your CV signal to a visible application rhythm.</p><div className="campaign-switcher" role="tablist" aria-label="Campaign preview stages">{campaignStages.map((stage, index) => <button key={stage.label} className={campaignStage === index ? "active" : ""} role="tab" aria-selected={campaignStage === index} onClick={() => setCampaignStage(index)}><span>0{index + 1}</span>{stage.label}</button>)}</div><input className="campaign-range" aria-label="Select campaign preview stage" type="range" min="0" max="2" value={campaignStage} onChange={(event) => setCampaignStage(Number(event.target.value))} /><Link href="/enquire" className="text-button light-text">Open your campaign brief <MoveRight size={17} /></Link></div>
+            <div className="campaign-dashboard" aria-label="Interactive example campaign status dashboard"><div className="dashboard-top"><span>SAUDI CAMPAIGN / PREVIEW</span><b>{campaignStages[campaignStage].status}</b></div><div className="dashboard-spotlight"><span>0{campaignStage + 1}</span><div><b>{campaignStages[campaignStage].title}</b><p>{campaignStages[campaignStage].detail}</p></div></div>{campaignStages.map((stage, index) => <button className={`dashboard-progress ${index === campaignStage ? "active" : ""} ${index > campaignStage ? "quiet" : ""}`} key={stage.label} onClick={() => setCampaignStage(index)}><span>0{index + 1}</span><div><b>{stage.label}</b><small>{index < campaignStage ? "Step prepared" : index === campaignStage ? "Current preview" : "Next in the flow"}</small></div>{index < campaignStage ? <Check size={16} /> : index === campaignStage ? <Clock3 size={16} /> : <ArrowUpRight size={16} />}</button>)}</div>
           </div>
         </section>
 
