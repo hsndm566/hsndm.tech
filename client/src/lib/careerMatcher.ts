@@ -22,10 +22,20 @@ export const FIELD_MAP: CareerField[] = [
   { title: "Project Management", keywords: ["project manager", "pmp", "primavera", "ms project", "stakeholder", "scope", "milestone", "مشاريع"], items: ["Project Manager", "Project Coordinator", "PMO Analyst"] },
 ];
 
-export function demoLists(cvText: string): CareerField[] {
+export const INDUSTRY_SCOPES: Record<string, string[]> = {
+  "technology-data": ["Software & Engineering", "Data & Analytics", "IT & Support"],
+  "business-operations": ["Accounting & Finance", "Sales & Business Development", "Operations Management", "Logistics & Supply Chain", "Project Management"],
+  "people-service": ["Human Resources", "Healthcare & Medical", "Customer Service", "Teaching & Education"],
+  "engineering-construction": ["Civil & Construction", "Mechanical & Electrical"],
+};
+
+export function demoLists(cvText: string, industryScope = "all"): CareerField[] {
   const text = String(cvText || "").toLowerCase();
   if (text.length < 25) return [];
-  const scored = FIELD_MAP.map((field) => ({
+  const fields = INDUSTRY_SCOPES[industryScope]
+    ? FIELD_MAP.filter((field) => INDUSTRY_SCOPES[industryScope].includes(field.title))
+    : FIELD_MAP;
+  const scored = fields.map((field) => ({
     field,
     score: field.keywords.reduce((score, keyword) => score + (text.includes(keyword) ? 1 : 0), 0),
   })).filter(({ score }) => score > 0).sort((a, b) => b.score - a.score);

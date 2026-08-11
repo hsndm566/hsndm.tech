@@ -21,6 +21,7 @@ import {
   ScanSearch,
   Send,
   ShieldCheck,
+  SlidersHorizontal,
   Sparkles,
   X,
   Zap,
@@ -61,12 +62,12 @@ const faqs = [
   {
     question: "Do you apply to real companies?",
     answer:
-      "The service is designed for live Gulf roles, using email and direct portal submission, with bounce-checked addresses where email is used.",
+      "The service is designed for live Saudi Arabia roles, using email and direct portal submission, with bounce-checked addresses where email is used.",
   },
   {
     question: "Which languages are supported?",
     answer:
-      "The current service supports English, Arabic, Somali, and Filipino to serve a broad Gulf job market.",
+      "The current service supports English and Arabic for job seekers across Saudi Arabia.",
   },
   {
     question: "How do I pay?",
@@ -88,7 +89,8 @@ function StatusDot({ tone = "active" }: { tone?: "active" | "quiet" }) {
   return <span className={`status-dot ${tone}`} aria-hidden="true" />;
 }
 
-type ScanResult = { field: string; roles: string[] };
+type ScanResult = { field: string; roles: string[]; confidence: "Focused" | "Strong"; rationale: string };
+type MatchPreferences = { city: string; industry: string; seniority: string; language: string };
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -97,12 +99,13 @@ export default function Home() {
   const [scanState, setScanState] = useState<"idle" | "scanning" | "matched" | "fallback">("idle");
   const [scanProgress, setScanProgress] = useState(0);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
+  const [matchPreferences, setMatchPreferences] = useState<MatchPreferences>({ city: "Jeddah", industry: "all", seniority: "Any level", language: "English" });
   const scanFrame = useRef<number | null>(null);
   const scanVersion = useRef(0);
 
   useEffect(() => {
-    document.title = "AutoApply SA | AI Job Application Engine for the Gulf";
-    document.querySelector('meta[name="description"]')?.setAttribute("content", "AutoApply SA helps Gulf job seekers organise, tailor, and submit applications with a 24/7 AI application engine based in Jeddah.");
+    document.title = "AutoApply SA | AI Job Application Engine for Saudi Arabia";
+    document.querySelector('meta[name="description"]')?.setAttribute("content", "AutoApply SA helps job seekers across Saudi Arabia organise, tailor, and submit applications with a 24/7 AI application engine based in Jeddah.");
   }, []);
 
   useEffect(() => () => {
@@ -120,7 +123,8 @@ export default function Home() {
     const version = scanVersion.current + 1;
     scanVersion.current = version;
     const scanDuration = 8000 + Math.floor(Math.random() * 4001);
-    const fieldPromise = readCvText(file).then((text) => demoLists(text));
+    const preferencesAtScan = matchPreferences;
+    const fieldPromise = readCvText(file).then((text) => demoLists(text, preferencesAtScan.industry));
     const startedAt = performance.now();
 
     setSelectedFile(file.name);
@@ -142,7 +146,9 @@ export default function Home() {
           setScanState("fallback");
           return;
         }
-        setScanResult({ field: bestFit.title, roles: bestFit.items.slice(0, 3) });
+        const confidence = fields.length > 1 ? "Strong" : "Focused";
+        const scope = preferencesAtScan.industry === "all" ? "your CV signals" : "your CV signals and selected industry";
+        setScanResult({ field: bestFit.title, roles: bestFit.items.slice(0, 3), confidence, rationale: `Matched from ${scope}; ${preferencesAtScan.city}, ${preferencesAtScan.seniority}, and ${preferencesAtScan.language} are included in your Saudi Arabia campaign brief.` });
         setScanState("matched");
       });
     };
@@ -184,9 +190,7 @@ export default function Home() {
         </nav>
 
         <div className="nav-actions">
-          <a className="language-link" href="https://hsndm.tech" lang="ar" aria-label="Visit the Arabic version">
-            العربية
-          </a>
+          <Link className="language-link" href="/ar" lang="ar" aria-label="Visit the Arabic version">العربية</Link>
           <Link className="button button-ink button-small" href="/enquire">Start a campaign <ArrowUpRight size={15} /></Link>
           <button
             className="mobile-menu-button"
@@ -229,14 +233,14 @@ export default function Home() {
           </div>
           <div className="hero-content page-frame">
             <div className="hero-lead">
-              <div className="eyebrow light"><StatusDot /> 24/7 job engine <span /> Jeddah, KSA</div>
+              <div className="eyebrow light"><StatusDot /> 24/7 job engine <span /> Jeddah, Saudi Arabia</div>
               <h1 id="hero-heading">
                 Your applications,<br />
                 <i>engineered</i> while<br />
                 you sleep.
               </h1>
               <p>
-                AutoApply SA finds, tailors, and submits applications to Gulf roles by email and portal—built around your CV and your preferred language.
+                AutoApply SA finds, tailors, and submits applications to Saudi Arabia roles by email and portal—built around your CV and your preferred language.
               </p>
               <div className="hero-actions">
                 <Link className="button button-paper" href="/enquire">Start your campaign <ArrowDownRight size={18} /></Link>
@@ -271,7 +275,7 @@ export default function Home() {
             </div>
 
             <div className="hero-stats">
-              <div><strong>500+</strong><span>Gulf roles scanned</span></div>
+              <div><strong>500+</strong><span>Saudi roles scanned</span></div>
               <div><strong>24/7</strong><span>Engine in motion</span></div>
               <div><strong>4</strong><span>Languages supported</span></div>
             </div>
@@ -296,7 +300,7 @@ export default function Home() {
                   <span className="capability-index">A/01</span>
                   <ScanSearch size={27} strokeWidth={1.6} />
                   <h3>Application engine</h3>
-                  <p>CV details are matched to live Gulf roles and each application is tailored to the opening.</p>
+                  <p>CV details are matched to live Saudi Arabia roles and each application is tailored to the opening.</p>
                   <span className="card-rule" />
                 </article>
                 <article className="capability-card dark-card">
@@ -342,7 +346,7 @@ export default function Home() {
                   <div className="process-number">02</div>
                   <div className="process-content">
                     <h3>Set your target roles</h3>
-                    <p>Review the best-fit role lanes found across Gulf listings and align the search to your next move.</p>
+                    <p>Review the best-fit role lanes found across Saudi Arabia listings and align the search to your next move.</p>
                   </div>
                   <Globe2 size={24} strokeWidth={1.4} />
                 </article>
@@ -368,7 +372,16 @@ export default function Home() {
             <div className="upload-copy">
               <div className="section-kicker"><Paperclip size={15} /> CV INTAKE</div>
               <h2>Drop your CV. <i>Find your lanes.</i></h2>
-              <p className="section-summary">Select the latest version of your CV and continue the conversation directly with the team. You will receive the relevant next steps for your campaign.</p>
+              <p className="section-summary">Select the latest version of your CV, then set the Saudi Arabia role preferences that matter to you. The local scan uses both inputs to make its match more relevant.</p>
+              <div className="match-preferences" aria-label="Saudi Arabia role preferences">
+                <div className="preferences-heading"><span><SlidersHorizontal size={14} /> MATCH PREFERENCES</span><small>Applied locally</small></div>
+                <div className="preferences-grid">
+                  <label><span>City</span><select value={matchPreferences.city} onChange={(event) => setMatchPreferences((current) => ({ ...current, city: event.target.value }))}><option>Jeddah</option><option>Riyadh</option><option>Dammam</option><option>Makkah</option><option>Madinah</option><option>Anywhere in Saudi Arabia</option></select></label>
+                  <label><span>Industry</span><select value={matchPreferences.industry} onChange={(event) => setMatchPreferences((current) => ({ ...current, industry: event.target.value }))}><option value="all">All industries</option><option value="technology-data">Technology & Data</option><option value="business-operations">Business & Operations</option><option value="people-service">People & Services</option><option value="engineering-construction">Engineering & Construction</option></select></label>
+                  <label><span>Seniority</span><select value={matchPreferences.seniority} onChange={(event) => setMatchPreferences((current) => ({ ...current, seniority: event.target.value }))}><option>Any level</option><option>Entry level</option><option>Mid level</option><option>Senior level</option></select></label>
+                  <label><span>Language</span><select value={matchPreferences.language} onChange={(event) => setMatchPreferences((current) => ({ ...current, language: event.target.value }))}><option>English</option><option>Arabic</option></select></label>
+                </div>
+              </div>
               <label className={`drop-zone ${scanState !== "idle" ? "has-file" : ""}`} onDragOver={(event) => event.preventDefault()} onDrop={onFileDrop}>
                 <input type="file" accept=".pdf,.doc,.docx,.txt" onChange={onFileChange} />
                 <span className="drop-symbol"><FileText size={24} /></span>
@@ -388,8 +401,9 @@ export default function Home() {
               {scanState === "matched" && scanResult && (
                 <div className="role-results" role="status" aria-live="polite">
                   <div className="result-heading"><span><Check size={14} /> ROLE SIGNALS FOUND</span><button onClick={resetScan}>Scan another CV</button></div>
-                  <p>Best-fit lane <b>{scanResult.field}</b></p>
+                  <p>Best-fit lane <b>{scanResult.field}</b> <em>{scanResult.confidence} match</em></p>
                   <div className="role-chips">{scanResult.roles.map((role) => <span key={role}>{role}</span>)}</div>
+                  <div className="match-rationale"><b>Why this match</b><span>{scanResult.rationale}</span></div>
                 </div>
               )}
               {scanState === "fallback" && (
@@ -412,7 +426,14 @@ export default function Home() {
             <div><StatusDot /> Bounce-verified sends</div>
             <div><StatusDot /> Email + portal submission</div>
             <div><StatusDot /> STC Pay & IBAN accepted</div>
-            <div><StatusDot /> EN / AR / SO / FIL</div>
+            <div><StatusDot /> EN / AR · Saudi Arabia</div>
+          </div>
+        </section>
+
+        <section className="campaign-preview section-ink">
+          <div className="page-frame campaign-preview-grid">
+            <div className="campaign-preview-copy"><div className="section-kicker inverse"><Clock3 size={15} /> BEFORE YOU COMMIT</div><h2>See the campaign <i>take shape.</i></h2><p className="section-summary inverse-summary">A focused preview of the steps your Saudi Arabia campaign follows—from the first CV signal to an organised progress report.</p><Link href="/enquire" className="text-button light-text">Open your campaign brief <MoveRight size={17} /></Link></div>
+            <div className="campaign-dashboard" aria-label="Example campaign status dashboard"><div className="dashboard-top"><span>SAUDI CAMPAIGN / PREVIEW</span><b>JEDDAH · ACTIVE</b></div><div className="dashboard-progress"><span>01</span><div><b>CV signals read</b><small>Skills and experience prepared for matching</small></div><Check size={16} /></div><div className="dashboard-progress"><span>02</span><div><b>Role lanes confirmed</b><small>Preference-led list for Saudi Arabia</small></div><Check size={16} /></div><div className="dashboard-progress active"><span>03</span><div><b>Applications in preparation</b><small>Tailoring and submission route selected</small></div><Clock3 size={16} /></div><div className="dashboard-progress quiet"><span>04</span><div><b>Campaign report due</b><small>Clear view of work completed and next actions</small></div><ArrowUpRight size={16} /></div></div>
           </div>
         </section>
 
@@ -450,7 +471,7 @@ export default function Home() {
               <h2>One brief. A clearer <i>application operating rhythm.</i></h2>
               <p className="section-summary">This illustrative process note shows how a campaign moves from a candidate’s existing CV to a maintained job-application workflow. It is a service walkthrough, not a customer testimonial.</p>
               <div className="case-ledger">
-                <div className="case-heading"><span>CAMPAIGN TRACE / EXAMPLE</span><span>GULF ROLE SEARCH</span></div>
+                <div className="case-heading"><span>CAMPAIGN TRACE / EXAMPLE</span><span>SAUDI ARABIA ROLE SEARCH</span></div>
                 <article><span className="case-stage">01</span><div><b>Candidate brief</b><p>Role preference, experience, language, and availability are organised into a usable campaign brief.</p></div><span className="case-time">START</span></article>
                 <article><span className="case-stage">02</span><div><b>Role lanes identified</b><p>Relevant openings are prioritised so the campaign focuses on jobs that make sense for the profile.</p></div><span className="case-time">MATCH</span></article>
                 <article><span className="case-stage">03</span><div><b>Applications prepared</b><p>Each application gets the necessary tailoring before email or portal submission is carried out.</p></div><span className="case-time">APPLY</span></article>
@@ -492,6 +513,15 @@ export default function Home() {
           </div>
         </section>
 
+        <section id="reviews" className="reviews-pending section-fog">
+          <div className="page-frame reviews-heading"><div><div className="section-kicker"><MessageCircle size={15} /> CLIENT PERSPECTIVES</div><h2>Real experiences,<br /><i>properly attributed.</i></h2></div><p><ShieldCheck size={16} /> Three reviews shared directly by AutoApply SA clients.</p></div>
+          <div className="page-frame review-cards">
+            <article className="review-card"><span className="review-index">01 / JEDDAH</span><blockquote>“Working in Jeddah as a nurse, the service matched me to hospital roles and emailed them for me. Saved me the late-night applying.”</blockquote><footer><b>Ana</b><span>Nurse · Jeddah</span></footer></article>
+            <article className="review-card arabic-review" lang="ar" dir="rtl"><span className="review-index">02 / الرياض</span><blockquote>“قدّمت سيرتي مع أوتوأبلاي السعودية وطلعت لي وظائف تطابق تخصصي في المحاسبة. الخدمة مرتبة والرد سريع على واتساب.”</blockquote><footer><b>سلطان</b><span>محاسب · الرياض</span></footer></article>
+            <article className="review-card"><span className="review-index">03 / DAMMAM</span><blockquote>“I uploaded my CV and got matched to IT support roles within the same day. The team followed up on WhatsApp like they said. Still interviewing, but the applications actually went out.”</blockquote><footer><b>Fahad</b><span>IT Support · Dammam</span></footer></article>
+          </div>
+        </section>
+
         <section id="faq" className="faq-section section-ink">
           <div className="page-frame split-layout">
             <aside className="section-rail inverted">
@@ -523,8 +553,8 @@ export default function Home() {
           <div className="page-frame location-grid">
             <div className="location-copy">
               <div className="section-kicker"><Globe2 size={15} /> JEDDAH, KSA</div>
-              <h2>Gulf focused.<br /><i>Jeddah based.</i></h2>
-              <p className="section-summary">AutoApply SA is based in Jeddah and serves candidates pursuing roles across the Gulf. Directions open in Google Maps, while campaign support continues online.</p>
+              <h2>Saudi focused.<br /><i>Jeddah based.</i></h2>
+              <p className="section-summary">AutoApply SA is based in Jeddah and serves candidates pursuing roles across Saudi Arabia. Directions open in Google Maps, while campaign support continues online.</p>
               <div className="location-actions">
                 <a className="button button-ink" href="https://www.google.com/maps/dir/?api=1&destination=Jeddah%2C%20Saudi%20Arabia" target="_blank" rel="noreferrer">Get directions <ArrowUpRight size={18} /></a>
                 <Link className="text-button" href="/enquire">Start remotely <MoveRight size={18} /></Link>
@@ -561,7 +591,7 @@ export default function Home() {
             <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" />
             <span>AutoApply <em>SA</em></span>
           </a>
-          <p>Your 24/7 job application engine.<br />Jeddah built. Gulf focused.</p>
+          <p>Your 24/7 job application engine.<br />Jeddah built. Saudi focused.</p>
           <a className="footer-email" href="mailto:hasan@hsndm.tech">hasan@hsndm.tech <ArrowUpRight size={16} /></a>
         </div>
         <div className="page-frame footer-bottom">

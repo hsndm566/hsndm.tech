@@ -4,6 +4,7 @@
  */
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import ArabicHome from "@/pages/ArabicHome";
 import Enquire from "@/pages/Enquire";
 import NotFound from "@/pages/NotFound";
 import ThankYou from "@/pages/ThankYou";
@@ -12,11 +13,13 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import "./updates.css";
+import "./saudi-experience.css";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/ar" component={ArabicHome} />
       <Route path="/enquire" component={Enquire} />
       <Route path="/thank-you" component={ThankYou} />
       <Route path="/404" component={NotFound} />

@@ -17,7 +17,7 @@ export default function Enquire() {
 
   useEffect(() => {
     document.title = "Start a Campaign | AutoApply SA";
-    document.querySelector('meta[name="description"]')?.setAttribute("content", "Start an AutoApply SA campaign and share the essential details for your Gulf job search.");
+    document.querySelector('meta[name="description"]')?.setAttribute("content", "Start an AutoApply SA campaign and share the essential details for your Saudi Arabia job search.");
   }, []);
 
   const chooseFile = (event: ChangeEvent<HTMLInputElement>) => {
