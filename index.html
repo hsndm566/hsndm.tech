@@ -73,6 +73,7 @@ a{color:inherit;text-decoration:none}
 .hero h1{font-size:clamp(40px,6vw,72px);font-weight:800;letter-spacing:-0.03em;margin:20px 0;color:#fff;line-height:1.05}
 .hero .sub{font-size:clamp(16px,1.4vw,20px);font-weight:400;color:var(--text-light-2);max-width:640px;margin:0 0 36px;line-height:1.65}
 .hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+.hero-price{margin-top:14px;font-size:15px;color:rgba(255,255,255,.85)}
 .stat-row{display:flex;gap:56px;margin-top:64px;flex-wrap:wrap}
 .stat{display:flex;flex-direction:column;gap:6px}
 .stat .num{font-size:42px;font-weight:800;color:#fff;letter-spacing:-0.02em;line-height:1}
@@ -110,6 +111,7 @@ a{color:inherit;text-decoration:none}
 .upload-text{font-size:1.1rem;font-weight:600}
 .upload-hint{font-size:0.85rem;color:var(--text-4)}
 .upload-filename{font-size:0.9rem;color:var(--text);font-weight:500;margin-top:4px}
+[hidden]{display:none!important}
 .psy-bubble{display:inline-flex;align-items:center;gap:12px;margin-top:12px;padding:14px 22px;background:#fff;border:1px solid var(--border);border-radius:999px;box-shadow:0 4px 20px rgba(0,0,0,.06);font-size:0.95rem}
 .psy-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:psyBlink 1s steps(2,start) infinite}
 @keyframes psyBlink{50%{opacity:.2}}
@@ -214,7 +216,8 @@ a{color:inherit;text-decoration:none}
 }
 @media (prefers-reduced-motion: reduce){
   .card,.reveal{transition:none!important}
-  .marquee-track{animation:none}
+  .marquee-track{animation:none;flex-wrap:wrap;justify-content:center;width:100%}
+  .marquee{overflow-x:auto}
   .faq-a{transition:none}
   html{scroll-behavior:auto}
 }
@@ -240,7 +243,7 @@ a{color:inherit;text-decoration:none}
       <a href="#faq" data-i18n="nav_faq">FAQ</a>
       <a href="#contact" data-i18n="nav_contact">Contact</a>
       <button class="lang-toggle" id="langToggle">العربية</button>
-      <a class="btn btn-primary" href="mailto:hasan@hsndm.tech" data-i18n="nav_cta">Start a Campaign</a>
+      <a class="btn btn-primary" href="https://wa.me/966571448656?text=Hi%2C%20I%20want%20to%20start%20using%20AutoApply%20SA" data-i18n="nav_cta">Start a Campaign</a>
     </div>
     <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -255,7 +258,7 @@ a{color:inherit;text-decoration:none}
   </div>
 </nav>
 <header class="hero" id="hero">
-  <img src="assets/media/hero.jpg" alt="" class="hero-media" onerror="this.style.display='none'">
+  <img src="assets/media/hero.jpg" alt="AutoApply SA — automated job applications dashboard" class="hero-media" onerror="this.style.display='none'">
   <canvas id="heroCanvas"></canvas>
   <div class="hero-scrim"></div>
   <div class="hero-inner wrap">
@@ -266,6 +269,7 @@ a{color:inherit;text-decoration:none}
       <a class="btn btn-white" href="#upload" data-i18n="hero_cta_upload">Upload your CV</a>
       <a class="btn btn-outline-white" href="#how" data-i18n="hero_cta_how">See how it works</a>
     </div>
+    <p class="hero-price" data-i18n="hero_price"><b>From 99 SAR / month</b> · no card needed to start</p>
     <div class="stat-row">
       <div class="stat"><div class="num" data-target="500" data-suffix="+">0</div><div class="lbl" data-i18n="stat_apps_label">applications engineered</div></div>
       <div class="stat"><div class="num" data-target="18" data-suffix="%">0</div><div class="lbl" data-i18n="stat_turnaround_label">avg turnaround gain</div></div>
@@ -362,7 +366,7 @@ a{color:inherit;text-decoration:none}
   </div>
 </section>
 <section class="section" style="padding-top:40px">
-  <div class="wrap"><div class="section-head reveal"><p class="eyebrow" data-i18n="testi_eyebrow">Candidate stories</p><h2 data-i18n="testi_h2">Landed. Verified.</h2></div></div>
+  <div class="wrap"><div class="section-head reveal"><p class="eyebrow" data-i18n="testi_eyebrow">Illustrative examples</p><h2 data-i18n="testi_h2">What the service does</h2></div></div>
   <div class="marquee">
     <div class="marquee-track" id="marqueeTrack">
       <div class="tcard"><p class="q" data-i18n="t1_q">"Went from 0 replies to 3 interviews in two weeks. The engine just… did it."</p><div class="who"><b>Omar K.</b> · <span data-i18n="t1_who">Logistics Coordinator</span></div></div>
@@ -386,20 +390,20 @@ a{color:inherit;text-decoration:none}
     <div class="plans">
       <div class="plan reveal">
         <div class="tier" data-i18n="tier_starter">Starter</div>
-        <div class="price">99 <span>SAR/mo</span></div>
+        <div class="price">99 <span data-i18n="sar_mo">SAR/mo</span></div>
         <ul><li data-i18n="li_40apps">~40 applications</li><li data-i18n="li_email_portal">Email + portal submit</li><li data-i18n="li_weekly">Weekly report</li></ul>
         <button class="btn btn-ghost pay-btn" data-plan="Starter" data-amount="99"><span data-i18n="btn_choose_starter">Choose Starter</span></button>
       </div>
       <div class="plan featured reveal">
         <div class="badge" data-i18n="badge_popular">Most Popular</div>
         <div class="tier" data-i18n="tier_pro">Pro</div>
-        <div class="price">149 <span>SAR/mo</span></div>
+        <div class="price">149 <span data-i18n="sar_mo">SAR/mo</span></div>
         <ul><li data-i18n="li_90apps">~90 applications</li><li data-i18n="li_priority">Priority tailoring</li><li data-i18n="li_julie">Julie copilot</li><li data-i18n="li_daily">Daily report</li></ul>
         <button class="btn btn-white pay-btn" data-plan="Pro" data-amount="149"><span data-i18n="btn_choose_pro">Choose Pro</span></button>
       </div>
       <div class="plan reveal">
         <div class="tier" data-i18n="tier_founder">Founder</div>
-        <div class="price">249 <span>SAR/mo</span></div>
+        <div class="price">249 <span data-i18n="sar_mo">SAR/mo</span></div>
         <ul><li data-i18n="li_150apps">~150 applications</li><li data-i18n="li_multi">Multi-role targeting</li><li data-i18n="li_whiteglove">White-glove onboarding</li></ul>
         <button class="btn btn-ghost pay-btn" data-plan="Founder" data-amount="249"><span data-i18n="btn_choose_founder">Choose Founder</span></button>
       </div>
@@ -423,7 +427,7 @@ a{color:inherit;text-decoration:none}
     <h2 class="reveal" data-i18n="contact_h2">Let's get you applied.</h2>
     <p class="reveal" data-i18n="contact_p">Reach Hasan directly — WhatsApp, Instagram, or LinkedIn.</p>
     <div class="reveal" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-      <a class="btn btn-white" href="https://wa.me/966571448656" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn btn-white" href="https://wa.me/966571448656" target="_blank" rel="noopener">WhatsApp · +966 57 144 8656</a>
       <a class="btn btn-outline-white" href="https://instagram.com/hsndm_" target="_blank" rel="noopener">Instagram</a>
       <a class="btn btn-outline-white" href="https://linkedin.com/in/hsndm" target="_blank" rel="noopener">LinkedIn</a>
     </div>
@@ -438,7 +442,7 @@ a{color:inherit;text-decoration:none}
       </div>
       <div class="footer-col"><h4 data-i18n="nav_product">Product</h4><a href="#how" data-i18n="nav_how">How it works</a><a href="#upload">CV Upload</a><a href="#pricing" data-i18n="nav_pricing">Pricing</a></div>
       <div class="footer-col"><h4 data-i18n="footer_company">Company</h4><a href="#faq" data-i18n="nav_faq">FAQ</a><a href="#contact" data-i18n="nav_contact">Contact</a></div>
-      <div class="footer-col"><h4 data-i18n="footer_connect">Connect</h4><a href="https://wa.me/966571448656" target="_blank" rel="noopener">WhatsApp · hsndm_</a><a href="https://instagram.com/hsndm_" target="_blank" rel="noopener">Instagram · hsndm_</a><a href="https://linkedin.com/in/hsndm" target="_blank" rel="noopener">LinkedIn · hsndm</a></div>
+      <div class="footer-col"><h4 data-i18n="footer_connect">Connect</h4><a href="https://wa.me/966571448656" target="_blank" rel="noopener">WhatsApp · +966 57 144 8656</a><a href="https://instagram.com/hsndm_" target="_blank" rel="noopener">Instagram · hsndm_</a><a href="https://linkedin.com/in/hsndm" target="_blank" rel="noopener">LinkedIn · hsndm</a></div>
     </div>
     <div class="footer-bottom">
       <div class="footer-social">
@@ -644,16 +648,16 @@ const I18N = {
   upload_sub:{en:"Upload your CV and our AI shows your best-fit target roles in seconds.",ar:"ارفع سيرتك الذاتية وسيعرض الذكاء الاصطناعي أنسب الوظائف لك خلال ثوانٍ."},
   upload_text:{en:"Upload your CV",ar:"ارفع سيرتك الذاتية"},
   upload_hint:{en:"PDF, DOC, DOCX or TXT · private, used only to match roles",ar:"PDF أو DOC أو DOCX أو TXT · خاص، يُستخدم فقط لمطابقة الوظائف"},
-  testi_eyebrow:{en:"Candidate stories",ar:"قصص المتقدمين"},
-  testi_h2:{en:"Landed. Verified.",ar:"تم القبول. موثّق."},
-  t1_q:{en:'"Went from 0 replies to 3 interviews in two weeks. The engine just… did it."',ar:'"من صفر ردود إلى 3 مقابلات خلال أسبوعين. المحرك أنجز كل شيء."'},
-  t1_who:{en:"Logistics Coordinator",ar:"منسق لوجستيات"},
-  t2_q:{en:'"I uploaded my CV at midnight. Woke up to 11 tailored applications sent."',ar:'"رفعت سيرتي الذاتية في منتصف الليل. استيقظت على 11 طلب توظيف مُرسل ومخصص."'},
-  t2_who:{en:"Operations Lead",ar:"مسؤولة عمليات"},
-  t3_q:{en:'"Finally a service that speaks Arabic and actually applies, not just advice."',ar:'"أخيرًا خدمة تتحدث العربية وتُقدّم فعليًا، لا مجرد نصائح."'},
-  t3_who:{en:"Supply Chain Analyst",ar:"محللة سلسلة إمداد"},
-  t4_q:{en:'"Saved me 20 hours a week. Worth every riyal."',ar:'"وفّرت عليّ 20 ساعة أسبوعيًا. تستحق كل ريال."'},
-  t4_who:{en:"IE Analyst",ar:"محلل هندسة صناعية"},
+  testi_eyebrow:{en:"Illustrative examples",ar:"أمثلة توضيحية"},
+  testi_h2:{en:"What the service does",ar:"ماذا تقدّم الخدمة"},
+  t1_q:{en:'"Send your CV once. The engine reads it, matches roles, and submits — you never retype anything."',ar:'"أرسل سيرتك الذاتية مرة واحدة. يقرأها المحرك، يطابق الوظائف، ويرسل الطلبات — دون أن تكتب شيئًا مجددًا."'},
+  t1_who:{en:"How it works",ar:"كيف تعمل"},
+  t2_q:{en:'"Applications go out with your CV and your details, to roles you approved. You get a full log of every one."',ar:'"تُرسل الطلبات بسيرتك وتفاصيلك، للوظائف التي وافقت عليها. وتحصل على سجل كامل بكل طلب."'},
+  t2_who:{en:"What you get",ar:"ماذا تحصل"},
+  t3_q:{en:'"Arabic and English, built in Jeddah for the Saudi and Gulf job market."',ar:'"بالعربية والإنجليزية، صُممت في جدة لسوق العمل السعودي والخليجي."'},
+  t3_who:{en:"Built for KSA",ar:"صُممت للسعودية"},
+  t4_q:{en:'"Flat monthly price. No commission, no placement fee, no charge for getting hired."',ar:'"سعر شهري ثابت. بلا عمولة، بلا رسوم توظيف، بلا مقابل عند القبول."'},
+  t4_who:{en:"Honest pricing",ar:"تسعير صادق"},
   pricing_eyebrow:{en:"Pricing · SAR / month",ar:"الأسعار · ريال سعودي / شهريًا"},
   pricing_h2:{en:"Pick your engine.",ar:"اختر محركك."},
   pricing_sub:{en:"Monthly plans. STC Pay & IBAN. Cancel anytime.",ar:"خطط شهرية. STC Pay والحوالة البنكية. إلغاء في أي وقت."},
@@ -694,6 +698,8 @@ const I18N = {
   julie_send:{en:"Send",ar:"إرسال"}
 };
 const I18N_HTML = {
+  sar_mo:{en:"SAR/mo",ar:"ريال / شهر"},
+  hero_price:{en:"<b>From 99 SAR / month</b> · no card needed to start",ar:"<b>من 99 ريال / شهر</b> · لا حاجة لبطاقة للبدء"},
   hero_h1:{en:"Your applications,<br>engineered while you sleep.",ar:"طلبات توظيفك،<br>تُجهَّز وأنت نائم."},
   trust1:{en:"<b>Bounce-verified</b> sends",ar:"<b>إرسال</b> موثّق وصوله"},
   trust2:{en:"<b>Email + portal</b> submission",ar:"<b>تقديم عبر البريد والمنصات</b>"},
@@ -742,7 +748,7 @@ const psyLists=document.getElementById('psyLists');
 const PSY_MESSAGES_BY_LANG = {
   en:[
     "Reading your CV… matching you to live roles…",
-    "Scoring fit against 300+ Gulf openings…",
+    "Scoring fit against 500+ Gulf openings…",
     "Tailoring your first applications…",
     "Your engine is warming up — almost ready…",
     "Found strong matches. Preparing your launch…"
@@ -786,7 +792,7 @@ function readFileText(file){
   });
 }
 async function getCareerLists(cvText){
-  if(!AI_API_KEY||/\.\.\./.test(AI_API_KEY))return demoLists(cvText);
+  if(!AI_API_KEY||/\.{3}/.test(AI_API_KEY))return demoLists(cvText);
   const prompt='You are an AI career matcher for AutoApply SA. Given this CV, identify the candidate best-fit target roles. Return exactly 3 career fields, each with 3 specific job titles that fit THIS person. Respond ONLY as strict JSON (no markdown): [{"title":"Field","items":["Job","Job","Job"]}]. CV:\n'+(cvText||'Generic professional CV').slice(0,4000);
   try{
     const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
@@ -845,8 +851,8 @@ function showLists(lists){
   psyLists.innerHTML='';
   lists.forEach(group=>{
     const wrap=document.createElement('div');wrap.className='psy-list';
-    wrap.innerHTML='<h4>'+group.title+'</h4><div class="psy-chips"></div>';
-    const chips=wrap.querySelector('.psy-chips');
+    const h=document.createElement('h4');h.textContent=group.title;wrap.appendChild(h);
+    const chips=document.createElement('div');chips.className='psy-chips';wrap.appendChild(chips);
     (group.items||[]).forEach(it=>{const c=document.createElement('span');c.className='psy-chip';c.textContent=it;chips.appendChild(c);});
     psyLists.appendChild(wrap);
   });
