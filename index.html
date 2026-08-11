@@ -404,7 +404,7 @@ a{color:inherit;text-decoration:none}
         <button class="btn btn-ghost pay-btn" data-plan="Founder" data-amount="249"><span data-i18n="btn_choose_founder">Choose Founder</span></button>
       </div>
     </div>
-    <p style="text-align:center;margin-top:32px;font-size:14px;color:var(--text-3)" data-i18n-html="pricing_disclaimer">Secure checkout via <strong>Moyasar</strong> (SAMA-licensed) · mada, Visa, Mastercard · also STC Pay & IBAN.</p>
+    <p style="text-align:center;margin-top:32px;font-size:14px;color:var(--text-3)" data-i18n-html="pricing_disclaimer">Pay by <strong>STC Pay</strong> or <strong>bank transfer (IBAN)</strong> · card checkout coming soon.</p>
   </div>
 </section>
 <section class="section" id="faq" style="padding-top:40px">
@@ -414,7 +414,7 @@ a{color:inherit;text-decoration:none}
       <div class="faq-item"><button class="faq-q"><span data-i18n="faq_q1">Is my CV data private?</span> <span class="pm">+</span></button><div class="faq-a"><p data-i18n="faq_a1">Yes. Your CV is used only to match and tailor applications. We never sell it, and you can request deletion anytime.</p></div></div>
       <div class="faq-item"><button class="faq-q"><span data-i18n="faq_q2">Do you apply to real companies?</span> <span class="pm">+</span></button><div class="faq-a"><p data-i18n="faq_a2">Yes — via email and direct portal submission to live Gulf listings we've verified, with bounce-checked addresses.</p></div></div>
       <div class="faq-item"><button class="faq-q"><span data-i18n="faq_q3">Which languages?</span> <span class="pm">+</span></button><div class="faq-a"><p data-i18n="faq_a3">English, Arabic, Somali, and Filipino — covering the majority of the Gulf job market.</p></div></div>
-      <div class="faq-item"><button class="faq-q"><span data-i18n="faq_q4">How do I pay?</span> <span class="pm">+</span></button><div class="faq-a"><p data-i18n="faq_a4">STC Pay, bank IBAN, or card through Moyasar. Plans are monthly and cancel anytime.</p></div></div>
+      <div class="faq-item"><button class="faq-q"><span data-i18n="faq_q4">How do I pay?</span> <span class="pm">+</span></button><div class="faq-a"><p data-i18n="faq_a4">STC Pay or bank transfer (IBAN). Card checkout is coming soon. Plans are monthly and cancel anytime.</p></div></div>
     </div>
   </div>
 </section>
@@ -682,7 +682,7 @@ const I18N = {
   faq_q3:{en:"Which languages?",ar:"ما هي اللغات المدعومة؟"},
   faq_a3:{en:"English, Arabic, Somali, and Filipino — covering the majority of the Gulf job market.",ar:"الإنجليزية، العربية، الصومالية، والفلبينية — تغطي غالبية سوق العمل الخليجي."},
   faq_q4:{en:"How do I pay?",ar:"كيف أدفع؟"},
-  faq_a4:{en:"STC Pay, bank IBAN, or card through Moyasar. Plans are monthly and cancel anytime.",ar:"عبر STC Pay أو الحوالة البنكية أو البطاقة عبر ميسر. الخطط شهرية ويمكن إلغاؤها في أي وقت."},
+  faq_a4:{en:"STC Pay or bank transfer (IBAN). Card checkout is coming soon. Plans are monthly and cancel anytime.",ar:"عبر STC Pay أو التحويل البنكي (آيبان). الدفع بالبطاقة قريبًا. الخطط شهرية ويمكن إلغاؤها في أي وقت."},
   contact_h2:{en:"Let's get you applied.",ar:"لنبدأ بتقديم طلباتك."},
   contact_p:{en:"Reach Hasan directly — WhatsApp, Instagram, or LinkedIn.",ar:"تواصل مع حسن مباشرة — واتساب، إنستغرام، أو لينكدإن."},
   footer_desc:{en:"Your 24/7 AI job application engine. Based in Jeddah, serving the entire Gulf region.",ar:"محرك ذكاء اصطناعي للتقديم على الوظائف على مدار الساعة. مقرنا في جدة، ونخدم منطقة الخليج بأكملها."},
@@ -700,7 +700,7 @@ const I18N_HTML = {
   trust3:{en:"<b>STC Pay</b> & IBAN accepted",ar:"نقبل <b>STC Pay</b> والحوالة البنكية"},
   trust4:{en:"<b>Jeddah, KSA</b> based",ar:"<b>مقرنا في جدة</b>، السعودية"},
   trust5:{en:"<b>4 languages</b> supported",ar:"ندعم <b>4 لغات</b>"},
-  pricing_disclaimer:{en:"Secure checkout via <strong>Moyasar</strong> (SAMA-licensed) · mada, Visa, Mastercard · also STC Pay & IBAN.",ar:"دفع آمن عبر <strong>ميسر</strong> (مرخصة من ساما) · مدى، فيزا، ماستركارد · بالإضافة إلى STC Pay والحوالة البنكية."},
+  pricing_disclaimer:{en:"Pay by <strong>STC Pay</strong> or <strong>bank transfer (IBAN)</strong> · card checkout coming soon.",ar:"الدفع عبر <strong>STC Pay</strong> أو <strong>التحويل البنكي (آيبان)</strong> · الدفع بالبطاقة قريبًا."},
   footer_note:{en:"AutoApply SA · Hasan Adam · Jeddah, KSA · hasan@hsndm.tech",ar:"أوتوأبلاي السعودية · حسن آدم · جدة، السعودية · hasan@hsndm.tech"}
 };
 let CUR_LANG = 'en';
@@ -867,17 +867,20 @@ function startProgress(){
   },120);
 }
 
-/* ===== MOYASAR PAYMENT ===== */
-const MOYASAR_PK='pk_test_xxxxxxxxxxxxxxxx'; // TODO: swap in your real Moyasar publishable key
-document.querySelectorAll('.pay-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const plan=btn.dataset.plan, amount=parseInt(btn.dataset.amount,10)*100;
-    if(typeof Moyasar==='undefined'){
-      alert('Moyasar SDK not loaded. On launch this opens secure '+plan+' payment ('+(amount/100)+' SAR) via Moyasar (2.2%+1 SAR).');
-      return;
-    }
-    Moyasar.init({ element:document.querySelector('.plan.featured')||document.body, amount:amount, currency:'SAR',
-      description:'AutoApply SA — '+plan+' plan', publishable_api_key:MOYASAR_PK, callback_url:'https://hsndm.tech/thank-you' });
+/* ===== CHECKOUT =====
+   Card gateway is not live yet. Previously these buttons fired a
+   'Moyasar SDK not loaded' developer alert at real customers, which
+   killed every purchase. They now open WhatsApp with the chosen plan
+   pre-filled so the lead is never lost. */
+const SALES_WHATSAPP='966571448656';
+document.querySelectorAll('.pay-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var plan=btn.dataset.plan||'', amount=btn.dataset.amount||'';
+    var ar=(typeof CUR_LANG!=='undefined'&&CUR_LANG==='ar');
+    var msg=ar
+      ? 'السلام عليكم، أرغب في الاشتراك في باقة '+plan+' (‏'+amount+' ريال شهريًا) من AutoApply SA.'
+      : 'Hi, I would like to start the '+plan+' plan ('+amount+' SAR/month) with AutoApply SA.';
+    window.open('https://wa.me/'+SALES_WHATSAPP+'?text='+encodeURIComponent(msg),'_blank','noopener');
   });
 });
 </script>
