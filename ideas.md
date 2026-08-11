@@ -49,7 +49,7 @@ At first view, hero copy rises by a few pixels with opacity and the workflow pan
 
 ### Brand Essence
 
-**AutoApply SA is a job-application operating engine for Gulf-region candidates who want disciplined, multilingual execution rather than more job-search advice.**
+**AutoApply SA is a Saudi Arabia job-application operating engine for candidates who want disciplined, bilingual execution rather than more job-search advice.**
 
 **Personality:** Exacting, calm, determined.
 
@@ -68,3 +68,9 @@ The mark is an **abstract double-chevron ledger tab**: two stacked, offset block
 ### Signature Brand Color
 
 **Signal Vermilion — #E5482A**
+
+## Style Decisions
+
+- **English typography:** Space Grotesk carries English display emphasis. Expressive serif italics are removed from the recurring English headline system so the service reads as an operating engine, not an editorial lifestyle brand.
+- **Hero hierarchy:** The live workflow ledger and campaign queue are amplified as the primary proof-of-work layer. Supporting lifestyle photography remains secondary and will become optional when the approved hero video is uploaded.
+- **Arabic route scope:** Arabic copy and Saudi Arabia references were audited for correctness, but deeper Arabic UI composition changes are intentionally deferred at the user’s request while English UI receives the current optimisation pass.

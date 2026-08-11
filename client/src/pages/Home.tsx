@@ -260,11 +260,11 @@ export default function Home() {
               <div className="hero-trust-row"><span><ShieldCheck size={14} /> Start with a brief</span><span><Clock3 size={14} /> Follow up within one business day</span></div>
             </div>
 
-            <div className="hero-ledger" aria-label="Application engine status">
-              <div className="ledger-topline">
-                <span>APPLICATION ENGINE</span>
-                <span>LIVE / 24H</span>
-              </div>
+              <div className="hero-ledger" aria-label="Application engine status">
+                <div className="ledger-topline">
+                  <span>APPLICATION ENGINE</span>
+                  <span>LIVE / 24H</span>
+                </div>
               <div className="ledger-route">
                 <div><StatusDot /> CV parsed</div>
                 <span />
@@ -279,6 +279,11 @@ export default function Home() {
                   <small>Skills, experience & language mapped</small>
                 </div>
                 <ArrowUpRight size={16} />
+              </div>
+              <div className="ledger-queue" aria-label="Saudi Arabia campaign workflow preview">
+                <div className="queue-heading"><span>CAMPAIGN QUEUE / PREVIEW</span><b>JEDDAH · SA</b></div>
+                <div><StatusDot /> CV signal intake <span>READY</span></div>
+                <div><StatusDot /> Saudi role lane <span>QUEUED</span></div>
               </div>
             </div>
 
