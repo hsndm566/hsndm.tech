@@ -277,7 +277,7 @@ export default function Home() {
             <div className="hero-stats">
               <div><strong>500+</strong><span>Saudi roles scanned</span></div>
               <div><strong>24/7</strong><span>Engine in motion</span></div>
-              <div><strong>4</strong><span>Languages supported</span></div>
+              <div><strong>2</strong><span>Languages supported</span></div>
             </div>
           </div>
         </section>
