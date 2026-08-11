@@ -1,0 +1,86 @@
+      let t=String(r.result||'');
+      /* PDF/DOCX read as raw bytes produce binary noise. Strip it so the
+         matcher never receives junk it will silently fail on. */
+      t=t.replace(/[^\x09\x0A\x0D\x20-\x7E\u0600-\u06FF]/g,' ')
+         .replace(/\s{2,}/g,' ').trim();
+      const letters=(t.match(/[A-Za-z\u0600-\u06FF]/g)||[]).length;
+      /* Too little real text = unreadable format (scanned PDF, binary docx) */
+      resolve(letters < 120 ? '' : t);
+    };
+    r.onerror=()=>resolve('');
+    try{r.readAsText(file);}catch(e){resolve('');}
+  });
+}
+async function getCareerLists(cvText){
+  if(!AI_API_KEY||/\.{3}/.test(AI_API_KEY))return demoLists(cvText);
+  const prompt='You are an AI career matcher for AutoApply SA. Given this CV, identify the candidate best-fit target roles. Return exactly 3 career fields, each with 3 specific job titles that fit THIS person. Respond ONLY as strict JSON (no markdown): [{"title":"Field","items":["Job","Job","Job"]}]. CV:\n'+(cvText||'Generic professional CV').slice(0,4000);
+  try{
+    const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+AI_API_KEY},
+      body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:[{role:'user',content:prompt}],temperature:0.3})
+    });
+    const data=await res.json();
+    const content=data.choices?.[0]?.message?.content||'[]';
+    const parsed=JSON.parse(content.replace(/```json|```/g,'').trim());
+    if(Array.isArray(parsed)&&parsed.length&&parsed[0].title)return parsed;
+  }catch(err){console.warn('AI match failed, keyword fallback',err);}
+  return demoLists(cvText);
+}
+/* Keyword-derived fallback. Previously this returned a hardcoded
+   Operations/Logistics/IE list, so EVERY visitor saw the same three
+   fields regardless of their CV. Now it reads the CV text. */
+const FIELD_MAP=[
+  {title:'Software & Engineering',ar:'البرمجة والهندسة التقنية',kw:['software','developer','javascript','python','java','react','node','backend','frontend','full stack','programmer','api','database','sql','devops','مطور','برمجة'],items:['Software Engineer','Backend Developer','Full Stack Developer']},
+  {title:'Data & Analytics',ar:'البيانات والتحليل',kw:['data','analyst','analytics','machine learning','power bi','tableau','statistics','sql','excel','dashboard','بيانات','تحليل'],items:['Data Analyst','Business Intelligence Analyst','Data Scientist']},
+  {title:'Accounting & Finance',ar:'المحاسبة والمالية',kw:['accounting','accountant','finance','financial','audit','tax','sap fico','bookkeep','payable','receivable','cpa','محاسب','مالية'],items:['Accountant','Financial Analyst','Finance Officer']},
+  {title:'Sales & Business Development',ar:'المبيعات وتطوير الأعمال',kw:['sales','business development','account manager','client','revenue','crm','quota','b2b','مبيعات','تطوير أعمال'],items:['Sales Executive','Account Manager','Business Development Manager']},
+  {title:'Marketing & Digital',ar:'التسويق الرقمي',kw:['marketing','seo','social media','content','brand','campaign','digital marketing','advertis','تسويق','محتوى'],items:['Marketing Specialist','Digital Marketing Executive','Social Media Manager']},
+  {title:'Human Resources',ar:'الموارد البشرية',kw:['human resources','recruit','talent','hr ','payroll','onboarding','employee relations','موارد بشرية','توظيف'],items:['HR Specialist','Recruiter','HR Coordinator']},
+  {title:'Healthcare & Medical',ar:'الرعاية الصحية',kw:['nurse','nursing','medical','clinical','patient','hospital','pharmac','doctor','physician','health','تمريض','طبي','صحة'],items:['Registered Nurse','Clinical Coordinator','Medical Officer']},
+  {title:'Civil & Construction',ar:'الهندسة المدنية والإنشاءات',kw:['civil','construction','site engineer','structural','autocad','quantity survey','architect','hse','مدني','إنشاءات'],items:['Civil Engineer','Site Engineer','Project Engineer']},
+  {title:'Mechanical & Electrical',ar:'الهندسة الميكانيكية والكهربائية',kw:['mechanical','electrical','maintenance','hvac','plc','automation','technician','manufacturing','ميكانيكا','كهرباء'],items:['Mechanical Engineer','Electrical Engineer','Maintenance Engineer']},
+  {title:'IT & Support',ar:'تقنية المعلومات والدعم',kw:['it support','network','system admin','helpdesk','cisco','windows server','cyber','security','infrastructure','دعم فني','شبكات'],items:['IT Support Specialist','Network Administrator','Systems Administrator']},
+  {title:'Customer Service',ar:'خدمة العملاء',kw:['customer service','call center','support agent','client service','guest','reception','خدمة عملاء'],items:['Customer Service Representative','Call Center Agent','Client Support Specialist']},
+  {title:'Teaching & Education',ar:'التعليم والتدريب',kw:['teacher','teaching','lecturer','tutor','curriculum','classroom','school','pedagog','academic coordinator','معلم','تدريس','مدرسة'],items:['Teacher','Training Specialist','Academic Coordinator']},
+  {title:'Operations Management',ar:'إدارة العمليات',kw:['operations','process improvement','lean','six sigma','productivity','kaizen','عمليات','تحسين'],items:['Operations Lead','Process Improvement Specialist','Operations Coordinator']},
+  {title:'Logistics & Supply Chain',ar:'اللوجستيات وسلسلة الإمداد',kw:['logistics','supply chain','warehouse','procurement','inventory','shipping','freight','import','export','لوجستيات','مشتريات','مستودع'],items:['Logistics Coordinator','Supply Chain Analyst','Warehouse Supervisor']},
+  {title:'Project Management',ar:'إدارة المشاريع',kw:['project manager','pmp','primavera','ms project','stakeholder','scope','milestone','مشاريع'],items:['Project Manager','Project Coordinator','PMO Analyst']}
+];
+function demoLists(cvText){
+  const t=String(cvText||'').toLowerCase();
+  const ASK=[{title:'Tell us your target roles',items:['Send your CV on WhatsApp','We read it manually','You get a real match']}];
+  /* Too little readable text (scanned PDF / binary docx): never fake a match */
+  if(t.length<25) return ASK;
+  const scored=FIELD_MAP.map(function(f){
+    var n=0; f.kw.forEach(function(k){ if(t.indexOf(k)>-1) n++; });
+    return {f:f,score:n};
+  }).filter(function(x){return x.score>0;}).sort(function(a,b){return b.score-a.score;});
+  if(!scored.length) return ASK;
+  /* Only show extra fields if they are a genuine signal, not a single
+     stray keyword. A weak 2nd/3rd match is worse than showing one. */
+  var top=scored[0].score;
+  var keep=scored.filter(function(x,i){
+    if(i===0) return true;
+    return x.score>=2 && x.score>=top*0.6;
+  });
+  return keep.slice(0,3).map(function(x){return {title:x.f.title,items:x.f.items};});
+}
+function showLists(lists){
+  if(!psyLists)return;
+  psyLists.innerHTML='';
+  lists.forEach(group=>{
+    const wrap=document.createElement('div');wrap.className='psy-list';
+    const h=document.createElement('h4');h.textContent=group.title;wrap.appendChild(h);
+    const chips=document.createElement('div');chips.className='psy-chips';wrap.appendChild(chips);
+    (group.items||[]).forEach(it=>{const c=document.createElement('span');c.className='psy-chip';c.textContent=it;chips.appendChild(c);});
+    psyLists.appendChild(wrap);
+  });
+  psyLists.hidden=false;
+}
+function startProgress(){
+  if(!psyBubble)return;
+  const msgs=PSY_MESSAGES();
+  psyBubble.hidden=false;if(psyLists)psyLists.hidden=true;
+  let pct=0,msgIdx=0;
+  psyText.textContent=msgs[0];

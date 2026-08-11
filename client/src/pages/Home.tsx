@@ -2,8 +2,9 @@
  * Design reminder — Operational Clarity: Swiss information design with a signal rail,
  * deliberate asymmetry, near-black ink, warm paper, and signal vermilion used only for action.
  */
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, DragEvent, useEffect, useRef, useState } from "react";
 import { MapView } from "@/components/Map";
+import { demoLists, readCvText } from "@/lib/careerMatcher";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -87,14 +88,25 @@ function StatusDot({ tone = "active" }: { tone?: "active" | "quiet" }) {
   return <span className={`status-dot ${tone}`} aria-hidden="true" />;
 }
 
+type ScanResult = { field: string; roles: string[] };
+
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
   const [selectedFile, setSelectedFile] = useState("");
+  const [scanState, setScanState] = useState<"idle" | "scanning" | "matched" | "fallback">("idle");
+  const [scanProgress, setScanProgress] = useState(0);
+  const [scanResult, setScanResult] = useState<ScanResult | null>(null);
+  const scanFrame = useRef<number | null>(null);
+  const scanVersion = useRef(0);
 
   useEffect(() => {
     document.title = "AutoApply SA | AI Job Application Engine for the Gulf";
     document.querySelector('meta[name="description"]')?.setAttribute("content", "AutoApply SA helps Gulf job seekers organise, tailor, and submit applications with a 24/7 AI application engine based in Jeddah.");
+  }, []);
+
+  useEffect(() => () => {
+    if (scanFrame.current !== null) window.cancelAnimationFrame(scanFrame.current);
   }, []);
 
   const scrollTo = (id: string) => {
@@ -102,8 +114,57 @@ export default function Home() {
     setMenuOpen(false);
   };
 
+  const startScan = (file?: File) => {
+    if (!file) return;
+    if (scanFrame.current !== null) window.cancelAnimationFrame(scanFrame.current);
+    const version = scanVersion.current + 1;
+    scanVersion.current = version;
+    const scanDuration = 8000 + Math.floor(Math.random() * 4001);
+    const fieldPromise = readCvText(file).then((text) => demoLists(text));
+    const startedAt = performance.now();
+
+    setSelectedFile(file.name);
+    setScanState("scanning");
+    setScanProgress(0);
+    setScanResult(null);
+
+    const tick = (now: number) => {
+      const progress = Math.min(100, Math.round(((now - startedAt) / scanDuration) * 100));
+      setScanProgress(progress);
+      if (progress < 100) {
+        scanFrame.current = window.requestAnimationFrame(tick);
+        return;
+      }
+      void fieldPromise.then((fields) => {
+        if (scanVersion.current !== version) return;
+        const bestFit = fields[0];
+        if (!bestFit) {
+          setScanState("fallback");
+          return;
+        }
+        setScanResult({ field: bestFit.title, roles: bestFit.items.slice(0, 3) });
+        setScanState("matched");
+      });
+    };
+    scanFrame.current = window.requestAnimationFrame(tick);
+  };
+
   const onFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSelectedFile(event.target.files?.[0]?.name || "");
+    startScan(event.target.files?.[0]);
+  };
+
+  const onFileDrop = (event: DragEvent<HTMLLabelElement>) => {
+    event.preventDefault();
+    startScan(event.dataTransfer.files?.[0]);
+  };
+
+  const resetScan = () => {
+    scanVersion.current += 1;
+    if (scanFrame.current !== null) window.cancelAnimationFrame(scanFrame.current);
+    setSelectedFile("");
+    setScanProgress(0);
+    setScanResult(null);
+    setScanState("idle");
   };
 
   return (
@@ -308,15 +369,36 @@ export default function Home() {
               <div className="section-kicker"><Paperclip size={15} /> CV INTAKE</div>
               <h2>Drop your CV. <i>Find your lanes.</i></h2>
               <p className="section-summary">Select the latest version of your CV and continue the conversation directly with the team. You will receive the relevant next steps for your campaign.</p>
-              <label className={`drop-zone ${selectedFile ? "has-file" : ""}`}>
+              <label className={`drop-zone ${scanState !== "idle" ? "has-file" : ""}`} onDragOver={(event) => event.preventDefault()} onDrop={onFileDrop}>
                 <input type="file" accept=".pdf,.doc,.docx,.txt" onChange={onFileChange} />
                 <span className="drop-symbol"><FileText size={24} /></span>
                 <span className="drop-copy">
-                  <b>{selectedFile || "Choose your CV"}</b>
-                  <small>{selectedFile ? "Ready to share with the team" : "PDF, DOC, DOCX or TXT"}</small>
+                  <b>{selectedFile || "Choose or drop your CV"}</b>
+                  <small>{selectedFile ? "Local scan active — your file stays in this browser" : "PDF, DOC, DOCX or TXT"}</small>
                 </span>
                 <span className="drop-arrow"><ArrowUpRight size={20} /></span>
               </label>
+              {scanState === "scanning" && (
+                <div className="role-scan" role="status" aria-live="polite">
+                  <div className="scan-meta"><span><ScanSearch size={14} /> Finding roles for you…</span><b>{scanProgress}%</b></div>
+                  <div className="scan-track" role="progressbar" aria-label="Finding relevant roles" aria-valuemin={0} aria-valuemax={100} aria-valuenow={scanProgress}><span style={{ width: `${scanProgress}%` }} /></div>
+                  <p>Reading skills, experience, and career signals locally.</p>
+                </div>
+              )}
+              {scanState === "matched" && scanResult && (
+                <div className="role-results" role="status" aria-live="polite">
+                  <div className="result-heading"><span><Check size={14} /> ROLE SIGNALS FOUND</span><button onClick={resetScan}>Scan another CV</button></div>
+                  <p>Best-fit lane <b>{scanResult.field}</b></p>
+                  <div className="role-chips">{scanResult.roles.map((role) => <span key={role}>{role}</span>)}</div>
+                </div>
+              )}
+              {scanState === "fallback" && (
+                <div className="scan-fallback" role="status" aria-live="polite">
+                  <div><ShieldCheck size={16} /><span><b>We need a closer look.</b> This file could not be read clearly in the browser, so we will not guess at roles.</span></div>
+                  <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">Send it on WhatsApp <ArrowUpRight size={15} /></a>
+                  <button onClick={resetScan}>Try another CV</button>
+                </div>
+              )}
               <p className="privacy-note"><ShieldCheck size={16} /> This static preview keeps the selection in your browser only. For a real campaign, continue with the team below.</p>
               <a className="button button-ink" href={WHATSAPP_URL} target="_blank" rel="noreferrer">
                 Continue on WhatsApp <MessageCircle size={18} />
