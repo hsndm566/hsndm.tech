@@ -1,0 +1,84 @@
+/**
+ * Design reminder — Operational Clarity: the enquiry route is a focused intake sheet,
+ * not a generic contact page. Use sharp rules, visible status, and a single next action.
+ */
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ArrowLeft, ArrowRight, Check, FileText, ShieldCheck } from "lucide-react";
+import { Link, useLocation } from "wouter";
+
+const campaignLanes = ["Operations", "Logistics", "Sales", "Technology", "Hospitality", "Other"];
+
+export default function Enquire() {
+  const [, setLocation] = useLocation();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
+  const [fileName, setFileName] = useState("");
+
+  useEffect(() => {
+    document.title = "Start a Campaign | AutoApply SA";
+    document.querySelector('meta[name="description"]')?.setAttribute("content", "Start an AutoApply SA campaign and share the essential details for your Gulf job search.");
+  }, []);
+
+  const chooseFile = (event: ChangeEvent<HTMLInputElement>) => {
+    setFileName(event.target.files?.[0]?.name || "");
+  };
+
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLocation(`/thank-you${name ? `?name=${encodeURIComponent(name)}` : ""}`);
+  };
+
+  return (
+    <main className="journey-page">
+      <header className="journey-header page-frame">
+        <Link href="/" className="brand journey-brand" aria-label="AutoApply SA home">
+          <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" />
+          <span>AutoApply <em>SA</em></span>
+        </Link>
+        <span className="journey-status"><i /> CAMPAIGN INTAKE / STEP 01</span>
+      </header>
+
+      <section className="enquiry-wrap page-frame">
+        <nav className="breadcrumbs" aria-label="Breadcrumb"><Link href="/">Home</Link><span>/</span><b>Start a campaign</b></nav>
+        <div className="enquiry-grid">
+          <aside className="enquiry-aside">
+            <span className="rail-label">01 / Start here</span>
+            <span className="rail-rule" />
+            <h1>Make your search <i>move with intent.</i></h1>
+            <p>Share the essential context for your next role. This secure-looking static preview does not transmit the file you select.</p>
+            <div className="response-guard"><ShieldCheck size={17} /><div><b>Response safeguard</b><span>For the fastest direct reply, keep this page open and follow up via WhatsApp if you have not heard back within one business day.</span></div></div>
+          </aside>
+
+          <form className="campaign-form" onSubmit={submit}>
+            <div className="form-heading"><span>YOUR CAMPAIGN BRIEF</span><b>Required fields are marked <em>*</em></b></div>
+            <label>
+              <span>Full name <em>*</em></span>
+              <input required value={name} onChange={(e) => setName(e.target.value)} placeholder="How should we address you?" />
+            </label>
+            <label>
+              <span>Email address <em>*</em></span>
+              <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@example.com" />
+            </label>
+            <label>
+              <span>Primary target lane <em>*</em></span>
+              <select required value={role} onChange={(e) => setRole(e.target.value)}>
+                <option value="" disabled>Select a direction</option>
+                {campaignLanes.map((lane) => <option key={lane} value={lane}>{lane}</option>)}
+              </select>
+            </label>
+            <label className="campaign-upload">
+              <input type="file" accept=".pdf,.doc,.docx,.txt" onChange={chooseFile} />
+              <span className="upload-icon"><FileText size={19} /></span>
+              <span><b>{fileName || "Select a CV (optional)"}</b><small>PDF, DOC, DOCX or TXT · remains on this device in preview</small></span>
+              <ArrowRight size={18} />
+            </label>
+            <div className="form-protection"><Check size={15} /> This form takes you to a confirmation page. Use WhatsApp to complete a real campaign enquiry.</div>
+            <button className="button button-accent" type="submit">Send campaign enquiry <ArrowRight size={18} /></button>
+            <Link href="/" className="form-back"><ArrowLeft size={15} /> Return to the engine overview</Link>
+          </form>
+        </div>
+      </section>
+    </main>
+  );
+}

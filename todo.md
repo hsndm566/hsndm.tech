@@ -1,0 +1,13 @@
+# Requested Enhancement Checklist
+
+- [x] Add a custom 404 page with clear routes back to the main service journey.
+- [x] Clarify the primary above-the-fold campaign CTA and add contextual internal links.
+- [x] Create a thank-you page for completed enquiries and wire the enquiry flow to it.
+- [x] Add contextual breadcrumbs to the non-home page journeys.
+- [x] Add a case-study section based on transparent, non-testimonial service process content.
+- [x] Set the FAQ count to five and add response-time expectations without unsupported guarantees.
+- [x] Add a sticky mobile CTA.
+- [x] Add `robots.txt`, page-specific titles, meta descriptions, and social-share metadata/images.
+- [x] Add a Jeddah location map and a directions link.
+- [x] Do not add customer reviews: no authentic, verifiable source was identified, and fabricated or unverified testimonials are excluded.
+- [x] Validate desktop and mobile navigation, submit flow, metadata assets, and production build.

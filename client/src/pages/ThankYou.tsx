@@ -1,0 +1,44 @@
+/**
+ * Design reminder — Operational Clarity: a confirmation page must close uncertainty,
+ * state the response protection clearly, and expose the next human-contact action.
+ */
+import { useEffect, useMemo } from "react";
+import { ArrowRight, CheckCircle2, MessageCircle, ShieldCheck } from "lucide-react";
+import { Link } from "wouter";
+
+const WHATSAPP_URL = "https://wa.me/966571448656?text=Hi%20AutoApply%20SA%2C%20I%20just%20sent%20a%20campaign%20enquiry%20and%20would%20like%20to%20continue.";
+
+export default function ThankYou() {
+  const name = useMemo(() => new URLSearchParams(window.location.search).get("name"), []);
+
+  useEffect(() => {
+    document.title = "Enquiry Received | AutoApply SA";
+    document.querySelector('meta[name="description"]')?.setAttribute("content", "Your AutoApply SA campaign enquiry has been received. Continue with the team on WhatsApp for the fastest response.");
+  }, []);
+
+  return (
+    <main className="journey-page thank-you-page">
+      <header className="journey-header page-frame">
+        <Link href="/" className="brand journey-brand" aria-label="AutoApply SA home">
+          <img src="/manus-storage/autoapply-symbol_80d77010.png" alt="" className="brand-mark" />
+          <span>AutoApply <em>SA</em></span>
+        </Link>
+        <span className="journey-status"><i /> INTAKE RECEIVED / STEP 02</span>
+      </header>
+      <section className="thanks-wrap page-frame">
+        <nav className="breadcrumbs light-breadcrumbs" aria-label="Breadcrumb"><Link href="/">Home</Link><span>/</span><Link href="/enquire">Start a campaign</Link><span>/</span><b>Enquiry received</b></nav>
+        <div className="thanks-card">
+          <CheckCircle2 size={42} strokeWidth={1.3} />
+          <div className="thank-eyebrow">CAMPAIGN BRIEF LOGGED</div>
+          <h1>{name ? `Thanks, ${name}.` : "Thanks."}<br />The next move is <i>in motion.</i></h1>
+          <p>Your enquiry has reached the campaign queue. For the quickest direct response and any payment or CV-sharing instructions, continue on WhatsApp.</p>
+          <div className="thanks-actions">
+            <a className="button button-paper" href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle size={17} /> Continue on WhatsApp</a>
+            <Link href="/" className="text-button light-text">Back to engine overview <ArrowRight size={17} /></Link>
+          </div>
+          <div className="thanks-protection"><ShieldCheck size={17} /><span><b>Response protection.</b> If you have not received a reply within one business day, send a follow-up directly on WhatsApp with your name and target role.</span></div>
+        </div>
+      </section>
+    </main>
+  );
+}

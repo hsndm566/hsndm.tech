@@ -2,7 +2,8 @@
  * Design reminder — Operational Clarity: Swiss information design with a signal rail,
  * deliberate asymmetry, near-black ink, warm paper, and signal vermilion used only for action.
  */
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { MapView } from "@/components/Map";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -23,6 +24,7 @@ import {
   X,
   Zap,
 } from "lucide-react";
+import { Link } from "wouter";
 
 const WHATSAPP_URL =
   "https://wa.me/966571448656?text=Hi%20AutoApply%20SA%2C%20I%20want%20to%20start%20a%20campaign.";
@@ -70,6 +72,11 @@ const faqs = [
     answer:
       "Monthly plans can be arranged through STC Pay or bank transfer (IBAN). You can ask the team about the current payment instructions when you start a campaign.",
   },
+  {
+    question: "When should I expect a response?",
+    answer:
+      "Campaign enquiries are reviewed by the team. For the fastest direct response, use WhatsApp after submitting your brief; if you have not heard back within one business day, send a short follow-up with your name and target role.",
+  },
 ];
 
 function RailLabel({ children }: { children: React.ReactNode }) {
@@ -84,6 +91,11 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
   const [selectedFile, setSelectedFile] = useState("");
+
+  useEffect(() => {
+    document.title = "AutoApply SA | AI Job Application Engine for the Gulf";
+    document.querySelector('meta[name="description"]')?.setAttribute("content", "AutoApply SA helps Gulf job seekers organise, tailor, and submit applications with a 24/7 AI application engine based in Jeddah.");
+  }, []);
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -114,9 +126,7 @@ export default function Home() {
           <a className="language-link" href="https://hsndm.tech" lang="ar" aria-label="Visit the Arabic version">
             العربية
           </a>
-          <a className="button button-ink button-small" href={WHATSAPP_URL} target="_blank" rel="noreferrer">
-            Start a campaign <ArrowUpRight size={15} />
-          </a>
+          <Link className="button button-ink button-small" href="/enquire">Start a campaign <ArrowUpRight size={15} /></Link>
           <button
             className="mobile-menu-button"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -168,14 +178,13 @@ export default function Home() {
                 AutoApply SA finds, tailors, and submits applications to Gulf roles by email and portal—built around your CV and your preferred language.
               </p>
               <div className="hero-actions">
-                <button className="button button-paper" onClick={() => scrollTo("upload")}>
-                  Upload your CV <ArrowDownRight size={18} />
-                </button>
+                <Link className="button button-paper" href="/enquire">Start your campaign <ArrowDownRight size={18} /></Link>
                 <button className="text-button light-text" onClick={() => scrollTo("how")}>
                   See the system <MoveRight size={18} />
                 </button>
               </div>
               <div className="hero-note">From 99 SAR / month <b /> no card needed to begin a conversation</div>
+              <div className="hero-trust-row"><span><ShieldCheck size={14} /> Start with a brief</span><span><Clock3 size={14} /> Follow up within one business day</span></div>
             </div>
 
             <div className="hero-ledger" aria-label="Application engine status">
@@ -347,6 +356,29 @@ export default function Home() {
           </div>
         </section>
 
+        <section id="case-study" className="case-study-section section-paper">
+          <div className="page-frame split-layout">
+            <aside className="section-rail">
+              <RailLabel>04 / Case note</RailLabel>
+              <span className="rail-rule" />
+              <p>AN EXAMPLE OF THE SERVICE PROCESS</p>
+            </aside>
+            <div className="case-main">
+              <div className="section-kicker"><FileText size={15} /> PROCESS CASE STUDY</div>
+              <h2>One brief. A clearer <i>application operating rhythm.</i></h2>
+              <p className="section-summary">This illustrative process note shows how a campaign moves from a candidate’s existing CV to a maintained job-application workflow. It is a service walkthrough, not a customer testimonial.</p>
+              <div className="case-ledger">
+                <div className="case-heading"><span>CAMPAIGN TRACE / EXAMPLE</span><span>GULF ROLE SEARCH</span></div>
+                <article><span className="case-stage">01</span><div><b>Candidate brief</b><p>Role preference, experience, language, and availability are organised into a usable campaign brief.</p></div><span className="case-time">START</span></article>
+                <article><span className="case-stage">02</span><div><b>Role lanes identified</b><p>Relevant openings are prioritised so the campaign focuses on jobs that make sense for the profile.</p></div><span className="case-time">MATCH</span></article>
+                <article><span className="case-stage">03</span><div><b>Applications prepared</b><p>Each application gets the necessary tailoring before email or portal submission is carried out.</p></div><span className="case-time">APPLY</span></article>
+                <article><span className="case-stage">04</span><div><b>Follow-through retained</b><p>Reports, delivery checks, and subsequent actions keep the candidate’s application activity visible.</p></div><span className="case-time">TRACK</span></article>
+              </div>
+              <Link href="/enquire" className="text-button case-link">Start a campaign brief <MoveRight size={18} /></Link>
+            </div>
+          </div>
+        </section>
+
         <section id="pricing" className="pricing-section section-paper">
           <div className="page-frame split-layout">
             <aside className="section-rail">
@@ -370,7 +402,7 @@ export default function Home() {
                     <div className="price"><b>{plan.price}</b><span>SAR<br />/ MO</span></div>
                     <p>{plan.descriptor}</p>
                     <ul>{plan.features.map((feature) => <li key={feature}><Check size={15} /> {feature}</li>)}</ul>
-                    <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="plan-cta">Choose {plan.name} <MoveRight size={17} /></a>
+                    <Link href="/enquire" className="plan-cta">Choose {plan.name} <MoveRight size={17} /></Link>
                   </article>
                 ))}
               </div>
@@ -405,6 +437,24 @@ export default function Home() {
           </div>
         </section>
 
+        <section id="location" className="location-section section-fog">
+          <div className="page-frame location-grid">
+            <div className="location-copy">
+              <div className="section-kicker"><Globe2 size={15} /> JEDDAH, KSA</div>
+              <h2>Gulf focused.<br /><i>Jeddah based.</i></h2>
+              <p className="section-summary">AutoApply SA is based in Jeddah and serves candidates pursuing roles across the Gulf. Directions open in Google Maps, while campaign support continues online.</p>
+              <div className="location-actions">
+                <a className="button button-ink" href="https://www.google.com/maps/dir/?api=1&destination=Jeddah%2C%20Saudi%20Arabia" target="_blank" rel="noreferrer">Get directions <ArrowUpRight size={18} /></a>
+                <Link className="text-button" href="/enquire">Start remotely <MoveRight size={18} /></Link>
+              </div>
+            </div>
+            <div className="map-frame">
+              <MapView className="location-map-canvas" initialCenter={{ lat: 21.4858, lng: 39.1925 }} initialZoom={11} />
+              <div className="map-caption"><span><StatusDot /> SERVICE BASE</span><b>JEDDAH / KSA</b></div>
+            </div>
+          </div>
+        </section>
+
         <section className="final-cta section-accent">
           <div className="page-frame final-inner">
             <div>
@@ -413,11 +463,15 @@ export default function Home() {
             </div>
             <div className="final-action">
               <p>Reach Hasan directly for campaign setup, payment details, and the best way to share your CV.</p>
-              <a className="button button-ink" href={WHATSAPP_URL} target="_blank" rel="noreferrer">Talk on WhatsApp <ArrowUpRight size={18} /></a>
+              <Link className="button button-ink" href="/enquire">Start your campaign <ArrowUpRight size={18} /></Link>
             </div>
           </div>
         </section>
       </main>
+
+      <div className="mobile-campaign-cta">
+        <Link href="/enquire"><span><StatusDot /> OPEN CAMPAIGN</span><b>Start now <ArrowUpRight size={17} /></b></Link>
+      </div>
 
       <footer className="footer">
         <div className="page-frame footer-top">
