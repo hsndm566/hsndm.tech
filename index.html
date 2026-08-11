@@ -14,6 +14,7 @@
 <meta name="twitter:image" content="https://hsndm.tech/assets/media/hero.jpg">
 <link rel="canonical" href="https://hsndm.tech/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23111%22/><text y=%2270%22 x=%2250%22 text-anchor=%22middle%22 font-size=%2258%22 font-family=%22Arial%22 fill=%22white%22>A</text></svg>">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -110,6 +111,7 @@ a{color:inherit;text-decoration:none}
 .upload-drop i{font-size:2.5rem;color:var(--text-3)}
 .upload-text{font-size:1.1rem;font-weight:600}
 .upload-hint{font-size:0.85rem;color:var(--text-4)}
+.upload-note{font-size:0.85rem;color:var(--danger,#b91c1c);margin-top:10px;line-height:1.5}
 .upload-filename{font-size:0.9rem;color:var(--text);font-weight:500;margin-top:4px}
 [hidden]{display:none!important}
 .psy-bubble{display:inline-flex;align-items:center;gap:12px;margin-top:12px;padding:14px 22px;background:#fff;border:1px solid var(--border);border-radius:999px;box-shadow:0 4px 20px rgba(0,0,0,.06);font-size:0.95rem}
@@ -306,7 +308,7 @@ a{color:inherit;text-decoration:none}
       <div class="card reveal">
         <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
         <h3 data-i18n="feat2_title">CV Matching</h3>
-        <p data-i18n="feat2_p">Our AI reads your CV and returns your best-fit target roles instantly, so you apply where you'll actually land.</p>
+        <p data-i18n="feat2_p">Our engine reads your CV and returns your best-fit target roles instantly, so you apply where you'll actually land.</p>
       </div>
       <div class="card reveal">
         <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg></div>
@@ -324,7 +326,7 @@ a{color:inherit;text-decoration:none}
       <p data-i18n="how_sub">Upload your CV, get your target roles, and the engine applies around the clock.</p>
     </div>
     <div class="steps">
-      <div class="step reveal"><div class="step-num">01</div><h3 data-i18n="step1_title">Upload your CV</h3><p data-i18n="step1_p">Drop your PDF, DOC, or TXT. Our AI extracts your skills, experience, and career trajectory in seconds.</p></div>
+      <div class="step reveal"><div class="step-num">01</div><h3 data-i18n="step1_title">Upload your CV</h3><p data-i18n="step1_p">Drop your PDF, DOC, or TXT. Our engine reads your skills, experience, and career trajectory in seconds.</p></div>
       <div class="step reveal"><div class="step-num">02</div><h3 data-i18n="step2_title">Get matched</h3><p data-i18n="step2_p">We scan 500+ live Gulf listings and surface the roles where your profile has the highest probability of success.</p></div>
       <div class="step reveal"><div class="step-num">03</div><h3 data-i18n="step3_title">We apply 24/7</h3><p data-i18n="step3_p">The engine tailors cover letters, fills portals, sends emails, and verifies delivery — while you sleep.</p></div>
     </div>
@@ -345,7 +347,7 @@ a{color:inherit;text-decoration:none}
     <div class="section-head reveal">
       <p class="eyebrow" data-i18n="upload_eyebrow">Start in 60 seconds</p>
       <h2 data-i18n="upload_h2">Drop your CV — we'll find your lanes.</h2>
-      <p data-i18n="upload_sub">Upload your CV and our AI shows your best-fit target roles in seconds.</p>
+      <p data-i18n="upload_sub">Upload your CV and our engine shows your best-fit target roles in seconds.</p>
     </div>
     <div class="upload-card">
       <img src="assets/media/desk.jpg" alt="Your desk, automated" class="upload-desk" onerror="this.style.display='none'">
@@ -354,6 +356,7 @@ a{color:inherit;text-decoration:none}
         <div class="upload-text" data-i18n="upload_text">Upload your CV</div>
         <div class="upload-hint" data-i18n="upload_hint">PDF, DOC, DOCX or TXT · private, used only to match roles</div>
         <div class="upload-filename" id="uploadFilename"></div>
+        <p class="upload-note" id="uploadHint" data-i18n="upload_note" style="display:none">Couldn't read that file as text (scanned or image PDF?). Send it on WhatsApp and we'll match you manually.</p>
       </div>
       <input type="file" id="cvInput" accept=".pdf,.doc,.docx,.txt" hidden>
       <div class="psy-bubble" id="psyBubble" hidden>
@@ -438,11 +441,11 @@ a{color:inherit;text-decoration:none}
     <div class="footer-grid">
       <div>
         <div class="footer-brand"><span class="dot"></span> AutoApply SA</div>
-        <div class="footer-desc" data-i18n="footer_desc">Your 24/7 AI job application engine. Based in Jeddah, serving the entire Gulf region.</div>
+        <div class="footer-desc" data-i18n="footer_desc">Your 24/7 job application engine. Based in Jeddah, serving the entire Gulf region.</div>
       </div>
-      <div class="footer-col"><h4 data-i18n="nav_product">Product</h4><a href="#how" data-i18n="nav_how">How it works</a><a href="#upload">CV Upload</a><a href="#pricing" data-i18n="nav_pricing">Pricing</a></div>
+      <div class="footer-col"><h4 data-i18n="nav_product">Product</h4><a href="#how" data-i18n="nav_how">How it works</a><a href="#upload" data-i18n="footer_cvupload">CV Upload</a><a href="#pricing" data-i18n="nav_pricing">Pricing</a></div>
       <div class="footer-col"><h4 data-i18n="footer_company">Company</h4><a href="#faq" data-i18n="nav_faq">FAQ</a><a href="#contact" data-i18n="nav_contact">Contact</a></div>
-      <div class="footer-col"><h4 data-i18n="footer_connect">Connect</h4><a href="https://wa.me/966571448656" target="_blank" rel="noopener">WhatsApp · +966 57 144 8656</a><a href="https://instagram.com/hsndm_" target="_blank" rel="noopener">Instagram · hsndm_</a><a href="https://linkedin.com/in/hsndm" target="_blank" rel="noopener">LinkedIn · hsndm</a></div>
+      <div class="footer-col"><h4 data-i18n="footer_connect">Connect</h4><a href="https://wa.me/966571448656" target="_blank" rel="noopener">WhatsApp · +966 57 144 8656</a><a href="https://instagram.com/hsndm_" target="_blank" rel="noopener">Instagram · @hsndm_</a><a href="https://linkedin.com/in/hsndm" target="_blank" rel="noopener">LinkedIn · hsndm</a></div>
     </div>
     <div class="footer-bottom">
       <div class="footer-social">
@@ -458,7 +461,7 @@ a{color:inherit;text-decoration:none}
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
 </button>
 <div class="julie-panel" id="juliePanel">
-  <div class="julie-head"><span class="dot"></span> <span data-i18n="julie_head">Julie · your AI copilot</span></div>
+  <div class="julie-head"><span class="dot"></span> <span data-i18n="julie_head">Julie · your guide</span></div>
   <div class="julie-msgs" id="julieMsgs">
     <div class="jmsg" data-i18n="julie_greeting">Hi, I'm Julie 👋 Tell me your field and I'll suggest where AutoApply SA should aim your applications.</div>
   </div>
@@ -618,7 +621,7 @@ const I18N = {
   hero_cta_upload:{en:"Upload your CV",ar:"ارفع سيرتك الذاتية"},
   hero_cta_how:{en:"See how it works",ar:"شاهد كيف تعمل"},
   stat_apps_label:{en:"applications engineered",ar:"طلب توظيف تم إنجازه"},
-  stat_turnaround_label:{en:"avg turnaround gain",ar:"تحسّن في سرعة الاستجابة"},
+  stat_turnaround_label:{en:"faster than manual apply",ar:"أسرع من التقديم اليدوي"},
   stat_always_label:{en:"always applying",ar:"تقديم مستمر"},
   stat_langs_label:{en:"languages supported",ar:"لغات مدعومة"},
   features_eyebrow:{en:"Platform",ar:"المنصة"},
@@ -627,27 +630,28 @@ const I18N = {
   feat1_title:{en:"Application Engine",ar:"محرك التقديم"},
   feat1_p:{en:"We read your CV, match it to live Gulf roles, and tailor every application to the posting — no copy-paste.",ar:"نقرأ سيرتك الذاتية، نطابقها مع الوظائف المتاحة، ونعدّل كل طلب حسب الوظيفة — بدون نسخ ولصق."},
   feat2_title:{en:"CV Matching",ar:"مطابقة السيرة الذاتية"},
-  feat2_p:{en:"Our AI reads your CV and returns your best-fit target roles instantly, so you apply where you'll actually land.",ar:"يقرأ الذكاء الاصطناعي سيرتك الذاتية ويقترح فورًا أنسب الوظائف لك."},
+  feat2_p:{en:"Our engine reads your CV and returns your best-fit target roles instantly, so you apply where you'll actually land.",ar:"يقرأ المحرك سيرتك الذاتية ويقترح فورًا أنسب الوظائف لك."},
   feat3_title:{en:"Ops Automation",ar:"أتمتة العمليات"},
   feat3_p:{en:"Follow-ups, resends, and bounce-verified sends run on autopilot so nothing slips through.",ar:"المتابعات، إعادة الإرسال، والتحقق من التسليم تعمل تلقائيًا حتى لا يفوتك شيء."},
   how_eyebrow:{en:"How it works",ar:"كيف تعمل"},
   how_h2:{en:"Three moves. Zero manual applying.",ar:"ثلاث خطوات. بدون تقديم يدوي."},
   how_sub:{en:"Upload your CV, get your target roles, and the engine applies around the clock.",ar:"ارفع سيرتك الذاتية، احصل على أنسب الوظائف، والمحرك يقدّم طلباتك على مدار الساعة."},
   step1_title:{en:"Upload your CV",ar:"ارفع سيرتك الذاتية"},
-  step1_p:{en:"Drop your PDF, DOC, or TXT. Our AI extracts your skills, experience, and career trajectory in seconds.",ar:"أرفق ملف PDF أو DOC أو TXT. يستخرج الذكاء الاصطناعي مهاراتك وخبراتك ومسارك المهني خلال ثوانٍ."},
+  step1_p:{en:"Drop your PDF, DOC, or TXT. Our engine reads your skills, experience, and career trajectory in seconds.",ar:"أرفق ملف PDF أو DOC أو TXT. يقرأ المحرك مهاراتك وخبراتك ومسارك المهني خلال ثوانٍ."},
   step2_title:{en:"Get matched",ar:"احصل على مطابقة"},
   step2_p:{en:"We scan 500+ live Gulf listings and surface the roles where your profile has the highest probability of success.",ar:"نبحث في أكثر من 500 وظيفة نشطة في الخليج ونعرض عليك الوظائف الأنسب لملفك."},
   step3_title:{en:"We apply 24/7",ar:"نقدّم على مدار الساعة"},
   step3_p:{en:"The engine tailors cover letters, fills portals, sends emails, and verifies delivery — while you sleep.",ar:"المحرك يعدّل خطابات التقديم، يملأ المنصات، يرسل البريد، ويتحقق من التسليم — وأنت نائم."},
   stats_band_apps:{en:"Applications engineered",ar:"طلب توظيف تم إنجازه"},
-  stats_band_turnaround:{en:"Average turnaround gain",ar:"متوسط تحسّن سرعة الاستجابة"},
+  stats_band_turnaround:{en:"Faster than manual apply",ar:"أسرع من التقديم اليدوي"},
   stats_band_always:{en:"Always applying",ar:"تقديم مستمر"},
   stats_band_langs:{en:"Languages (EN/AR/SO/FIL)",ar:"اللغات (إنجليزي/عربي/صومالي/فلبيني)"},
   upload_eyebrow:{en:"Start in 60 seconds",ar:"ابدأ خلال 60 ثانية"},
   upload_h2:{en:"Drop your CV — we'll find your lanes.",ar:"ارفع سيرتك الذاتية — وسنجد لك المسار المناسب."},
-  upload_sub:{en:"Upload your CV and our AI shows your best-fit target roles in seconds.",ar:"ارفع سيرتك الذاتية وسيعرض الذكاء الاصطناعي أنسب الوظائف لك خلال ثوانٍ."},
+  upload_sub:{en:"Upload your CV and our engine shows your best-fit target roles in seconds.",ar:"ارفع سيرتك الذاتية وسيعرض المحرك أنسب الوظائف لك خلال ثوانٍ."},
   upload_text:{en:"Upload your CV",ar:"ارفع سيرتك الذاتية"},
   upload_hint:{en:"PDF, DOC, DOCX or TXT · private, used only to match roles",ar:"PDF أو DOC أو DOCX أو TXT · خاص، يُستخدم فقط لمطابقة الوظائف"},
+  upload_note:{en:"Couldn’t read that file as text (scanned or image PDF?). Send it on WhatsApp and we’ll match you manually.",ar:"تعذّر قراءة الملف كنص (PDF ممسوح أو صورة؟). أرسله عبر واتساب وسنطابقه يدويًا."},
   testi_eyebrow:{en:"Illustrative examples",ar:"أمثلة توضيحية"},
   testi_h2:{en:"What the service does",ar:"ماذا تقدّم الخدمة"},
   t1_q:{en:'"Send your CV once. The engine reads it, matches roles, and submits — you never retype anything."',ar:'"أرسل سيرتك الذاتية مرة واحدة. يقرأها المحرك، يطابق الوظائف، ويرسل الطلبات — دون أن تكتب شيئًا مجددًا."'},
@@ -689,10 +693,11 @@ const I18N = {
   faq_a4:{en:"STC Pay or bank transfer (IBAN). Card checkout is coming soon. Plans are monthly and cancel anytime.",ar:"عبر STC Pay أو التحويل البنكي (آيبان). الدفع بالبطاقة قريبًا. الخطط شهرية ويمكن إلغاؤها في أي وقت."},
   contact_h2:{en:"Let's get you applied.",ar:"لنبدأ بتقديم طلباتك."},
   contact_p:{en:"Reach Hasan directly — WhatsApp, Instagram, or LinkedIn.",ar:"تواصل مع حسن مباشرة — واتساب، إنستغرام، أو لينكدإن."},
-  footer_desc:{en:"Your 24/7 AI job application engine. Based in Jeddah, serving the entire Gulf region.",ar:"محرك ذكاء اصطناعي للتقديم على الوظائف على مدار الساعة. مقرنا في جدة، ونخدم منطقة الخليج بأكملها."},
+  footer_cvupload:{en:"CV Upload",ar:"رفع السيرة الذاتية"},
+  footer_desc:{en:"Your 24/7 job application engine. Based in Jeddah, serving the entire Gulf region.",ar:"محرك طلبات التوظيف على مدار الساعة. مقرنا جدة، نخدم كامل الخليج."},
   footer_company:{en:"Company",ar:"الشركة"},
   footer_connect:{en:"Connect",ar:"تواصل"},
-  julie_head:{en:"Julie · your AI copilot",ar:"جولي · مساعدتك الذكية"},
+  julie_head:{en:"Julie · your guide",ar:"جولي · دليلك"},
   julie_greeting:{en:"Hi, I'm Julie 👋 Tell me your field and I'll suggest where AutoApply SA should aim your applications.",ar:"مرحبًا، أنا جولي 👋 أخبريني بمجالك وسأقترح أين يجب أن يوجّه أوتوأبلاي السعودية طلباتك."},
   julie_ph:{en:"e.g. logistics, IT, finance…",ar:"مثال: لوجستيات، تقنية معلومات، مالية…"},
   julie_send:{en:"Send",ar:"إرسال"}
@@ -773,6 +778,12 @@ cvInput.addEventListener('change',async(e)=>{
   const text=await readFileText(file);
   const lists=await getCareerLists(text);
   showLists(lists);
+  /* Honest signal: if the file yielded almost no text (scanned/image PDF),
+     the keyword matcher can't read it. Tell them, don't fake a match. */
+  if(text.length<25){
+    var note=document.getElementById('uploadHint');
+    if(note) note.style.display='block';
+  }
 });
 function readFileText(file){
   return new Promise(resolve=>{
