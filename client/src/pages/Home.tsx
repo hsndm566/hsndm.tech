@@ -107,6 +107,7 @@ export default function Home() {
   const [scanState, setScanState] = useState<"idle" | "scanning" | "matched" | "fallback">("idle");
   const [scanProgress, setScanProgress] = useState(0);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
+  const [selectedSuggestedRole, setSelectedSuggestedRole] = useState<string | null>(null);
   const [matchPreferences, setMatchPreferences] = useState<MatchPreferences>({ city: "Jeddah", industry: "all", seniority: "Any level", language: "English" });
   const [campaignStage, setCampaignStage] = useState(1);
   const scanFrame = useRef<number | null>(null);
@@ -139,6 +140,7 @@ export default function Home() {
     setScanState("scanning");
     setScanProgress(0);
     setScanResult(null);
+    setSelectedSuggestedRole(null);
 
     const tick = (now: number) => {
       const progress = Math.min(100, Math.round(((now - startedAt) / scanDuration) * 100));
@@ -178,6 +180,7 @@ export default function Home() {
     setSelectedFile("");
     setScanProgress(0);
     setScanResult(null);
+    setSelectedSuggestedRole(null);
     setScanState("idle");
   };
 
@@ -415,7 +418,8 @@ export default function Home() {
                 <div className="role-results" role="status" aria-live="polite">
                   <div className="result-heading"><span><Check size={14} /> ROLE SIGNALS FOUND</span><button onClick={resetScan}>Scan another CV</button></div>
                   <p>Best-fit lane <b>{scanResult.field}</b> <em>{scanResult.confidence} match</em></p>
-                  <div className="role-chips">{scanResult.roles.map((role) => <span key={role}>{role}</span>)}</div>
+                  <div className="role-chips" aria-label="Suggested target roles">{scanResult.roles.map((role) => <button type="button" key={role} className={selectedSuggestedRole === role ? "selected" : ""} aria-pressed={selectedSuggestedRole === role} onClick={() => setSelectedSuggestedRole(role)}><span>{role}</span><ArrowUpRight size={13} /></button>)}</div>
+                  {selectedSuggestedRole && <p className="role-selection"><Check size={13} /> <b>{selectedSuggestedRole}</b> selected for your campaign brief.</p>}
                   <div className="match-rationale"><b>Why this match</b><span>{scanResult.rationale}</span></div>
                 </div>
               )}
