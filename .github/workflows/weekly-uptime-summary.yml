@@ -1,0 +1,74 @@
+name: AutoApply SA weekly uptime summary
+
+on:
+  schedule:
+    # Monday 09:00 Saudi Arabia time (06:00 UTC).
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  issues: write
+
+jobs:
+  weekly-summary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Create the weekly uptime report
+        uses: actions/github-script@v7
+        env:
+          REPORT_ASSIGNEE: hsndm566
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const now = new Date();
+            const since = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            const runs = await github.paginate(github.rest.actions.listWorkflowRuns, {
+              owner,
+              repo,
+              workflow_id: 'uptime-monitor.yml',
+              per_page: 100,
+            });
+            const completedRuns = runs.filter((run) =>
+              run.status === 'completed' && new Date(run.created_at) >= since
+            );
+            const passing = completedRuns.filter((run) => run.conclusion === 'success').length;
+            const failing = completedRuns.filter((run) => run.conclusion === 'failure').length;
+            const interrupted = completedRuns.length - passing - failing;
+            const passRate = completedRuns.length
+              ? `${((passing / completedRuns.length) * 100).toFixed(2)}%`
+              : 'No scheduled checks completed in this period';
+            const title = `[AutoApply SA Weekly] Uptime summary — ${now.toISOString().slice(0, 10)}`;
+            const body = [
+              '## Weekly uptime summary',
+              '',
+              `**Period:** ${since.toISOString().slice(0, 10)} to ${now.toISOString().slice(0, 10)} (UTC)`,
+              '',
+              '| Metric | Result |',
+              '| --- | --- |',
+              `| Completed health-check runs | ${completedRuns.length} |`,
+              `| Passing runs | ${passing} |`,
+              `| Failed runs | ${failing} |`,
+              `| Interrupted or cancelled runs | ${interrupted} |`,
+              `| Health-check pass rate | ${passRate} |`,
+              '',
+              'A passing run confirms that the homepage, campaign enquiry page, Arabic page, thank-you page, crawl files, and hero media passed the configured availability and response-time checks. A failed run opens or updates the separate immediate `uptime-alert` issue.',
+              '',
+              `[View the uptime monitor history](${context.serverUrl}/${owner}/${repo}/actions/workflows/uptime-monitor.yml)`,
+            ].join('\n');
+
+            const report = await github.rest.issues.create({
+              owner,
+              repo,
+              title,
+              body,
+              labels: ['uptime-summary'],
+              assignees: [process.env.REPORT_ASSIGNEE],
+            });
+            await github.rest.issues.update({
+              owner,
+              repo,
+              issue_number: report.data.number,
+              state: 'closed',
+            });

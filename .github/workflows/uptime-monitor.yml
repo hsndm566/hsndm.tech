@@ -52,6 +52,7 @@ jobs:
           if (( ${#failures[@]} > 0 )); then
             printf '%s\n' "${failures[@]}" > monitor-failure.md
             echo "failed=true" >> "$GITHUB_OUTPUT"
+            exit 1
           else
             echo "failed=false" >> "$GITHUB_OUTPUT"
           fi
