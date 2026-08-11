@@ -19,6 +19,8 @@ jobs:
         shell: bash
         run: |
           set -uo pipefail
+          checked_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          route_rows=$(mktemp)
           targets=(
             "Homepage|https://hsndm.tech/|GET"
             "Campaign enquiry|https://hsndm.tech/enquire|GET"
@@ -40,22 +42,51 @@ jobs:
 
             code=$(awk '{print $(NF-1)}' <<< "$response")
             duration=$(awk '{print $NF}' <<< "$response")
+            [[ "$duration" =~ ^[0-9]+(\.[0-9]+)?$ ]] || duration=0
+            outcome="pass"
             if [[ "$code" != "200" ]]; then
+              outcome="fail"
               failures+=("$label — expected HTTP 200, received: $response")
             elif [[ "$duration" =~ ^[0-9]+(\.[0-9]+)?$ ]] && awk "BEGIN { exit !($duration > 20) }"; then
+              outcome="fail"
               failures+=("$label — HTTP 200 but slow response: ${duration}s")
             else
               echo "$label healthy: HTTP $code in ${duration}s"
             fi
+            jq -nc \
+              --arg label "$label" \
+              --arg url "$url" \
+              --arg method "$method" \
+              --arg code "$code" \
+              --argjson seconds "$duration" \
+              --arg outcome "$outcome" \
+              '{label:$label,url:$url,method:$method,http_status:$code,response_seconds:$seconds,outcome:$outcome}' >> "$route_rows"
           done
 
           if (( ${#failures[@]} > 0 )); then
             printf '%s\n' "${failures[@]}" > monitor-failure.md
             echo "failed=true" >> "$GITHUB_OUTPUT"
-            exit 1
+            overall_status="fail"
           else
             echo "failed=false" >> "$GITHUB_OUTPUT"
+            overall_status="pass"
           fi
+          jq -s \
+            --arg checked_at "$checked_at" \
+            --arg overall_status "$overall_status" \
+            '{checked_at:$checked_at,overall_status:$overall_status,routes:.}' \
+            "$route_rows" > uptime-metrics.json
+          rm -f "$route_rows"
+          if [[ "$overall_status" == "fail" ]]; then exit 1; fi
+
+      - name: Store response-time metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uptime-metrics
+          path: uptime-metrics.json
+          retention-days: 8
+          if-no-files-found: error
 
       - name: Open or close the assigned alert issue
         if: always()
@@ -82,7 +113,7 @@ jobs:
               const detail = fs.existsSync('monitor-failure.md')
                 ? fs.readFileSync('monitor-failure.md', 'utf8')
                 : 'The health-check process did not complete. Review the workflow run.';
-              const body = `Automated health check detected a problem at ${new Date().toISOString()}.\n\n${detail}\n\n[Open the workflow run](${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId})`;
+              const body = `Automated health check detected a problem at ${new Date().toISOString()}.\n\n${detail}\n\nThe detailed response-time record is retained with this workflow run.\n\n[Open the workflow run](${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId})`;
 
               if (existing) {
                 await github.rest.issues.createComment({ owner, repo, issue_number: existing.number, body });
