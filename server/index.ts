@@ -1,6 +1,7 @@
 import express from "express";
 import { createServer } from "http";
 import path from "path";
+import { registerCvGeneratorRoutes } from "./cv-generator.js";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -9,6 +10,10 @@ const __dirname = path.dirname(__filename);
 async function startServer() {
   const app = express();
   const server = createServer(app);
+
+  app.use(express.json({ limit: process.env.MAX_CV_REQUEST_BYTES || "1mb" }));
+  app.get("/api/health", (_req, res) => res.json({ ok: true, service: "hsndm-cv-maker" }));
+  registerCvGeneratorRoutes(app);
 
   // Serve static files from dist/public in production
   const staticPath =

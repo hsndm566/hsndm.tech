@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import ArabicHome from "@/pages/ArabicHome";
 import Enquire from "@/pages/Enquire";
+import CvMaker from "@/pages/CvMaker";
 import NotFound from "@/pages/NotFound";
 import ThankYou from "@/pages/ThankYou";
 import { Route, Switch } from "wouter";
@@ -21,6 +22,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/ar" component={ArabicHome} />
       <Route path="/enquire" component={Enquire} />
+      <Route path="/cv-maker" component={CvMaker} />
       <Route path="/thank-you" component={ThankYou} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
