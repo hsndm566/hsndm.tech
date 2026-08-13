@@ -2,6 +2,7 @@ import express from "express";
 import { createServer } from "http";
 import path from "path";
 import { registerCvGeneratorRoutes } from "./cv-generator.js";
+import { manualPaymentHealth, registerManualPaymentRoutes } from "./manual-payments.js";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -19,8 +20,10 @@ async function startServer() {
       configured: Boolean(process.env.GROQ_API_KEY),
       model: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
     },
+    manualPayments: manualPaymentHealth(),
   }));
   registerCvGeneratorRoutes(app);
+  await registerManualPaymentRoutes(app);
 
   // Serve static files from dist/public in production
   const staticPath =
