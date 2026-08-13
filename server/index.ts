@@ -12,7 +12,14 @@ async function startServer() {
   const server = createServer(app);
 
   app.use(express.json({ limit: process.env.MAX_CV_REQUEST_BYTES || "1mb" }));
-  app.get("/api/health", (_req, res) => res.json({ ok: true, service: "hsndm-cv-maker" }));
+  app.get("/api/health", (_req, res) => res.json({
+    ok: true,
+    service: "hsndm-cv-maker",
+    cvGenerator: {
+      configured: Boolean(process.env.GROQ_API_KEY),
+      model: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
+    },
+  }));
   registerCvGeneratorRoutes(app);
 
   // Serve static files from dist/public in production

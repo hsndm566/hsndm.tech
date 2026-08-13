@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import type { Express, Request, Response } from "express";
 
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
@@ -67,6 +68,8 @@ function isValidOutput(value: unknown): value is { english: Record<string, unkno
 
 export function registerCvGeneratorRoutes(app: Express) {
   app.post("/api/cv/optimize", async (req: Request, res: Response) => {
+    const requestId = randomUUID();
+    res.setHeader("X-Request-Id", requestId);
     const body = (req.body || {}) as CvRequest;
     const sourceText = cleanText(body.sourceText, 30000);
     if (sourceText.length < 80) {
@@ -75,14 +78,18 @@ export function registerCvGeneratorRoutes(app: Express) {
 
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
-      return res.status(503).json({ error: "The CV generator is not configured yet. Add GROQ_API_KEY to the backend environment." });
+      console.error("CV generator is not configured", { requestId });
+      return res.status(503).json({ requestId, error: "The CV generator is not configured yet. Add GROQ_API_KEY to the backend environment." });
     }
 
     const model = process.env.GROQ_MODEL || DEFAULT_MODEL;
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 45000);
     try {
-      const response = await fetch(GROQ_URL, {
+      let response: globalThis.Response | undefined;
+      let payload: any = {};
+      for (let attempt = 1; attempt <= 3; attempt += 1) {
+        response = await fetch(GROQ_URL, {
         method: "POST",
         signal: controller.signal,
         headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
@@ -96,24 +103,28 @@ export function registerCvGeneratorRoutes(app: Express) {
           ],
           response_format: { type: "json_schema", json_schema: { name: "ats_cv", strict: true, schema: cvSchema } },
         }),
-      });
-      const payload = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        console.error("Groq CV generation failed", response.status, payload?.error?.message || "unknown error");
-        return res.status(502).json({ error: "The CV generator could not complete this request. Please try again." });
+        });
+        payload = await response.json().catch(() => ({}));
+        if (response.ok || ![429, 500, 502, 503, 504].includes(response.status) || attempt === 3) break;
+        await new Promise((resolve) => setTimeout(resolve, 400 * attempt));
+      }
+      if (!response?.ok) {
+        console.error("Groq CV generation failed", { requestId, status: response?.status, message: payload?.error?.message || "unknown error" });
+        return res.status(502).json({ requestId, error: "The CV generator could not complete this request. Please try again." });
       }
       const content = payload?.choices?.[0]?.message?.content;
       let parsed: unknown;
       try { parsed = JSON.parse(content); } catch { parsed = null; }
       if (!isValidOutput(parsed)) {
-        console.error("Groq returned invalid CV structure");
-        return res.status(502).json({ error: "The CV generator returned an invalid result. Please try again." });
+        console.error("Groq returned invalid CV structure", { requestId });
+        return res.status(502).json({ requestId, error: "The CV generator returned an invalid result. Please try again." });
       }
-      return res.json({ model, result: parsed });
+      console.info("CV generated", { requestId, model });
+      return res.json({ requestId, model, result: parsed });
     } catch (error) {
       const message = error instanceof Error ? error.message : "unknown error";
-      console.error("CV generation request failed", message);
-      return res.status(504).json({ error: "The CV generator timed out or became unavailable. Please try again." });
+      console.error("CV generation request failed", { requestId, message });
+      return res.status(504).json({ requestId, error: "The CV generator timed out or became unavailable. Please try again." });
     } finally {
       clearTimeout(timeout);
     }
