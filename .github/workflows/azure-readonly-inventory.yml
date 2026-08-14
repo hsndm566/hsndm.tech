@@ -1,0 +1,35 @@
+name: Azure read-only inventory
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type READ_AZURE to inspect the configured subscription without changing resources.'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  inventory:
+    if: ${{ inputs.confirm == 'READ_AZURE' }}
+    runs-on: ubuntu-latest
+    environment: azure-staging
+    steps:
+      - name: Authenticate with short-lived GitHub OIDC identity
+        uses: azure/login@v2
+        with:
+          client-id: 6250b570-898d-4bc0-8f8b-910078d4c7c5
+          tenant-id: 801585e2-0e6a-4322-a002-e7fc8457bab4
+          subscription-id: 5974c845-4443-4b80-a0cd-b83696573637
+      - name: Record subscription and resource inventory
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            set -euo pipefail
+            az account show --output table
+            az group list --output table
+            az resource list --output table
+            echo "Read-only inventory completed. No create, update, delete, DNS, or data migration command was run."
