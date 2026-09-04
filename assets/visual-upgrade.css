@@ -1,0 +1,101 @@
+/* AutoApply SA visual upgrade — layered on top of the compiled app styles. */
+:root{--aa-ink:#151515;--aa-paper:#f3f0e9;--aa-signal:#e5482a;--aa-soft:#fbf9f5;--aa-line:rgba(21,21,21,.14)}
+
+/* Brand */
+.site-shell .brand{gap:11px;font-weight:700;letter-spacing:-.035em}
+.site-shell .brand-mark,.journey-brand .brand-mark{width:42px!important;height:42px!important;padding:5px;border-radius:13px;background:#fff;object-fit:contain;box-shadow:0 8px 24px rgba(0,0,0,.18),inset 0 0 0 1px rgba(21,21,21,.08)}
+.site-shell .brand span{font-size:17px}.site-shell .brand em{color:var(--aa-signal);font-style:normal}
+.topbar{backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);background:rgba(243,240,233,.91)!important;box-shadow:0 1px 0 rgba(21,21,21,.08)}
+
+/* Hero: put the missing photography back under the existing motion layer. */
+.hero{position:relative;isolation:isolate;overflow:hidden;background:#111 url('/manus-storage/autoapply-hero-operations_ad007abc.jpg') center right/cover no-repeat}
+.hero:before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,rgba(12,12,12,.97) 0%,rgba(12,12,12,.88) 38%,rgba(12,12,12,.54) 66%,rgba(12,12,12,.34) 100%),linear-gradient(180deg,rgba(229,72,42,.08),transparent 36%)}
+.hero:after{content:"AUTOAPPLY SA";position:absolute;right:-1.5vw;bottom:3.5vh;z-index:1;color:rgba(255,255,255,.055);font:700 clamp(52px,8.5vw,142px)/.8 'Space Grotesk',sans-serif;letter-spacing:-.08em;white-space:nowrap;pointer-events:none}
+.hero-media{z-index:1;opacity:.46;mix-blend-mode:screen}
+.hero-media-video{object-fit:cover;filter:saturate(.72) contrast(1.08) brightness(.72)}
+.hero-structure{z-index:2;opacity:.46}.hero-content{position:relative;z-index:3}
+.hero-lead{max-width:780px}
+.hero-lead h1{text-shadow:0 16px 60px rgba(0,0,0,.42)}
+.hero-lead>p{max-width:660px;font-size:clamp(15px,1.45vw,19px);line-height:1.72;color:rgba(251,249,245,.84)}
+.hero-actions .button{box-shadow:0 14px 34px rgba(0,0,0,.25)}
+.hero-trust-row span{padding:7px 10px;border:1px solid rgba(255,255,255,.14);background:rgba(21,21,21,.24);backdrop-filter:blur(8px)}
+
+/* Engine status becomes the product visual instead of a flat text panel. */
+.hero-ledger{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.2)!important;background:linear-gradient(160deg,rgba(24,24,24,.9),rgba(12,12,12,.74))!important;box-shadow:0 28px 70px rgba(0,0,0,.38);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.hero-ledger:before{content:"";position:absolute;right:-34px;top:-34px;width:150px;height:150px;background:url('/manus-storage/autoapply-symbol_80d77010.png') center/contain no-repeat;opacity:.08;filter:grayscale(1) brightness(4);pointer-events:none}
+.ledger-topline{position:relative;z-index:1;background:rgba(229,72,42,.1);border-bottom:1px solid rgba(255,255,255,.1)}
+.ledger-record,.ledger-queue{position:relative;z-index:1}
+.ledger-record{background:rgba(255,255,255,.045)}
+.hero-stats>div>div{border:1px solid rgba(255,255,255,.12);background:rgba(21,21,21,.28);backdrop-filter:blur(10px);padding:12px!important}
+.hero-stats strong{font-size:clamp(20px,2vw,30px)!important;color:#fff}
+.hero-stats span{color:rgba(255,255,255,.64)}
+
+/* Make existing imagery feel intentional, not like leftover assets. */
+.video-explainer-inner{position:relative}
+.video-explainer-media,.video-placeholder{border-radius:24px!important;overflow:hidden;border:1px solid rgba(21,21,21,.12);box-shadow:0 32px 70px rgba(21,21,21,.16);background:#171717 url('/manus-storage/autoapply-flow_6c03602a.jpg') center/cover no-repeat}
+.video-explainer-media{filter:saturate(.9) contrast(1.03)}
+.video-explainer .video-placeholder:not(video){min-height:clamp(280px,48vw,590px);position:relative}
+.video-explainer .video-placeholder:not(video):after{content:"AUTOAPPLY SA / CAMPAIGN ENGINE";position:absolute;left:20px;bottom:18px;padding:8px 10px;background:rgba(21,21,21,.82);color:#fff;font:500 10px/1 'DM Mono',monospace;letter-spacing:.08em}
+
+.upload-image-wrap{position:relative;border-radius:26px;overflow:hidden;box-shadow:0 30px 70px rgba(21,21,21,.16);background:#151515}
+.upload-image-wrap img{display:block;width:100%;height:100%;min-height:520px;object-fit:cover;filter:saturate(.88) contrast(1.04)}
+.upload-image-wrap:after{content:"CV → MATCH → CAMPAIGN";position:absolute;left:18px;bottom:18px;padding:10px 12px;background:rgba(21,21,21,.84);color:#fff;font:500 10px/1 'DM Mono',monospace;letter-spacing:.08em;backdrop-filter:blur(8px)}
+.image-stamp{border-radius:999px!important;box-shadow:0 14px 28px rgba(0,0,0,.18)}
+
+/* Workflow art layer uses the image that had stopped appearing in the experience. */
+.workflow-section{position:relative;overflow:hidden}
+.workflow-section:after{content:"";position:absolute;right:-5%;top:5%;width:min(48vw,680px);height:90%;background:url('/manus-storage/autoapply-flow_6c03602a.jpg') center/cover no-repeat;opacity:.085;filter:grayscale(1) contrast(1.2);mask-image:linear-gradient(90deg,transparent,#000 32%);-webkit-mask-image:linear-gradient(90deg,transparent,#000 32%);pointer-events:none}
+.workflow-section>.page-frame{position:relative;z-index:1}
+
+/* Dashboard preview */
+.campaign-preview{position:relative;overflow:hidden}
+.campaign-dashboard{border-radius:24px!important;border:1px solid rgba(255,255,255,.16)!important;background:linear-gradient(160deg,#1e1e1e,#111)!important;box-shadow:0 32px 80px rgba(0,0,0,.34);overflow:hidden}
+.dashboard-top{background:linear-gradient(90deg,rgba(229,72,42,.18),rgba(255,255,255,.03));border-bottom:1px solid rgba(255,255,255,.12)}
+.dashboard-spotlight{background:rgba(255,255,255,.045)}
+.dashboard-progress{transition:transform .18s ease,background-color .18s ease,border-color .18s ease}
+.dashboard-progress:hover{transform:translateX(3px)}
+
+/* Pricing and reviews get stronger hierarchy without changing claims/content. */
+.plan-card,.review-card{border-radius:20px!important;overflow:hidden;box-shadow:0 16px 36px rgba(21,21,21,.07)}
+.plan-featured{transform:translateY(-8px);box-shadow:0 28px 55px rgba(21,21,21,.2)}
+.review-card:before{content:attr(data-review-initial);display:none}
+.proof-strip{background:linear-gradient(90deg,#e5482a,#d43d20)!important;color:#fff!important}
+.proof-strip .status-dot{background:#fff!important}
+
+/* Section rhythm */
+.section-paper{background-image:radial-gradient(circle at 92% 4%,rgba(229,72,42,.055),transparent 24%)}
+.final-cta{position:relative;overflow:hidden}
+.final-cta:after{content:"";position:absolute;right:-45px;bottom:-55px;width:240px;height:240px;background:url('/manus-storage/autoapply-symbol_80d77010.png') center/contain no-repeat;opacity:.09;filter:grayscale(1) brightness(.2);pointer-events:none}
+.final-inner{position:relative;z-index:1}
+
+/* Arabic homepage gets the same visual system with mirrored emphasis. */
+html[dir="rtl"] .hero{background-position:left center}
+html[dir="rtl"] .hero:before{background:linear-gradient(270deg,rgba(12,12,12,.97) 0%,rgba(12,12,12,.88) 38%,rgba(12,12,12,.54) 66%,rgba(12,12,12,.34) 100%)}
+html[dir="rtl"] .hero:after{right:auto;left:-1.5vw}
+
+@media (max-width:960px){
+  .hero{background-position:65% center}
+  .hero:before{background:linear-gradient(180deg,rgba(12,12,12,.83),rgba(12,12,12,.97) 68%)}
+  .hero-media{opacity:.32}
+  .hero:after{font-size:72px;right:-20px;bottom:22px}
+  .hero-ledger{margin-top:26px}
+  .workflow-section:after{width:80vw;right:-25%;opacity:.06}
+  .upload-image-wrap img{min-height:380px}
+  .plan-featured{transform:none}
+}
+
+@media (max-width:680px){
+  .site-shell .brand-mark,.journey-brand .brand-mark{width:36px!important;height:36px!important;border-radius:11px}
+  .site-shell .brand span{font-size:15px}
+  .hero{background-position:72% center}
+  .hero-media{opacity:.22}
+  .hero-lead>p{font-size:14px;line-height:1.6}
+  .hero-trust-row span{padding:6px 8px}
+  .hero:after{font-size:52px;opacity:.7}
+  .hero-ledger,.campaign-dashboard,.video-explainer-media,.video-placeholder,.upload-image-wrap,.plan-card,.review-card{border-radius:16px!important}
+  .hero-stats>div>div{padding:9px!important}
+  .upload-image-wrap img{min-height:290px}
+  .workflow-section:after{display:none}
+}
+
+@media (prefers-reduced-motion:reduce){.dashboard-progress{transition:none}.hero-media-video{display:none}.hero-media{opacity:0}}
