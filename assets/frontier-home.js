@@ -138,4 +138,150 @@
     }, { threshold: .12, rootMargin: '0px 0px -5%' });
     revealTargets.forEach((node) => observer.observe(node));
   }
+
+  const names = ['Khalid', 'Yusuf', 'Yassin', 'Renad', 'Yasmin'];
+  const companies = ['PwC', 'Al-Roco', 'SAVOLA Group', 'Aramco', 'STC'];
+
+  const socialProofStyle = document.createElement('style');
+  socialProofStyle.textContent = `
+    #autoapply-social-proof {
+      position: fixed;
+      left: 20px;
+      bottom: 20px;
+      z-index: 99999;
+      width: min(340px, calc(100vw - 40px));
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: #fff;
+      color: #151515;
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 12px;
+      box-shadow: 0 12px 35px rgba(0,0,0,.14);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      opacity: 0;
+      transform: translateX(-120%);
+      pointer-events: none;
+      transition: transform .45s cubic-bezier(.22,1,.36,1), opacity .35s ease;
+    }
+
+    #autoapply-social-proof.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    #autoapply-social-proof.hide {
+      opacity: 0;
+      transform: translateX(-15px);
+    }
+
+    .asp-avatar {
+      width: 42px;
+      height: 42px;
+      min-width: 42px;
+      border-radius: 50%;
+      background: #f1f1f1;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 15px;
+      color: #555;
+    }
+
+    .asp-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .asp-name {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .asp-action {
+      font-size: 13px;
+      line-height: 1.4;
+      color: #555;
+    }
+
+    .asp-action strong {
+      color: #151515;
+      font-weight: 600;
+    }
+
+    .asp-check {
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #e8f7ee;
+      color: #168a45;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    @media (max-width: 520px) {
+      #autoapply-social-proof {
+        left: 12px;
+        bottom: 12px;
+        width: calc(100vw - 24px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #autoapply-social-proof {
+        transition: opacity .2s ease;
+        transform: none;
+      }
+    }
+  `;
+  document.head.appendChild(socialProofStyle);
+
+  const socialProofPopup = document.createElement('div');
+  socialProofPopup.id = 'autoapply-social-proof';
+  socialProofPopup.setAttribute('role', 'status');
+  socialProofPopup.setAttribute('aria-live', 'polite');
+  socialProofPopup.innerHTML = `
+    <div class="asp-avatar"></div>
+    <div class="asp-content">
+      <div class="asp-name"></div>
+      <div class="asp-action"></div>
+    </div>
+    <div class="asp-check">✓</div>
+  `;
+  document.body.appendChild(socialProofPopup);
+
+  let previousSocialProofIndex = -1;
+
+  const showSocialProofNotification = () => {
+    let index;
+    do {
+      index = Math.floor(Math.random() * names.length);
+    } while (index === previousSocialProofIndex && names.length > 1);
+
+    previousSocialProofIndex = index;
+    const name = names[index];
+    const company = companies[index];
+
+    qs('.asp-avatar', socialProofPopup).textContent = name.charAt(0).toUpperCase();
+    qs('.asp-name', socialProofPopup).textContent = name;
+    qs('.asp-action', socialProofPopup).innerHTML = `Just Auto-Applied to <strong>${company}</strong>`;
+
+    socialProofPopup.classList.remove('hide');
+    requestAnimationFrame(() => socialProofPopup.classList.add('show'));
+
+    setTimeout(() => {
+      socialProofPopup.classList.remove('show');
+      socialProofPopup.classList.add('hide');
+    }, 5000);
+
+    const nextDelay = 60000 + Math.random() * 30000;
+    setTimeout(showSocialProofNotification, nextDelay);
+  };
+
+  setTimeout(showSocialProofNotification, 10000);
 })();
